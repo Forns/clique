@@ -7,3 +7,5 @@
 
 (function() {
 
+var clique = $C = {};
+

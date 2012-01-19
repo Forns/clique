@@ -5,11 +5,11 @@ MODULE_DIR = ${MAIN_DIR}/modules
 LIB_DIR = ${MAIN_DIR}/lib
 
 PREFIX = .
-DIST_DIR = ${PREFIX}/dist
+DIST_DIR = ${PREFIX}/${MAIN_DIR}/dist
 
 CLIQUE = ${DIST_DIR}/clique.js
 
-BASE_FILES = ${MODULE_DIR}/core.js
+BASE_FILES = ${MODULE_DIR}/combinatorics.js
 
 DEPENDENCIES = ${LIB_DIR}/sylvester.src.js
 
