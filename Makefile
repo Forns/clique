@@ -7,14 +7,17 @@ LIB_DIR = ${MAIN_DIR}/lib
 PREFIX = .
 DIST_DIR = ${PREFIX}/dist
 
+CLIQUE = ${DIST_DIR}/clique.js
+
 BASE_FILES = ${MODULE_DIR}/core.js
 
-MODULES = ${MODULE_DIR}/intro.js\
+DEPENDENCIES = ${LIB_DIR}/sylvester.src.js
+
+MODULES = ${MODULE_DIR}/header.js\
+	${DEPENDENCIES}\
+	${MODULE_DIR}/intro.js\
 	${BASE_FILES}\
 	${MODULE_DIR}/outro.js
-
-CLIQUE = ${DIST_DIR}/clique.js
-SYLVESTER = ${LIB_DIR}/sylvester.src.js
 
 all: core
 
@@ -31,4 +34,9 @@ ${CLIQUE}: ${MODULES} | ${DIST_DIR}
 
 	@@cat ${MODULES} | \
 		sed 's/.function..clique...{//' | \
-		sed 's/}...clique..;//'
+		sed 's/}...clique..;//' > \
+		${CLIQUE}
+
+clean:
+	@@echo "Removing Distriution directory:" ${DIST_DIR}
+	@@rm -rf ${DIST_DIR}
