@@ -352,19 +352,6 @@ Matrix.prototype = {
     return Vector.create(this.elements[i-1]);
   },
   
-  // Sets the given row of matrix to the given vector
-  setRow: function (i, vector) {
-    if (vector.dimensions() !== this.elements[i - 1].length) {
-      return null;
-    }
-    var vectorElements = [];
-    vector.each(function (x, k) {
-      vectorElements[k - 1] = x;
-    });
-    this.elements[i - 1] = vectorElements;
-    return this;
-  },
-
   // Returns column k of the matrix as a vector
   col: function(j) {
     if (j > this.elements[0].length) { return null; }
@@ -375,21 +362,6 @@ Matrix.prototype = {
     return Vector.create(col);
   },
   
-  // Sets the given column of matrix to the given vector
-  setCol: function (i, vector) {
-    if (vector.dimensions() !== this.rows()) {
-      return null;
-    }
-    var vectorElements = [];
-    vector.each(function (x, k) {
-      vectorElements[k - 1] = x;
-    });
-    for (var j = 0; j < vectorElements.length; j++) {
-      this.elements[i - 1][j] = vectorElements[j];
-    }
-    return this;
-  },
-
   // Returns the number of rows/columns the matrix has
   dimensions: function() {
     return {rows: this.elements.length, cols: this.elements[0].length};
@@ -400,14 +372,6 @@ Matrix.prototype = {
     return this.elements.length;
   },
   
-  // Swaps rows in the given matrix
-  swapRows: function (i, j) {
-    var swapped = this.elements[i - 1];
-    this.elements[i - 1] = this.elements[j - 1];
-    this.elements[j - 1] = swapped;
-    return this;
-  },
-
   // Returns the number of columns in the matrix
   cols: function() {
     return this.elements[0].length;
@@ -744,12 +708,6 @@ Matrix.prototype = {
     return matrix_rows.join('\n');
   },
   
-  // Sets a single matrix element to the given value
-  setElement: function (i, j, element) {
-    this.elements[i - 1][j - 1] = element;
-    return this;
-  },
-
   // Set the matrix's elements from an array. If the argument passed
   // is a vector, the resulting matrix will be a single column.
   setElements: function(els) {

@@ -35,63 +35,11 @@ $(function () {
   
   
   /*
-   * Tests for the matrix components
-   * including the Sylvester objects
-   */
-  module("Matrices");
-  
-  test("Matrix Definitions", function () {
-    ok($M([0]));
-    ok($M([1, 2, 3]));
-    ok($M([
-      [1, 2, 3],
-      [2, 4, 5],
-      [-1, 20, 0]
-    ]));
-  });
-  
-  test("Matrix Element Sums", function () {
-    // TODO
-  });
-  
-  test("Matrix Norm", function () {
-    // TODO
-  });
-  
-  test("Matrix Ones", function () {
-    // TODO
-  });
-  
-  test("Matrix Sort", function () {
-    // TODO
-  });
-  
-  test("firstNonZero", function () {
-    // TODO
-  });
-  
-  /*
-   * Tests for the vector components
-   * including the Sylvester objects
-   */
-  module("Vectors");
-  
-  test("Vector Definitions", function () {
-    ok($V([0]));
-    ok($V([0, -1, 2, 0]));
-  });
-  
-  test("Vector Sums", function () {
-    // TODO
-  });
-  
-  
-  /*
    * Tests for custom Sylvester functionalities
    */
   module("Sylvester Customs");
   
-  test("setElement", function () {
+  test("Matrix: setElement", function () {
     ok(
       $M([
         [0, 1, 1],
@@ -102,9 +50,20 @@ $(function () {
         [9, 8, 7]
       ]))
     );
+    
+    ok(
+      $M([
+        [0, 1, 1],
+        [9, 8, 7]
+      ]).setElement(2, 2, -5)
+      .eql($M([
+        [0, 1, 1],
+        [9, -5, 7]
+      ]))
+    );
   });
   
-  test("setRow", function () {
+  test("Matrix: setRow", function () {
     ok(
       $M([
         [0, 1, 0]
@@ -126,7 +85,7 @@ $(function () {
     );
   });
   
-  test("setCol", function () {
+  test("Matrix: setCol", function () {
     ok(
       $M([
         [0, 1, 1],
@@ -141,7 +100,159 @@ $(function () {
     );
   });
   
-  test("swapRows", function () {
+  test("Matrix: sums", function () {
+    equals(
+      $M(
+        [0]
+      ).sum(), 0
+    );
+    
+    equals(
+      $M(
+        [1]
+      ).sum(), 1
+    );
+    
+    equals(
+      $M(
+        [1, 0, 1]
+      ).sum(), 2
+    );
+    
+    equals(
+      $M([
+        [1, 1, 1],
+        [2, 2, 2]
+      ]).sum(), 9
+    );
+    
+    equals(
+      $M(
+        [1, 2, 3]
+      ).sum(2), 14
+    );
+    
+    equals(
+      $M([
+        [1, 2, 3],
+        [1, 2, -3]
+      ]).sum(2), 28
+    );
+  });
+  
+  test("Matrix: Ones", function () {
+    ok(
+      $M.ones(1, 1)
+      .eql($M([
+        [1]
+      ]))
+    );
+    
+    ok(
+      $M.ones(2, 2)
+      .eql($M([
+        [1, 1],
+        [1, 1]
+      ]))
+    );
+    
+    ok(
+      $M.ones(3, 4)
+      .eql($M([
+        [1, 1, 1, 1],
+        [1, 1, 1, 1],
+        [1, 1, 1, 1]
+      ]))
+    );
+  });
+  
+  test("Matrix: norm", function () {
+    equals(
+      $M([
+        [0]
+      ]).norm(), 0
+    );
+    
+    equals(
+      $M([
+        [0, 1, 0]
+      ]).norm(), 1
+    );
+    
+    equals(
+      $M([
+        [0, 2, 2],
+        [-2, 2, 0]
+      ]).norm(), 4
+    );
+  });
+  
+  test("Matrix: sort", function () {
+    ok(
+      $M.sort(
+        $M([1])
+      ).eql($M(
+        [1]
+      ))
+    );
+    
+    ok(
+      $M.sort(
+        $M([1, 2])
+      ).eql($M(
+        [1, 2]
+      ))
+    );
+    
+    ok(
+      $M.sort(
+        $M([
+          [1, 2, 3],
+          [2, 1, 2]
+        ])
+      ).eql($M([
+        [1, 1, 2],
+        [2, 2, 3]
+      ]))
+    );
+    
+    ok(
+      $M.sort(
+        $M([
+          [-1, 2, -3],
+          [2, 1, -2],
+          [5, 0, 0]
+        ])
+      ).eql($M([
+        [-1, 0, -3],
+        [2, 1, -2],
+        [5, 2, 0]
+      ]))
+    );
+  });
+  
+  test("Matrix: firstNonZero", function () {
+    deepEqual(
+      $M.firstNonZero($M([
+        [0]
+      ])), [0, 0, 0]
+    );
+    
+    deepEqual(
+      $M.firstNonZero($M([
+        [0, 0, 1]
+      ])), [1, 3, 1]
+    );
+    
+    deepEqual(
+      $M.firstNonZero($M([
+        [0, 0, 0],
+        [0, 0, 1]
+      ])), [2, 3, 1]
+    );
+  });
+  
+  test("Matrix: swapRows", function () {
     ok(
       $M([
         [0, 1, 0],
