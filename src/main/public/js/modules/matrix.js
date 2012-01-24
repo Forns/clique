@@ -73,7 +73,7 @@
   };
   
   // Creates a matrix of all ones with specified dimensions
-  Matrix.ones = $M.ones = function (rows, columns) {
+  Matrix.ones = function (rows, columns) {
     var result = [],
         addedRow = [];
     // Construct the row full of ones...
@@ -89,7 +89,7 @@
   
   // Finds the position of the first non-zero element
   // in an array; [0, 0, 0] if otherwise no position
-  Matrix.firstNonZero = $M.firstNonZero = function (matrix) {
+  Matrix.firstNonZero = function (matrix) {
     for (var i = 1; i <= matrix.rows(); i++) {
       for (var j = 1; j <= matrix.cols(); j++) {
         var currentElement = matrix.e(i, j);
@@ -102,7 +102,7 @@
   };
   
   // Sorts a given matrix by column and returns the new matrix
-  Matrix.sort = $M.sort = function (matrix) {
+  Matrix.sort = function (matrix) {
     var result = [];
     for (var i = 1; i <= matrix.cols(); i++) {
       var currentCol = [];

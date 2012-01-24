@@ -142,14 +142,14 @@ $(function () {
   
   test("Matrix: Ones", function () {
     ok(
-      $M.ones(1, 1)
+      Matrix.ones(1, 1)
       .eql($M([
         [1]
       ]))
     );
     
     ok(
-      $M.ones(2, 2)
+      Matrix.ones(2, 2)
       .eql($M([
         [1, 1],
         [1, 1]
@@ -157,7 +157,7 @@ $(function () {
     );
     
     ok(
-      $M.ones(3, 4)
+      Matrix.ones(3, 4)
       .eql($M([
         [1, 1, 1, 1],
         [1, 1, 1, 1],
@@ -189,7 +189,7 @@ $(function () {
   
   test("Matrix: sort", function () {
     ok(
-      $M.sort(
+      Matrix.sort(
         $M([1])
       ).eql($M(
         [1]
@@ -197,7 +197,7 @@ $(function () {
     );
     
     ok(
-      $M.sort(
+      Matrix.sort(
         $M([1, 2])
       ).eql($M(
         [1, 2]
@@ -205,7 +205,7 @@ $(function () {
     );
     
     ok(
-      $M.sort(
+      Matrix.sort(
         $M([
           [1, 2, 3],
           [2, 1, 2]
@@ -217,7 +217,7 @@ $(function () {
     );
     
     ok(
-      $M.sort(
+      Matrix.sort(
         $M([
           [-1, 2, -3],
           [2, 1, -2],
@@ -233,19 +233,19 @@ $(function () {
   
   test("Matrix: firstNonZero", function () {
     deepEqual(
-      $M.firstNonZero($M([
+      Matrix.firstNonZero($M([
         [0]
       ])), [0, 0, 0]
     );
     
     deepEqual(
-      $M.firstNonZero($M([
+      Matrix.firstNonZero($M([
         [0, 0, 1]
       ])), [1, 3, 1]
     );
     
     deepEqual(
-      $M.firstNonZero($M([
+      Matrix.firstNonZero($M([
         [0, 0, 0],
         [0, 0, 1]
       ])), [2, 3, 1]
