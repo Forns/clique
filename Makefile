@@ -12,7 +12,8 @@ CLIQUE = ${DIST_DIR}/clique.js
 BASE_FILES = ${MODULE_DIR}/combinatorics.js\
 	${MODULE_DIR}/matrix.js
 
-DEPENDENCIES = ${LIB_DIR}/sylvester.src.js
+DEPENDENCIES = ${LIB_DIR}/complex.js\
+    ${LIB_DIR}/sylvester.src.js
 
 MODULES = ${MODULE_DIR}/header.js\
 	${DEPENDENCIES}\

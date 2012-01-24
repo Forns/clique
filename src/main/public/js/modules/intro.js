@@ -7,5 +7,5 @@
 
 (function() {
 
-var clique = $C = {};
+var clique = $CQ = {};
 

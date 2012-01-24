@@ -32,7 +32,7 @@
       vectorElements[k - 1] = x;
     });
     for (var j = 0; j < vectorElements.length; j++) {
-      this.elements[i - 1][j] = vectorElements[j];
+      this.elements[j][i - 1] = vectorElements[j];
     }
     return this;
   };

@@ -12,8 +12,22 @@ $(function () {
   module("Library Inclusion");
   
   test("clique.js", function () {
-    ok($C, "clique.js library not found; ensure you've made the build.");
+    ok($CQ, "clique.js library not found; ensure you've made the build.");
   });
+  
+  
+  /*
+   * Tests for the Complex Number library 
+   */
+  module("Complex");
+  
+  test("Complex Constructor", function () {
+    ok($C(1, 2));
+    equal($C(-1, -2).real, -1);
+    equal($C(-1, -2).im, -2);
+    equal($C().real, 0);
+  });
+  
   
   /*
    * Tests for the Math module
@@ -88,13 +102,22 @@ $(function () {
   test("Matrix: setCol", function () {
     ok(
       $M([
+        [0, 1, 1]
+      ]).setCol(1, $V([-2]))
+      .eql($M([
+        [-2, 1, 1]
+      ]))
+    );
+    
+    ok(
+      $M([
         [0, 1, 1],
         [2, 3, 4],
         [4, 5, 6]
       ]).setCol(2, $V([5, 5, 5]))
       .eql($M([
-        [0, 1, 1],
-        [5, 5, 5],
+        [0, 5, 1],
+        [2, 5, 4],
         [4, 5, 6]
       ]))
     );
