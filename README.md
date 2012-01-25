@@ -9,9 +9,14 @@ Although initial eforts involved approval voting data, the present attempt will
 expand the possibilities of the statistical technique to analyze a wider
 variety of information types while making the tool available to all.
 
-### Collaborators
+### Collaborators: Spectral Analysis
 
 * Andrew Forney
 * Edward Mosteig
 * Michael Orrison
 * David Uminsky
+
+### Advisors: Clique
+
+* Mike Megally
+* Ray Toal
