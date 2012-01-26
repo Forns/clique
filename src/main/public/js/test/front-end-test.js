@@ -115,6 +115,14 @@ $(function () {
     ok(Complex.divide($C(4, -2), $C(-2, 4)).equals($C(-0.8, -0.6)));
   });
   
+  test("sqrt", function () {
+    equal(Complex.sqrt(0), 0);
+    equal(Complex.sqrt(4), 2);
+    ok(Complex.sqrt(-4).equals($C(0, 2)));
+    ok(Complex.sqrt($C(-4)).equals($C(0, 2)));
+    ok(Complex.sqrt($C(2, 2)).equals($C(0, 0).fromRect(1.5537739740300374, 0.6435942529055827)));
+  });
+  
   test("toString", function () {
     equal($C(0, 0).toString(), "0");
     equal($C(0, 1).toString(), "i");

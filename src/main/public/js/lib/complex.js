@@ -152,5 +152,20 @@ var Complex = $C = function () {};
     );
   };
   
+  // Returns the square root of a number, returning a Complex if
+  // it is non-real
+  Complex.sqrt = function (n) {
+    if (!Complex.areComplex(n)) {
+      return (n < 0) ? $C(0, Math.sqrt(Math.abs(n))) : Math.sqrt(n);
+    }
+    var mod = n.modulus(),
+        sign = (!n.im || n.im >= 0) ? 1 : -1,
+        x = Math.sqrt((n.real + mod) / 2),
+        y = sign * Math.sqrt((-1 * n.real + mod) / 2);
+        
+    // Hack: fromRect required due to weird automatic int casting in $C()
+    return $C(0, 0).fromRect(x, y);
+  };
+  
 })();
 
