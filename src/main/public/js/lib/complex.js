@@ -49,6 +49,11 @@ var Complex = $C = function () {};
       return Complex.sub(this, Complex.negate(z));
     },
     
+    // Multiplies a number by this
+    mult: function (z) {
+      return Complex.mult(this, z);
+    },
+    
     // Returns true if the two complex numbers are equal
     equals: function (z) {
       return Complex.equal(this, z);
@@ -99,8 +104,8 @@ var Complex = $C = function () {};
     return (n instanceof Complex) ? $C(-n.real, -n.im) : -n;
   };
   
-  // Adds two numbers a and b, returning a Complex if the result
-  // is a Complex number z with z.im !== 0
+  // Adds two numbers a and b, returning a Complex if either
+  // a or b are complex
   Complex.add = function (a, b) {
     if (!Complex.areComplex(a) && !Complex.areComplex(b)) {
       return a + b;
@@ -108,10 +113,43 @@ var Complex = $C = function () {};
     return $C((a.real | a) + (b.real | b), (a.im | 0) + (b.im | 0));
   };
   
-  // Subtracts two numbers b from a, returning a Complex if the result
-  // is a Complex number z with z.im !== 0
+  // Subtracts two numbers b from a, returning a Complex if either
+  // a or b are complex
   Complex.sub = function (a, b) {
     return Complex.add(a, Complex.negate(b));
+  };
+  
+  // Multiplies two numbers a and b, returning a Complex if either
+  // a or b are complex
+  Complex.mult = function (a, b) {
+    if (!Complex.areComplex(a) && !Complex.areComplex(b)) {
+      return a * b;
+    }
+    a = $C(a.real | a, a.im);
+    b = $C(b.real | b, b.im);
+    return $C(a.real * b.real - a.im * b.im, a.real * b.im + b.real * a.im);
+  };
+  
+  // Divides two numbers a by b, returning a Complex if either
+  // a or b are complex
+  Complex.divide = function (n, m) {
+    if (!Complex.areComplex(n) && !Complex.areComplex(m)) {
+      return n / m;
+    }
+    var z = $C(n.real | n, n.im | 0),
+        k = $C(m.real | m, m.im | 0),
+        a = z.real,
+        b = z.im,
+        c = k.real,
+        d = k.im;
+    // Division by zero? Not on my watch...
+    if (k.equals($C(0, 0))) {
+      return NaN;
+    }
+    return $C(
+      (a * c + b * d) / (c * c + d * d),
+      (b * c - a * d) / (c * c + d * d)
+    );
   };
   
 })();

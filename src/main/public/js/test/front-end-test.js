@@ -94,6 +94,27 @@ $(function () {
     ok(Complex.sub($C(1, -1), $C(0, 2)).equals($C(1, -3)));
   });
   
+  test("mult", function () {
+    equal(Complex.mult(1, 2), 2);
+    ok(Complex.mult($C(1), 2).equals($C(2)));
+    ok(Complex.mult(3, $C(-1)).equals($C(-3)));
+    ok(Complex.mult($C(1, 1), 2).equals($C(2, 2)));
+    ok(Complex.mult($C(1, -1), $C(0, 2)).equals($C(2, 2)));
+    ok(Complex.mult($C(1, -1), $C(-2, -3)).equals($C(-5, -1)));
+    ok(Complex.mult($C(1, -1), 0).equals($C(0, 0)));
+    ok(Complex.mult($C(1, -1), $C(0, 0)).equals($C(0, 0)));
+  });
+  
+  test("divide", function () {
+    equal(Complex.divide(1, 1), 1);
+    equal(Complex.divide(0, 70234), 0);
+    equal(Complex.divide(1, 5), 0.2);
+    ok(Complex.divide($C(1), 2).equals($C(0.5)));
+    ok(Complex.divide(1, $C(2)).equals($C(0.5)));
+    ok(Complex.divide(5, $C(2, 1)).equals($C(2, -1)));
+    ok(Complex.divide($C(4, -2), $C(-2, 4)).equals($C(-0.8, -0.6)));
+  });
+  
   test("toString", function () {
     equal($C(0, 0).toString(), "0");
     equal($C(0, 1).toString(), "i");
