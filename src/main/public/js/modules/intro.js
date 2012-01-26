@@ -5,7 +5,8 @@
  * ****************
  */
 
-(function() {
+// Global clique object
+var Clique = $CQ = function () {};
 
-var clique = $CQ = {};
+(function() {
 

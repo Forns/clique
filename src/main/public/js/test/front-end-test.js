@@ -21,11 +21,88 @@ $(function () {
    */
   module("Complex");
   
-  test("Complex Constructor", function () {
+  test("Complex.create", function () {
     ok($C(1, 2));
+    ok(Complex.create(3, 4));
     equal($C(-1, -2).real, -1);
     equal($C(-1, -2).im, -2);
     equal($C().real, 0);
+  });
+  
+  test("equals & equal", function () {
+    ok($C(0, 0).equals($C(0, 0)));
+    ok($C(1, -4).equals($C(1, -4)));
+    ok(Complex.equal($C(2, 2), $C(2, 2)));
+  });
+  
+  test("areComplex", function () {
+    var varTest = $C(1);
+    ok(!(Complex.areComplex()));
+    ok(!(Complex.areComplex(1)));
+    ok(!(Complex.areComplex(1, 2, 3, -5)));
+    ok(!(Complex.areComplex(1, 2, 3, $C(1))));
+    ok(!(Complex.areComplex($C(1), $C(1, 2), $C(0, -5), 1)));
+    ok(!(Complex.areComplex($C(1), varTest, 1)));
+    ok(Complex.areComplex(varTest));
+    ok(Complex.areComplex($C(1)));
+    ok(Complex.areComplex($C(1), $C(1, 2), $C(0, -5)));
+  });
+  
+  test("fromRect", function () {
+    var complex1 = $C(0, 0),
+        complex2 = $C(1, -2),
+        complex3 = $C(4, 0);
+    
+    ok(complex1.fromRect(1, -2).equals(complex2));
+    ok(complex1.equals(complex2));
+    ok(complex2.fromRect(4, 0).equals(complex3));
+    ok(!complex2.equals(complex1));
+  });
+  
+  test("modulus", function () {
+    equal($C(0, 0).modulus(), 0);
+    equal($C(0, 2).modulus(), 2);
+    equal($C(-2, 0).modulus(), 2);
+    equal($C(2, -2).modulus(), Math.sqrt(8));
+  });
+  
+  test("negate", function () {
+    equals(Complex.negate(3), -3);
+    ok($C(0, 0).negate().equals($C(0, 0)));
+    ok($C(-2, 3).negate().equals($C(2, -3)));
+    ok(Complex.negate($C(1, -3)).equals($C(-1, 3)));
+  });
+  
+  test("conjugate", function () {
+    ok($C(0, 0).conjugate().equals($C(0, 0)));
+    ok($C(-2, 3).conjugate().equals($C(-2, -3)));
+  });
+  
+  test("add", function () {
+    equal(Complex.add(1, 2), 3);
+    ok(Complex.add($C(1), 2).equals($C(3)));
+    ok(Complex.add(3, $C(-1)).equals($C(2)));
+    ok(Complex.add($C(1, 1), 2).equals($C(3, 1)));
+    ok(Complex.add($C(1, -1), $C(0, 2)).equals($C(1, 1)));
+  });
+  
+  test("sub", function () {
+    equal(Complex.sub(1, 2), -1);
+    ok(Complex.sub($C(1), 2).equals($C(-1)));
+    ok(Complex.sub(3, $C(-1)).equals($C(4)));
+    ok(Complex.sub($C(1, 1), 2).equals($C(-1, 1)));
+    ok(Complex.sub($C(1, -1), $C(0, 2)).equals($C(1, -3)));
+  });
+  
+  test("toString", function () {
+    equal($C(0, 0).toString(), "0");
+    equal($C(0, 1).toString(), "i");
+    equal($C(0, -3).toString(), "-3i");
+    equal($C(1, 0).toString(), "1");
+    equal($C(-1, 0).toString(), "-1");
+    equal($C(1, 3).toString(), "1+3i");
+    equal($C(-1, -3).toString(), "-1-3i");
+    equal($C(1, -1).toString(), "1-i");
   });
   
   
