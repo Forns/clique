@@ -26,6 +26,8 @@ $(function () {
     ok(Complex.create(3, 4));
     equal($C(-1, -2).real, -1);
     equal($C(-1, -2).im, -2);
+    equal($C(2.475, -0.221).real, 2.475);
+    equal($C(2.475, -0.221).im, -0.221);
     equal($C().real, 0);
   });
   
@@ -33,6 +35,7 @@ $(function () {
     ok($C(0, 0).equals($C(0, 0)));
     ok($C(1, -4).equals($C(1, -4)));
     ok(Complex.equal($C(2, 2), $C(2, 2)));
+    ok(Complex.equal($C(-0.2231, 78.29), $C(-0.2231, 78.29)));
   });
   
   test("areComplex", function () {
@@ -46,17 +49,20 @@ $(function () {
     ok(Complex.areComplex(varTest));
     ok(Complex.areComplex($C(1)));
     ok(Complex.areComplex($C(1), $C(1, 2), $C(0, -5)));
+    ok(Complex.areComplex($C(1), $C(1, 2), $C(0.871023, -5.89123)));
   });
   
   test("fromRect", function () {
     var complex1 = $C(0, 0),
         complex2 = $C(1, -2),
-        complex3 = $C(4, 0);
+        complex3 = $C(4, 0),
+        complex4 = $C(12.818, -2.222);
     
     ok(complex1.fromRect(1, -2).equals(complex2));
     ok(complex1.equals(complex2));
     ok(complex2.fromRect(4, 0).equals(complex3));
     ok(!complex2.equals(complex1));
+    ok(complex3.fromRect(12.818, -2.222).equals(complex3));
   });
   
   test("modulus", function () {
@@ -64,6 +70,7 @@ $(function () {
     equal($C(0, 2).modulus(), 2);
     equal($C(-2, 0).modulus(), 2);
     equal($C(2, -2).modulus(), Math.sqrt(8));
+    equal($C(-3.2, 3.7).modulus(), 4.8918299234540035);
   });
   
   test("negate", function () {
@@ -71,11 +78,13 @@ $(function () {
     ok($C(0, 0).negate().equals($C(0, 0)));
     ok($C(-2, 3).negate().equals($C(2, -3)));
     ok(Complex.negate($C(1, -3)).equals($C(-1, 3)));
+    ok(Complex.negate($C(0.8983777, -3.78172)).equals($C(-0.8983777, 3.78172)));
   });
   
   test("conjugate", function () {
     ok($C(0, 0).conjugate().equals($C(0, 0)));
     ok($C(-2, 3).conjugate().equals($C(-2, -3)));
+    ok($C(0.222, 0.222).conjugate().equals($C(0.222, -0.222)));
   });
   
   test("add", function () {
@@ -84,6 +93,7 @@ $(function () {
     ok(Complex.add(3, $C(-1)).equals($C(2)));
     ok(Complex.add($C(1, 1), 2).equals($C(3, 1)));
     ok(Complex.add($C(1, -1), $C(0, 2)).equals($C(1, 1)));
+    ok(Complex.add($C(-2.5, -1.25), $C(3, 1)).equals($C(0.5, -0.25)));
   });
   
   test("sub", function () {
@@ -92,6 +102,7 @@ $(function () {
     ok(Complex.sub(3, $C(-1)).equals($C(4)));
     ok(Complex.sub($C(1, 1), 2).equals($C(-1, 1)));
     ok(Complex.sub($C(1, -1), $C(0, 2)).equals($C(1, -3)));
+    ok(Complex.sub($C(-2.5, -1.25), $C(3, 1)).equals($C(-5.5, -2.25)));
   });
   
   test("mult", function () {
@@ -103,6 +114,7 @@ $(function () {
     ok(Complex.mult($C(1, -1), $C(-2, -3)).equals($C(-5, -1)));
     ok(Complex.mult($C(1, -1), 0).equals($C(0, 0)));
     ok(Complex.mult($C(1, -1), $C(0, 0)).equals($C(0, 0)));
+    ok(Complex.mult($C(-0.5, -0.5), $C(-0.5, 0.5)).equals($C(0.5, 0)));
   });
   
   test("divide", function () {
@@ -113,6 +125,7 @@ $(function () {
     ok(Complex.divide(1, $C(2)).equals($C(0.5)));
     ok(Complex.divide(5, $C(2, 1)).equals($C(2, -1)));
     ok(Complex.divide($C(4, -2), $C(-2, 4)).equals($C(-0.8, -0.6)));
+    ok(Complex.divide($C(-0.5, -0.5), $C(-0.5, 0.5)).equals($C(0, 1)));
   });
   
   test("sqrt", function () {
@@ -120,7 +133,7 @@ $(function () {
     equal(Complex.sqrt(4), 2);
     ok(Complex.sqrt(-4).equals($C(0, 2)));
     ok(Complex.sqrt($C(-4)).equals($C(0, 2)));
-    ok(Complex.sqrt($C(2, 2)).equals($C(0, 0).fromRect(1.5537739740300374, 0.6435942529055827)));
+    ok(Complex.sqrt($C(0.5, -0.5)).equals($C(0.7768869870150187, -0.32179712645279135)));
   });
   
   test("toString", function () {

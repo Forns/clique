@@ -77,7 +77,7 @@ var Complex = $C = function () {};
   // Constructor function
   $C = Complex.create = function (real, imaginary) {
     var newComplex = new Complex();
-    return newComplex.fromRect((real | 0), (imaginary | 0));
+    return newComplex.fromRect((real || 0), (imaginary || 0));
   };
   
   // Checks if all input arguments are complex numbers
@@ -110,7 +110,11 @@ var Complex = $C = function () {};
     if (!Complex.areComplex(a) && !Complex.areComplex(b)) {
       return a + b;
     }
-    return $C((a.real | a) + (b.real | b), (a.im | 0) + (b.im | 0));
+    var aReal = (Complex.areComplex(a)) ? a.real : a,
+        bReal = (Complex.areComplex(b)) ? b.real : b,
+        aIm = (a.im || 0),
+        bIm = (b.im || 0);
+    return $C(aReal + bReal, aIm + bIm);
   };
   
   // Subtracts two numbers b from a, returning a Complex if either
@@ -125,9 +129,11 @@ var Complex = $C = function () {};
     if (!Complex.areComplex(a) && !Complex.areComplex(b)) {
       return a * b;
     }
-    a = $C(a.real | a, a.im);
-    b = $C(b.real | b, b.im);
-    return $C(a.real * b.real - a.im * b.im, a.real * b.im + b.real * a.im);
+    var aReal = (Complex.areComplex(a)) ? a.real : a,
+        bReal = (Complex.areComplex(b)) ? b.real : b,
+        aIm = (a.im || 0),
+        bIm = (b.im || 0);
+    return $C(aReal * bReal - aIm * bIm, aReal * bIm + bReal * aIm);
   };
   
   // Divides two numbers a by b, returning a Complex if either
@@ -136,14 +142,12 @@ var Complex = $C = function () {};
     if (!Complex.areComplex(n) && !Complex.areComplex(m)) {
       return n / m;
     }
-    var z = $C(n.real | n, n.im | 0),
-        k = $C(m.real | m, m.im | 0),
-        a = z.real,
-        b = z.im,
-        c = k.real,
-        d = k.im;
+    var a = $C(Complex.areComplex(n) ? n.real : n),
+        b = n.im || 0,
+        c = $C(Complex.areComplex(m) ? m.real : m),
+        d = m.im || 0;
     // Division by zero? Not on my watch...
-    if (k.equals($C(0, 0))) {
+    if (!(c || d)) {
       return NaN;
     }
     return $C(
@@ -163,8 +167,7 @@ var Complex = $C = function () {};
         x = Math.sqrt((n.real + mod) / 2),
         y = sign * Math.sqrt((-1 * n.real + mod) / 2);
         
-    // Hack: fromRect required due to weird automatic int casting in $C()
-    return $C(0, 0).fromRect(x, y);
+    return $C(x, y);
   };
   
 })();
