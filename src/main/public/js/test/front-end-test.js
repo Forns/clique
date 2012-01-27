@@ -34,6 +34,13 @@ $(function () {
   test("equals & equal", function () {
     ok($C(0, 0).equals($C(0, 0)));
     ok($C(1, -4).equals($C(1, -4)));
+    ok($C(0).equals(0));
+    ok(Complex.equal(0, $C(0)));
+    ok(Complex.equal(-2, $C(-2)));
+    ok(Complex.equal($C(5, 0), 5));
+    ok(Complex.equal(0.523, $C(0.523)));
+    ok(!Complex.equal($C(5, 1), 5));
+    ok(!Complex.equal($C(5, 0), $C(0, 5)));
     ok(Complex.equal($C(2, 2), $C(2, 2)));
     ok(Complex.equal($C(-0.2231, 78.29), $C(-0.2231, 78.29)));
   });
@@ -85,6 +92,15 @@ $(function () {
     ok($C(0, 0).conjugate().equals($C(0, 0)));
     ok($C(-2, 3).conjugate().equals($C(-2, -3)));
     ok($C(0.222, 0.222).conjugate().equals($C(0.222, -0.222)));
+  });
+  
+  test("magnitude", function () {
+    equal(Complex.magnitude(0), 0);
+    equal(Complex.magnitude(5), 5);
+    equal(Complex.magnitude(-5), 5);
+    equal(Complex.magnitude($C(-2, 0)), 2);
+    equal(Complex.magnitude($C(2, -2)), Math.sqrt(8));
+    equal(Complex.magnitude($C(-3.2, 3.7)), 4.8918299234540035);
   });
   
   test("add", function () {

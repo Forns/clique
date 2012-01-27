@@ -95,13 +95,29 @@ var Complex = $C = function () {};
   
   // Returns true if the argument is a complex number
   Complex.equal = function (a, b) {
-    return (a instanceof Complex && b instanceof Complex && a.real === b.real && a.im === b.im);
+    if (Complex.areComplex(a)) {
+      if (Complex.areComplex(b)) {
+        return a.real === b.real && a.im === b.im;
+      }
+      return a.real === b && !a.im;
+    } else {
+      if (Complex.areComplex(b)) {
+        return b.real === a && !b.im; 
+      }
+      return a === b;
+    }
   };
   
   // Negates real and im components if Complex, or just returns negative
   // if a real number
   Complex.negate = function (n) {
     return (n instanceof Complex) ? $C(-n.real, -n.im) : -n;
+  };
+  
+  // Returns the distance from the origin of either a complex number
+  // or a real
+  Complex.magnitude = function (n) {
+    return (Complex.areComplex(n)) ? n.modulus() : Math.abs(n);
   };
   
   // Adds two numbers a and b, returning a Complex if either
