@@ -201,21 +201,17 @@ Vector.prototype = {
   toDiagonalMatrix: function() {
     return Matrix.Diagonal(this.elements);
   },
-  
-  /******
-   * TODO: LEFT OFF ON COMPLEX CONVERSION HERE
-   ******/
 
   // Returns the result of rounding the elements of the vector
   round: function() {
-    return this.map(function(x) { return Math.round(x); });
+    return this.map(function(x) { return Complex.round(x); });
   },
 
   // Returns a copy of the vector with elements set to the given value if they
   // differ from it by less than Sylvester.precision
   snapTo: function(x) {
     return this.map(function(y) {
-      return (Complex.magnitude(y - x) <= Sylvester.precision) ? x : y;
+      return (Complex.magnitude(Complex.subtract(y, x)) <= Sylvester.precision) ? x : y;
     });
   },
 
@@ -226,70 +222,16 @@ Vector.prototype = {
     if (V.length != this.elements.length) { return null; }
     var sum = 0, part;
     this.each(function(x, i) {
-      part = x - V[i-1];
-      sum += part * part;
+      part = Complex.sub(x, V[i-1]);
+      sum = Complex.add(sum, Complex.mult(part, part));
     });
     return Complex.sqrt(sum);
   },
 
-  // Returns true if the vector is point on the given line
-  liesOn: function(line) {
-    return line.contains(this);
-  },
-
-  // Return true iff the vector is a point in the given plane
-  liesIn: function(plane) {
-    return plane.contains(this);
-  },
-
-  // Rotates the vector about the given object. The object should be a 
-  // point if the vector is 2D, and a line if it is 3D. Be careful with line directions!
-  rotate: function(t, obj) {
-    var V, R, x, y, z;
-    switch (this.elements.length) {
-      case 2:
-        V = obj.elements || obj;
-        if (V.length != 2) { return null; }
-        R = Matrix.Rotation(t).elements;
-        x = this.elements[0] - V[0];
-        y = this.elements[1] - V[1];
-        return Vector.create([
-          V[0] + R[0][0] * x + R[0][1] * y,
-          V[1] + R[1][0] * x + R[1][1] * y
-        ]);
-        break;
-      case 3:
-        if (!obj.direction) { return null; }
-        var C = obj.pointClosestTo(this).elements;
-        R = Matrix.Rotation(t, obj.direction).elements;
-        x = this.elements[0] - C[0];
-        y = this.elements[1] - C[1];
-        z = this.elements[2] - C[2];
-        return Vector.create([
-          C[0] + R[0][0] * x + R[0][1] * y + R[0][2] * z,
-          C[1] + R[1][0] * x + R[1][1] * y + R[1][2] * z,
-          C[2] + R[2][0] * x + R[2][1] * y + R[2][2] * z
-        ]);
-        break;
-      default:
-        return null;
-    }
-  },
-
-  // Returns the result of reflecting the point in the given point, line or plane
-  reflectionIn: function(obj) {
-    if (obj.anchor) {
-      // obj is a plane or line
-      var P = this.elements.slice();
-      var C = obj.pointClosestTo(P).elements;
-      return Vector.create([C[0] + (C[0] - P[0]), C[1] + (C[1] - P[1]), C[2] + (C[2] - (P[2] || 0))]);
-    } else {
-      // obj is a point
-      var Q = obj.elements || obj;
-      if (this.elements.length != Q.length) { return null; }
-      return this.map(function(x, i) { return Q[i-1] + (Q[i-1] - x); });
-    }
-  },
+  // liesOn function deleted
+  // liesIn function deleted
+  // rotate function deleted
+  // reflectionIn function deleted
 
   // Utility to make sure vectors are 3D. If they are 2D, a zero z-component is added
   to3D: function() {
@@ -395,7 +337,7 @@ Matrix.prototype = {
     do { i = ki - ni;
       nj = kj;
       do { j = kj - nj;
-        if (Complex.magnitude(this.elements[i][j] - M[i][j]) > Sylvester.precision) { return false; }
+        if (Complex.magnitude(Complex.sub(this.elements[i][j], M[i][j])) > Sylvester.precision) { return false; }
       } while (--nj);
     } while (--ni);
     return true;
@@ -432,7 +374,7 @@ Matrix.prototype = {
     var M = matrix.elements || matrix;
     if (typeof(M[0][0]) == 'undefined') { M = Matrix.create(M).elements; }
     if (!this.isSameSizeAs(M)) { return null; }
-    return this.map(function(x, i, j) { return x + M[i-1][j-1]; });
+    return this.map(function(x, i, j) { return Complex.add(x, M[i-1][j-1]); });
   },
 
   // Returns the result of subtracting the argument from the matrix
@@ -440,7 +382,7 @@ Matrix.prototype = {
     var M = matrix.elements || matrix;
     if (typeof(M[0][0]) == 'undefined') { M = Matrix.create(M).elements; }
     if (!this.isSameSizeAs(M)) { return null; }
-    return this.map(function(x, i, j) { return x - M[i-1][j-1]; });
+    return this.map(function(x, i, j) { return Complex.sub(x, M[i-1][j-1]); });
   },
 
   // Returns true iff the matrix can multiply the argument from the left
@@ -457,7 +399,7 @@ Matrix.prototype = {
   // col(1) on the result.
   multiply: function(matrix) {
     if (!matrix.elements) {
-      return this.map(function(x) { return x * matrix; });
+      return this.map(function(x) { return Complex.mult(x, matrix); });
     }
     var returnVector = matrix.modulus ? true : false;
     var M = matrix.elements || matrix;
@@ -472,7 +414,7 @@ Matrix.prototype = {
         sum = 0;
         nc = cols;
         do { c = cols - nc;
-          sum += this.elements[i][c] * M[c][j];
+          sum = Complex.add(sum, Complex.mult(this.elements[i][c], M[c][j]));
         } while (--nc);
         elements[i][j] = sum;
       } while (--nj);
@@ -537,7 +479,7 @@ Matrix.prototype = {
     do { i = ki - ni;
       nj = kj;
       do { j = kj - nj;
-        if (this.elements[i][j] == x) { return {i: i+1, j: j+1}; }
+        if (Complex.equal(this.elements[i][j], x)) { return {i: i+1, j: j+1}; }
       } while (--nj);
     } while (--ni);
     return null;
@@ -561,28 +503,28 @@ Matrix.prototype = {
     var M = this.dup(), els;
     var n = this.elements.length, k = n, i, np, kp = this.elements[0].length, p;
     do { i = k - n;
-      if (M.elements[i][i] == 0) {
+      if (Complex.equal(M.elements[i][i], 0)) {
         for (j = i + 1; j < k; j++) {
-          if (M.elements[j][i] != 0) {
+          if (!Complex.equal(M.elements[j][i], 0)) {
             els = []; np = kp;
             do { p = kp - np;
-              els.push(M.elements[i][p] + M.elements[j][p]);
+              els.push(Complex.add(M.elements[i][p], M.elements[j][p]));
             } while (--np);
             M.elements[i] = els;
             break;
           }
         }
       }
-      if (M.elements[i][i] != 0) {
+      if (!Complex.equal(M.elements[i][i], 0)) {
         for (j = i + 1; j < k; j++) {
-          var multiplier = M.elements[j][i] / M.elements[i][i];
+          var multiplier = Complex.divide(M.elements[j][i], M.elements[i][i]);
           els = []; np = kp;
           do { p = kp - np;
             // Elements with column numbers up to an including the number
             // of the row that we're subtracting can safely be set straight to
             // zero, since that's the point of this routine and it avoids having
             // to loop over and correct rounding errors later
-            els.push(p <= i ? 0 : M.elements[j][p] - M.elements[i][p] * multiplier);
+            els.push(p <= i ? 0 : Complex.sub(M.elements[j][p], Complex.mult(M.elements[i][p], multiplier)));
           } while (--np);
           M.elements[j] = els;
         }
@@ -599,7 +541,7 @@ Matrix.prototype = {
     var M = this.toRightTriangular();
     var det = M.elements[0][0], n = M.elements.length - 1, k = n, i;
     do { i = k - n + 1;
-      det = det * M.elements[i][i];
+      det = Complex.mult(det, M.elements[i][i]);
     } while (--n);
     return det;
   },
@@ -608,7 +550,7 @@ Matrix.prototype = {
 
   // Returns true iff the matrix is singular
   isSingular: function() {
-    return (this.isSquare() && this.determinant() === 0);
+    return (this.isSquare() && Complex.equal(this.determinant(), 0));
   },
 
   // Returns the trace for square matrices
@@ -616,7 +558,7 @@ Matrix.prototype = {
     if (!this.isSquare()) { return null; }
     var tr = this.elements[0][0], n = this.elements.length - 1, k = n, i;
     do { i = k - n + 1;
-      tr += this.elements[i][i];
+      tr = Complex.add(tr, this.elements[i][i]);
     } while (--n);
     return tr;
   },
@@ -669,7 +611,7 @@ Matrix.prototype = {
       inverse_elements[i] = [];
       divisor = M.elements[i][i];
       do { p = kp - np;
-        new_element = M.elements[i][p] / divisor;
+        new_element = Complex.divide(M.elements[i][p], divisor);
         els.push(new_element);
         // Shuffle of the current row of the right hand side into the results
         // array as it will not be modified by later runs through this loop
@@ -681,7 +623,7 @@ Matrix.prototype = {
       for (j = 0; j < i; j++) {
         els = []; np = kp;
         do { p = kp - np;
-          els.push(M.elements[j][p] - M.elements[i][p] * M.elements[j][i]);
+          els.push(Complex.sub(M.elements[j][p], Complex.mult(M.elements[i][p], M.elements[j][i])));
         } while (--np);
         M.elements[j] = els;
       }
@@ -693,14 +635,14 @@ Matrix.prototype = {
 
   // Returns the result of rounding all the elements
   round: function() {
-    return this.map(function(x) { return Math.round(x); });
+    return this.map(function(x) { return Complex.round(x); });
   },
 
   // Returns a copy of the matrix with elements set to the given value if they
   // differ from it by less than Sylvester.precision
   snapTo: function(x) {
     return this.map(function(p) {
-      return (Complex.magnitude(p - x) <= Sylvester.precision) ? x : p;
+      return (Complex.magnitude(Complex.sub(p, x)) <= Sylvester.precision) ? x : p;
     });
   },
 

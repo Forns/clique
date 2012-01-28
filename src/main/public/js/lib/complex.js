@@ -6,7 +6,7 @@
  */
 
 // Complex numbers of the form x + iy where x, y are
-// real numbers and i = Sqrt(-1)
+// real numbers and i = sqrt(-1)
 var Complex = $C = function () {};
 
 (function() {
@@ -118,6 +118,15 @@ var Complex = $C = function () {};
   // or a real
   Complex.magnitude = function (n) {
     return (Complex.areComplex(n)) ? n.modulus() : Math.abs(n);
+  };
+  
+  // Rounds the imaginary and real parts of the given number to the
+  // nearest integer value
+  Complex.round = function (n) {
+    if (!Complex.areComplex(n)) {
+      return Math.round(n);
+    }
+    return $C(Math.round(n.real), Math.round(n.im));
   };
   
   // Adds two numbers a and b, returning a Complex if either

@@ -103,6 +103,13 @@ $(function () {
     equal(Complex.magnitude($C(-3.2, 3.7)), 4.8918299234540035);
   });
   
+  test("round", function () {
+    equal(Complex.round(0.5), 1);
+    equal(Complex.round(0.49), 0);
+    ok(Complex.equal(Complex.round($C(0.5)), $C(1)));
+    ok(Complex.equal(Complex.round($C(0.49, -0.51)), $C(0, -1)));
+  });
+  
   test("add", function () {
     equal(Complex.add(1, 2), 3);
     ok(Complex.add($C(1), 2).equals($C(3)));
@@ -187,6 +194,24 @@ $(function () {
    * Tests for custom Sylvester functionalities
    */
   module("Sylvester Customs");
+  
+  test("Vector: Complex Elements", function () {
+    equal($V([$C(0, 1)]).inspect(), "[i]");
+    equal($V([$C(2, -1)]).inspect(), "[2-i]");
+    equal($V([$C(2, -1), $C(2, 0)]).inspect(), "[2-i, 2]");
+    equal($V([$C(2, -1), $C(2, 0), $C(0, 2), 3]).inspect(), "[2-i, 2, 2i, 3]");
+  });
+  
+  test("Matrix: Complex Elements", function () {
+    equal($M([$C(0, 1)]).inspect(), "[i]");
+    equal($M([$C(2, -1)]).inspect(), "[2-i]");
+    equal($M([[$C(2, -1), $C(2, 0)]]).inspect(), "[2-i, 2]");
+    equal($M([[$C(2, -1), $C(2, 0), $C(0, 2), 3]]).inspect(), "[2-i, 2, 2i, 3]");
+    equal($M([
+      [$C(2, -1), $C(2, 0), $C(0, 2), 3],
+      [$C(0), 4, $C(-5, 2), 3]
+    ]).inspect(), "[2-i, 2, 2i, 3]\n[0, 4, -5+2i, 3]");
+  });
   
   test("Matrix: setElement", function () {
     ok(
@@ -298,7 +323,7 @@ $(function () {
     );
   });
   
-  test("Matrix: Ones", function () {
+  test("Matrix: ones", function () {
     ok(
       Matrix.ones(1, 1)
       .eql($M([
