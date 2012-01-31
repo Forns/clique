@@ -13,4 +13,9 @@ $(function () {
   
   // Links set to buttons
   navBarSetup();
+  
+  // Special case for git navigation
+  $("#git-nav").click(function () {
+    window.open("https://github.com/Forns/clique");
+  });
 });
