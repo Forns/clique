@@ -1,3 +1,5 @@
+<center>![Imgur](http://i.imgur.com/mQg4I.png)</center>
+
 ## Clique: A Javascript Linear Algebra Library with Applications to Spectral Analysis
 
 Clique represents a two-sided effort:
