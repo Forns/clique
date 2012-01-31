@@ -1,5 +1,86 @@
-/* DATA ENTRY */
-#data-entry {
+/* GENERAL */
+body {
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 1em;
+  background-image: url("../assets/clique-bg.png");
+  background-repeat: repeat-x;
+  background-color: #111111;
+  color: white;
+  text-align: center;
+}
+
+#container {
+  margin: 0 auto;
+  width: 960px;
+}
+
+#header {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+  width: 960px;
+  height: 130px;
+}
+
+#nav-bar {
+  margin-top: 2px;
+  padding: 5px;
+  height: 30px;
+  visibility: hidden;
+  display: inline-block;
+}
+
+#center-zone {
+  margin-top: 15px;
+  padding: 15px;
+  padding-right: 250px;
+  height: 220px;
+  background: rgba(34, 34, 34, 0.5);
+  text-align: left;
+}
+
+.main-section {
+  text-align: left;
+  margin-top: 40px;
+  padding: 15px;
+  background: rgba(34, 34, 34, 0.9);
+  position: relative;
+}
+
+/* ACCENTS */
+.rounded-corners {
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -khtml-border-radius: 10px;
+  border-radius: 10px;
+}
+
+h1 {
+  margin: 0;
+  margin-bottom: 15px;
+  padding: 7px;
+  padding-left: 57px;
+  font-size: 30px;
   width: 400px;
-  height: 300px;
+  margin-left: -50px;
+  text-align: left;
+  box-shadow: 8px 8px 8px rgba(0, 0, 0, 0.80);
+  -moz-box-shadow: 8px 8px 8px rgba(0, 0, 0, 0.80);
+  -webkit-box-shadow: 8px 8px 8px rgba(0, 0, 0, 0.80);
+}
+
+h2 {
+  margin-top: 0;
+  color: #cc0000;
+  font-size: 20px;
+}
+
+/* INDEX */
+#download-box {
+  float: right;
+  display: inline-block;
+  text-align: center;
+  padding: 10px;
+  width: 200px;
+  margin-right: -240px;
 }

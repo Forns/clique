@@ -1,10 +1,38 @@
-#main
-  h1 Clique
-  p Enjoy this bootleg index for Clique!
-  p Enter data below to take things for a spin:
-  #browser-support
-  #file-upload
-  textarea#data-entry Enter your data here
-  br
-  button#submit-button Submit!
-script(src='./js/display/index-display.js')
+#container
+  #header
+    img(src='./assets/clique-logo.png')
+  #nav-bar
+    input#home-nav(type="radio", name="nav-bar")
+    label(for="home-nav") Home
+    input#about-nav(type="radio", name="nav-bar")
+    label(for="about-nav") About
+    input#git-nav(type="radio", name="nav-bar")
+    label(for="git-nav") Git Repo
+    input#api-nav(type="radio", name="nav-bar")
+    label(for="api-nav") API
+    input#download-nav(type="radio", name="nav-bar")
+    label(for="download-nav") Downloads
+    input#spec-nav(type="radio", name="nav-bar")
+    label(for="spec-nav") Spectral Analyzer
+  #center-zone.rounded-corners
+    #download-box.ui-widget-content.rounded-corners
+      h2 Download Clique
+      hr
+      button#clique-src clique.js
+    h2 Clique: Linear Algebra Gets JavaScripty
+    p Clique represents a two-sided effort: 
+    ol
+      li A generalized, powerful linear algebra library for use in any Javascript application
+      li An application of said library to a new statistical method for analyzing trends in large data sets
+    p Although initial efforts involved approval voting data, the present attempt will expand the possibilities 
+      of the statistical technique to analyze a wider variety of information types while making the tool available to all.
+  #comments.main-section.rounded-corners
+    h1.ui-dialog-titlebar.ui-widget-header.rounded-corners Clique Reviews
+    p "Clique saved my marriage. Finally I can spend time with my family and not worry about JavaScript Linear Algebra." -B. Handy
+    p "It's a great product--really a clique I don't mind joining... and I've been in a lot of cliques." -D. Hara
+    p "My band played at Clique once. Was a tight venue." -D. Rowe
+    p "This project never really Clique'd. F-!" -M. Megally
+  #feedback.main-section.rounded-corners
+    h1.ui-dialog-titlebar.ui-widget-header.rounded-corners Contact Me
+    p Confused about something in Clique? Inconceivable, the documentation is flawless--go look again.
+    p Honestly need to contact me? K fine: a clique-related email will go here soon
