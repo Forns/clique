@@ -27,6 +27,15 @@ var Complex = $C = function () {};
 
 (function() {
   
+  // Helper functions
+  var ln = function (n) {
+    // Returns the natural log of n
+    return Math.log(n) / Math.log(Math.E);
+  };
+  
+  // Sets the sensitivity for equivalence checks
+  Complex.sensitivity = 0.000001;
+  
   Complex.prototype = {
     
     // Sets the given complex number's real and imaginary
@@ -35,6 +44,15 @@ var Complex = $C = function () {};
       this.real = x;
       this.im = y;
       return this;
+    },
+    
+    // Sets the given complex number's real and imaginary
+    // components from the polar arguments given
+    fromPolar: function (r, theta) {
+      return this.fromRect(
+        r * Math.cos(theta),
+        r * Math.sin(theta)
+      );
     },
     
     // Distance of Complex vector from origin
@@ -48,6 +66,16 @@ var Complex = $C = function () {};
     // The conjugate of 2 + 3i would be 2 - 3i
     conjugate: function () {
       return this.fromRect(this.real, -this.im);
+    },
+    
+    // Returns the angle of the complex number
+    angle: function () {
+      return Complex.angleOf(this);
+    },
+    
+    // Returns the log of this complex to base k
+    log: function (k) {
+      return Complex.log(this, k);
     },
     
     // Negates both real and im components
@@ -115,10 +143,10 @@ var Complex = $C = function () {};
       if (Complex.areComplex(b)) {
         return a.real === b.real && a.im === b.im;
       }
-      return a.real === b && !a.im;
+      return Math.abs(a.real - b) <= Complex.sensitivity && !a.im;
     } else {
       if (Complex.areComplex(b)) {
-        return b.real === a && !b.im; 
+        return Math.abs(b.real - a) <= Complex.sensitivity && !b.im;
       }
       return a === b;
     }
@@ -134,6 +162,51 @@ var Complex = $C = function () {};
   // or a real
   Complex.magnitude = function (n) {
     return (Complex.areComplex(n)) ? n.modulus() : Math.abs(n);
+  };
+  
+  // Returns the angle from the positive real axis of the given number n
+  Complex.angleOf = function (n) {
+    if (!Complex.areComplex(n)) {
+      return (n === 0) ? NaN : ((n > 0) ? 0 : 180);
+    }
+    if (n.real === 0 && n.im === 0) {
+      return NaN;
+    }
+    var arctan = Math.atan(n.im / n.real);
+    if (n.real > 0) {
+      return arctan;
+    }
+    if (n.real < 0) {
+      return (n.im >= 0) ? arctan + Math.PI : arctan - Math.PI;
+    }
+    // Otherwise, n.real === 0
+    return (n.im > 0) ? Math.PI / 2 : -1 * Math.PI / 2;
+  };
+  
+  // Returns the log base k of the given number n
+  Complex.log = function (n, k) {
+    if (typeof(k) === "undefined") {k = Math.E;}
+    var isComplex = Complex.areComplex(n);
+    if (k === 0) {return (isComplex) ? $C(0) : 0;}
+    if (k === 1) {return NaN;}
+    if (!isComplex) {
+      return Math.log(n) / Math.log(k);
+    }
+    return $C(
+      Complex.log((n.modulus()), Math.E),
+      Complex.angleOf(n)
+    );
+  };
+  
+  // Returns e^(n)
+  Complex.exp = function (n) {
+    if (!Complex.areComplex(n)) {
+      return Math.exp(n);
+    }
+    return n.fromPolar(
+      Math.exp(n.real),
+      n.im
+    );
   };
   
   // Rounds the imaginary and real parts of the given number to the

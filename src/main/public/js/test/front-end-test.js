@@ -72,6 +72,41 @@ $(function () {
     ok(complex3.fromRect(12.818, -2.222).equals(complex3));
   });
   
+  test("fromPolar", function () {
+    ok($C(0, 0).fromPolar(1, 0).equals($C(1, 0)));
+    ok($C(0, 0).fromPolar(0, 0).equals($C(0, 0)));
+    ok($C(0, 0).fromPolar(1.52, 0).equals($C(1.52, 0)));
+    ok($C(0, 0).fromPolar(-1.52, 0).equals($C(-1.52, 0)));
+    ok($C(0, 0).fromPolar(-1, Math.PI / 2).equals($C(-1 * Math.cos(Math.PI / 2), -1 * Math.sin(Math.PI / 2))));
+  });
+  
+  test("angleOf", function () {
+    ok(isNaN(Complex.angleOf($C(0, 0))));
+    ok(isNaN(Complex.angleOf(0)));
+    equals(Complex.angleOf(1), 0);
+    equals(Complex.angleOf(-1), 180);
+    equals(Complex.angleOf($C(0, 1)), Math.PI / 2);
+    equals(Complex.angleOf($C(1, 0)), 0);
+    equals(Complex.angleOf($C(1, 1)), Math.PI / 4);
+    equals(Complex.angleOf($C(-1, 1)), 3 * Math.PI / 4);
+    equals(Complex.angleOf($C(-1, -1)), -3 * Math.PI / 4);
+    equals(Complex.angleOf($C(1, -1)), -1 * Math.PI / 4);
+  });
+  
+  test("log", function () {
+    ok(isNaN(Complex.log(50, 1)));
+    ok(isNaN(Complex.log($C(23, -50), 1)));
+    ok(Complex.log($C(0, -3), Math.E).equals($C(Math.log(3) / Math.log(Math.E), -1 * Math.PI / 2)));
+    ok(Complex.log($C(1, 1), Math.E).equals($C(Complex.log(Math.sqrt(2), Math.E), Math.PI / 4)));
+  });
+  
+  test("exp", function () {
+    ok(Complex.exp(0), 1);
+    ok(Complex.exp($C(1, 0)).equals($C(Math.E)));
+    ok(Complex.exp($C(0, 1)).equals($C(0.5403023058681398, 0.8414709848078965)));
+    ok(Complex.exp($C(-1, -1)).equals($C(0.19876611034641298, -0.3095598756531122)));
+  });
+  
   test("modulus", function () {
     equal($C(0, 0).modulus(), 0);
     equal($C(0, 2).modulus(), 2);
