@@ -32,10 +32,13 @@ body {
 #center-zone {
   margin-top: 15px;
   padding: 15px;
-  padding-right: 250px;
   height: 220px;
   background: rgba(34, 34, 34, 0.5);
   text-align: left;
+}
+
+.center-zone-right-addon {
+  padding-right: 250px !important;
 }
 
 .main-section {
@@ -72,6 +75,27 @@ h2 {
   margin-top: 0;
   color: #cc0000;
   font-size: 20px;
+}
+
+a:link {
+  color: #b83f00;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+a:visited {
+  color: #b83f00;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #b83f00;
+  text-decoration: none;
+}
+
+a:active {
+  color: #b83f00;
+  text-decoration: none;
 }
 
 /* INDEX */

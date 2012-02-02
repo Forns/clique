@@ -209,6 +209,25 @@ var Complex = $C = function () {};
     );
   };
   
+  // Returns n^k
+  Complex.pow = function (n, k) {
+    if (!Complex.areComplex(n)) {
+      return Math.pow(n, k);
+    }
+    if (!k) {
+      if (k === 0) {
+        return $C(1);
+      }
+      return NaN;
+    }
+    var result = n;
+    while (k > 1) {
+      result = Complex.mult(result, result);
+      k--;
+    }
+    return result;
+  }
+  
   // Rounds the imaginary and real parts of the given number to the
   // nearest integer value
   Complex.round = function (n) {
@@ -1114,7 +1133,7 @@ var Clique = $CQ = function () {};
   // Helper method for the matrix sorting that determines
   // ascending sorting method
   var sortNumber = function (a, b) {
-    return a - b;
+    return Complex.sub(a, b);
   };
   
   // Sets the given row of matrix to the given vector
@@ -1168,7 +1187,7 @@ var Clique = $CQ = function () {};
     }
     for (var i = 1; i <= this.rows(); i++) {
       for (var j = 1; j <= this.cols(); j++) {
-        result += Math.pow(this.e(i, j), power);
+        result = Complex.add(result, Complex.pow(this.e(i, j), power));
       }
     }
     return result;
@@ -1177,7 +1196,7 @@ var Clique = $CQ = function () {};
   // The norm of a matrix is a scalar that gives some
   // measure of the magnitude of the elements of the matrix
   Matrix.prototype.norm = function () {
-    return Math.sqrt(this.sum(2));
+    return Complex.sqrt(this.sum(2));
   };
   
   // Creates a matrix of all ones with specified dimensions
@@ -1201,7 +1220,7 @@ var Clique = $CQ = function () {};
     for (var i = 1; i <= matrix.rows(); i++) {
       for (var j = 1; j <= matrix.cols(); j++) {
         var currentElement = matrix.e(i, j);
-        if (currentElement) {
+        if (!Complex.equal(currentElement, 0)) {
           return [i, j, currentElement];
         }
       }

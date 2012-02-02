@@ -193,6 +193,25 @@ var Complex = $C = function () {};
     );
   };
   
+  // Returns n^k
+  Complex.pow = function (n, k) {
+    if (!Complex.areComplex(n)) {
+      return Math.pow(n, k);
+    }
+    if (!k) {
+      if (k === 0) {
+        return $C(1);
+      }
+      return NaN;
+    }
+    var result = n;
+    while (k > 1) {
+      result = Complex.mult(result, result);
+      k--;
+    }
+    return result;
+  }
+  
   // Rounds the imaginary and real parts of the given number to the
   // nearest integer value
   Complex.round = function (n) {

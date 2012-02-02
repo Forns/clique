@@ -107,6 +107,17 @@ $(function () {
     ok(Complex.exp($C(-1, -1)).equals($C(0.19876611034641298, -0.3095598756531122)));
   });
   
+  test("pow", function () {
+    equals(Complex.pow(2, 3), 8);
+    equals(Complex.pow(2, 0), 1);
+    ok(Complex.pow($C(2), 2), $C(4));
+    ok(Complex.pow($C(2), 0), $C(1));
+    ok(Complex.pow($C(0, 2), 3), $C(0, -8));
+    ok(Complex.pow($C(0, 2), 0), $C(1));
+    ok(Complex.pow($C(2, 2), 2), $C(0, 8));
+    ok(Complex.pow($C(2, 2), 3), $C(-16, 16));
+  });
+  
   test("modulus", function () {
     equal($C(0, 0).modulus(), 0);
     equal($C(0, 2).modulus(), 2);
@@ -270,6 +281,17 @@ $(function () {
         [9, -5, 7]
       ]))
     );
+    
+    ok(
+      $M([
+        [0, 1, 1],
+        [9, 8, 7]
+      ]).setElement(2, 2, $C(5, -5))
+      .eql($M([
+        [0, 1, 1],
+        [9, $C(5, -5), 7]
+      ]))
+    );
   });
   
   test("Matrix: setRow", function () {
@@ -355,6 +377,13 @@ $(function () {
         [1, 2, 3],
         [1, 2, -3]
       ]).sum(2), 28
+    );
+    
+    ok(
+      $M([
+        [1, 2, 3],
+        [1, $C(2, 2), -3]
+      ]).sum(1).equals($C(6, 2))
     );
   });
   
@@ -467,6 +496,13 @@ $(function () {
         [0, 0, 0],
         [0, 0, 1]
       ])), [2, 3, 1]
+    );
+    
+    deepEqual(
+      Matrix.firstNonZero($M([
+        [0, 0, 0],
+        [0, 0, $C(0, 1)]
+      ])), [2, 3, $C(0, 1)]
     );
   });
   
