@@ -432,6 +432,13 @@ $(function () {
         [-2, 2, 0]
       ]).norm(), 4
     );
+    
+    ok(
+      $M([
+        [0, 2, 2],
+        [-2, $C(2), 0]
+      ]).norm().equals($C(4))
+    );
   });
   
   test("Matrix: sort", function () {
