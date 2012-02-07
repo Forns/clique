@@ -22,5 +22,9 @@ if (loc === "test") {
   includes.push("./js/dist/clique.js");
 }
 
+if (loc === "spectral") {
+  includes.push("./js/display/spec-display.js");
+}
+
 // Perform necessary inclusions
 include.includeInit(includes);

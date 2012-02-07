@@ -57,6 +57,15 @@ body {
   border-radius: 10px;
 }
 
+.centering-container {
+  text-align: center;
+}
+
+hr {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
 h1 {
   margin: 0;
   margin-bottom: 15px;
@@ -106,4 +115,38 @@ a:active {
   padding: 10px;
   width: 200px;
   margin-right: -240px;
+}
+
+/* SPECTRAL */
+#browser-compat {
+  padding: 3px;
+  display: none;
+}
+
+.input-select {
+  text-align: center;
+  padding: 10px;
+  width: 420px;
+  height: 220px;
+  background: -moz-linear-gradient(top, #000000 0%, #444444 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#000000), color-stop(100%,#444444)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, #000000 0%,#444444 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, #000000 0%,#444444 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, #000000 0%,#444444 100%); /* IE10+ */
+  background: linear-gradient(top, #000000 0%,#444444 100%); /* W3C */
+}
+
+#file-select-input {
+  float: right;
+}
+
+#purify-button {
+  margin-top: 20px;
+  width: 200px;
+}
+
+#file-out {
+  background-color: #333333;
+  height: 400px;
+  overflow: scroll;
 }

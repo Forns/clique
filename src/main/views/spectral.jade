@@ -3,4 +3,45 @@
     img(src='./assets/clique-logo.png')
   #nav-bar
   #center-zone.rounded-corners
-    h2 This section is under construction. Check back soon!
+    h2 Clique: Spectral Analysis Made Awesome
+    p
+      | Clique features a spectral analysis web application that can take
+      | your data and find trends in variable groupings. Check back soon for
+      | a better description of what this awesome tool can offer!
+    p
+      | The spectral analysis tool employs a three step process:
+      ol
+        li 
+          | Data Purification: purges all bad data segments from the given input for use
+          | and compatibility with the analyzer
+        li
+          | Analysis Specifications: provides options, customizations, and configurations for
+          | the tool's data-crunching and output
+        li
+          | Reporting: spits back the relevant data analysis and graphical data
+    div.centering-container
+      
+      span#browser-compat.ui-widget.ui-state-highlight.rounded-corners
+  #purifier.main-section.rounded-corners
+    h1.ui-dialog-titlebar.ui-widget-header.rounded-corners Data Purification
+    h2 [P1] Choose your input method
+    #file-select-input.input-select.rounded-corners
+      p [P1.2] Select / Drag a file with data:
+      input#file-input(type="file")
+      p#file-info
+    #text-field-input.input-select.rounded-corners
+      p [P1.1] Input data into the text area:
+      textarea#text-input(rows="10", cols="45")
+    div.centering-container  
+      button#purify-button Print Data
+    hr
+    h2 [P2] Choose your configurations and options
+    hr
+    h2 [Temporary] File printout
+    #file-out
+  #analyzer.main-section.rounded-corners
+    h1.ui-dialog-titlebar.ui-widget-header.rounded-corners Spectral Analysis
+    h2 [You must first purify your data before analyzing it]
+  #results.main-section.rounded-corners
+    h1.ui-dialog-titlebar.ui-widget-header.rounded-corners Results
+    h2 [You must analyze your data before viewing any results]
