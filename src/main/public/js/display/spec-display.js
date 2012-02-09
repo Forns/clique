@@ -13,16 +13,49 @@
 var inputSelected = 0, // 1 = text input, 2 = file
     file = null,
     fileData = null,
-    textData;
-
+    textData = null,
+    
+    // Configuration settings
+    config = {
+      "delimiter-space": false,
+      "delimiter-comma": false,
+      "delimiter-tab": false,
+      "delimiter-custom": ""
+    },
+    
+    // Used for form feedback
+    errorMarks = [];
+    
 $(function () {
   
   // Set up the file loading bar
   $("#file-loading")
     .progressbar({value: 0});
   
+  // Check that all fields have been satisfied to submit for analysis
+  var submissionCheck = function () {
+    var disableParsing = true;
+    
+    // Begin by checking input selection
+    switch(inputSelected) {
+      case 1: // text-field input
+        if ($("#text-input").val()) {
+          disableParsing = false;
+        } else {
+          inputSelected = 0;
+        }
+        break;
+      case 2: // file input
+        disableParsing = (fileData && $("#file-loading").progressbar("value") === 100);
+        break;
+    }
+    
+    // Finish by either enabling or disabling the submission button
+    $("#purify-button").button({disabled: disableParsing});
+  },
+  
   // Updates the progress of the reader parsing the file
-  var readerProgress = function (evt) {
+  readerProgress = function (evt) {
     if (evt.lengthComputable) {
       var percentComplete = Math.round((evt.loaded / evt.total) * 100);
       console.log(percentComplete);
@@ -44,7 +77,7 @@ $(function () {
       reader.onload = (function (f) {
         $("#file-loading").progressbar({value: 100});
         $("#loading-status").html("Loading Complete!");
-        $("#purify-button").button({disabled: false});
+        submissionCheck();
         return function (e) {
           fileData = reader.result;
         };
@@ -66,6 +99,28 @@ $(function () {
     }
     $("#text-field-input").fadeTo(1000, textInputOpac);
     $("#file-select-input").fadeTo(1000, fileInputOpac);
+  },
+  
+  // Chooses some purifier options based on the given data
+  autoConfig = function () {
+    var data = textData,
+        delimiters = {
+          "comma": ",",
+          "space": " ",
+          "tab": "\t"
+        };
+    if (inputSelected === 2) {
+      data = fileData;
+    }
+    // Check for any delimiters in the output
+    for (var d in delimiters) {
+      if (data && data.indexOf(delimiters[d]) !== -1) {
+        var delim = "delimiter-" + d;
+        if (!config[delim]) {
+          $("#" + delim).trigger("click");
+        }
+      }
+    }
   };
   
   // Begin by checking the browser compatibility
@@ -78,20 +133,13 @@ $(function () {
   // Set up input handlers
   // Handler for text-input
   $("#text-input")
-    .keypress(function (event) {
+    .change(function () {
       // Begin by updating the active input
       inputSelected = 1;
-      
-      var enableParsing = true;
-      
-      if ($("#text-input").val()) {
-        enableParsing = false;
-        inputSelected = 1;
-      } else {
-        inputSelected = 0;
-      }
-      $("#purify-button").button({disabled: enableParsing});
+      textData = $("#text-input").val();
       toggleInputUI();
+      autoConfig();
+      submissionCheck();
     });
   
   // Handler for uploading a file
@@ -120,8 +168,8 @@ $(function () {
       } else {
         inputSelected = 0;
         $("#loading-status").html("File type not supported");
-        $("#purify-button").button({disabled: true});
       }
+      
       toggleInputUI();
     });
   
@@ -129,16 +177,27 @@ $(function () {
   $("#purify-button")
     .button()
     .click(function () {
+      textData = $("#text-input").val();
+      var data = textData;
       if (inputSelected === 2) {
-        $("#file-out").html(fileData);
-      } else {
-        textData = $("#text-input").val();
-        $("#file-out").html(textData);
+        data = fileData;
       }
+      autoConfig();
+      $("#file-out").html(data);
     });
   
   // Set up options design
-  $("#delimiter-choice")
-    .buttonset();
+  $("#delimiter-choice").buttonset();
+  $("#trash-choice").buttonset();
+  
+  // Configure checkboxes to update the config
+  $(":checkbox")
+    .each(function () {
+      $(this).click(function () {
+        config[$(this).attr("id")] = !config[$(this).attr("id")];
+      });
+    });
+    
+  // Special input configurations
   
 });
