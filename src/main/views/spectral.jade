@@ -25,18 +25,31 @@
   #purifier.main-section.rounded-corners
     h1.ui-dialog-titlebar.ui-widget-header.rounded-corners Data Purification
     h2 [P1] Choose your input method
-    #file-select-input.input-select.rounded-corners
+    #file-select-input.parse-option.input-select.rounded-corners
       p [P1.2] Select / Drag a file with data:
       input#file-input(type="file")
       p#file-info
-    #text-field-input.input-select.rounded-corners
+      #file-loading
+        #loading-status
+    #text-field-input.parse-option.input-select.rounded-corners
       p [P1.1] Input data into the text area:
       textarea#text-input(rows="10", cols="45")
-    div.centering-container  
-      button#purify-button Print Data
     hr
     h2 [P2] Choose your configurations and options
+    #delimiter-choice.parse-option.rounded-corners
+      p [P2.1] Select delimiters in the data
+      input#delimiter-comma(type="checkbox")
+      label(for="delimiter-comma") Comma
+      input#delimiter-space(type="checkbox")
+      label(for="delimiter-space") Space
+      input#delimiter-tab(type="checkbox")
+      label(for="delimiter-tab") Tab
+      br
+      p Custom:
+        input#delimiter-custom(type="text")
     hr
+    div.centering-container  
+      button#purify-button(disabled="true") Print Data
     h2 [Temporary] File printout
     #file-out
   #analyzer.main-section.rounded-corners

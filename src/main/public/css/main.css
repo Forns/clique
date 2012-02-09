@@ -124,10 +124,13 @@ a:active {
 }
 
 .input-select {
-  text-align: center;
-  padding: 10px;
-  width: 420px;
   height: 220px;
+}
+
+.parse-option {
+  text-align: center;
+  width: 420px;
+  padding: 10px;
   background: -moz-linear-gradient(top, #000000 0%, #444444 100%); /* FF3.6+ */
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#000000), color-stop(100%,#444444)); /* Chrome,Safari4+ */
   background: -webkit-linear-gradient(top, #000000 0%,#444444 100%); /* Chrome10+,Safari5.1+ */
@@ -138,6 +141,7 @@ a:active {
 
 #file-select-input {
   float: right;
+  overflow-y: auto;
 }
 
 #purify-button {
@@ -149,4 +153,13 @@ a:active {
   background-color: #333333;
   height: 400px;
   overflow: scroll;
+}
+
+#loading-status {
+  float: left;
+  margin-left: 10px;
+}
+
+#file-loading {
+  display: none;
 }
