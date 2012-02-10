@@ -164,9 +164,17 @@ a:active {
 }
 
 #file-out {
-  background-color: #333333;
   height: 400px;
+}
+
+#log-zone {
+  height: 200px;
+}
+
+.purifier-output {
+  background-color: #333333;
   overflow: scroll;
+  display: none;
 }
 
 #loading-status {

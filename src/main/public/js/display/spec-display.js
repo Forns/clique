@@ -9,31 +9,32 @@
  * http://www.html5rocks.com/en/tutorials/file/dndfiles/
  */
 
-// Global variables for the analyzer
-var inputSelected = 0, // 1 = text input, 2 = file
+$(function () {
+  
+  var inputSelected = 0, // 1 = text input, 2 = file
     file = null,
     fileData = null,
     textData = null,
     
     // Configuration settings
     config = {
-      "delimiter-space": false,
-      "delimiter-comma": false,
-      "delimiter-tab": false,
-      "delimiter-custom": ""
+      delimiters: {
+        // Delimiter configurations
+        "delimiter-space": false,
+        "delimiter-comma": false,
+        "delimiter-tab": false,
+        "delimiter-custom": ""
+      },
+      
+      // Omission configurations
+      "first-row-vars": false
     },
     
-    // Used for form feedback
-    errorMarks = [];
-    
-$(function () {
-  
-  // Set up the file loading bar
-  $("#file-loading")
-    .progressbar({value: 0});
+    // Post-purification data
+    pureData = [],
   
   // Check that all fields have been satisfied to submit for analysis
-  var submissionCheck = function () {
+  submissionCheck = function () {
     var disableParsing = true;
     
     // Begin by checking input selection
@@ -58,9 +59,7 @@ $(function () {
   readerProgress = function (evt) {
     if (evt.lengthComputable) {
       var percentComplete = Math.round((evt.loaded / evt.total) * 100);
-      console.log(percentComplete);
-      $("#file-loading")
-        .progressbar({value: percentComplete});
+      $("#file-loading").progressbar({value: percentComplete});
     }
   },
   
@@ -80,6 +79,7 @@ $(function () {
         submissionCheck();
         return function (e) {
           fileData = reader.result;
+          autoConfig();
         };
       })(file);
       
@@ -114,11 +114,10 @@ $(function () {
     }
     // Check for any delimiters in the output
     for (var d in delimiters) {
-      if (data && data.indexOf(delimiters[d]) !== -1) {
-        var delim = "delimiter-" + d;
-        if (!config[delim]) {
-          $("#" + delim).trigger("click");
-        }
+      var delim = "delimiter-" + d;
+      if (data && data.indexOf(delimiters[d]) !== -1 && !config[delim]) {
+        $("#" + delim).trigger("click");
+        config.delimiters[delim] = true;
       }
     }
   };
@@ -146,7 +145,6 @@ $(function () {
   $("#file-input")
     .button()
     .change(function (event) {
-      
       // Next, check the file
       file = event.target.files[0];
       $("#file-info").html(
@@ -168,8 +166,8 @@ $(function () {
       } else {
         inputSelected = 0;
         $("#loading-status").html("File type not supported");
+        file = null;
       }
-      
       toggleInputUI();
     });
   
@@ -178,17 +176,29 @@ $(function () {
     .button()
     .click(function () {
       textData = $("#text-input").val();
-      var data = textData;
+      var data = textData,
+          delims = config.delimiters;
       if (inputSelected === 2) {
         data = fileData;
       }
-      autoConfig();
-      $("#file-out").html(data);
+      // Make sure there's at least one delimiter chosen
+      if (!(delims["delimiter-space"] || delims["delimiter-comma"] || delims["delimiter-tab"] || delims["delimiter-custom"])) {
+        autoConfig();
+      }
+      
+      purifyData(data, config, "file-out", "log-zone");
+      $("#file-out")
+        .fadeIn(1000)
+        .html(data);
     });
+  
+  // Set up the file loading bar
+  $("#file-loading").progressbar({value: 0});
   
   // Set up options design
   $("#delimiter-choice").buttonset();
   $("#trash-choice").buttonset();
+  $("#first-row-vars").button();
   
   // Configure checkboxes to update the config
   $(":checkbox")
@@ -198,6 +208,4 @@ $(function () {
       });
     });
     
-  // Special input configurations
-  
 });

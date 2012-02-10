@@ -36,6 +36,7 @@
       textarea#text-input(rows="10", cols="45")
     hr
     h2 [P2] Choose your configurations and options
+    
     #value-choice.parse-option.right-column.rounded-corners
       #trash-choice
         p [P2.2.1] What to do with un-matched / trash cell data?
@@ -50,6 +51,7 @@
         p.text-input-label "No" / Base Value:
         input#yes-max.text-input-field(type="text")
         p.text-input-label "Yes" Max:
+        
     #delimiter-choice.parse-option.rounded-corners
       p [P2.1] Select delimiters in the data
       input#delimiter-comma(type="checkbox")
@@ -62,20 +64,27 @@
       p
         input#delimiter-custom.text-input-field(type="text")
         p.text-input-label Custom:
+        
     #special-choice.parse-option.rounded-corners
       p [P2.3] Choose any special options or omissions
-      input#omit-rows.text-input-field(type="text")
-      p.text-input-label Omit Rows:
-      input#omit-cols.text-input-field(type="text")
-      p.text-input-label Omit Columns:
+      input#first-row-vars(type="checkbox")
+      label(for="first-row-vars") First Row Variable Names
+      p
+        input#omit-rows.text-input-field(type="text")
+        p.text-input-label Omit Rows:
+        input#omit-cols.text-input-field(type="text")
+        p.text-input-label Omit Columns:
     hr
     div.centering-container  
       button#purify-button(disabled="true") Print Data
     h2 [Temporary] File printout
-    #file-out
+    #file-out.purifier-output
+    #log-zone.purifier-output
+    
   #analyzer.main-section.rounded-corners
     h1.ui-dialog-titlebar.ui-widget-header.rounded-corners Spectral Analysis
     h2 [You must first purify your data before analyzing it]
+    
   #results.main-section.rounded-corners
     h1.ui-dialog-titlebar.ui-widget-header.rounded-corners Results
     h2 [You must analyze your data before viewing any results]
