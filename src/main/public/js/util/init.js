@@ -23,6 +23,7 @@ if (loc === "test") {
 }
 
 if (loc === "spectral") {
+  includes.push("./js/util/popup.js");
   includes.push("./js/modules/spec-purifier.js");
   includes.push("./js/display/spec-display.js");
 }

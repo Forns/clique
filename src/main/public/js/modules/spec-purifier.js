@@ -13,20 +13,21 @@ var purifyData = function (data, config, output, log) {
       currentChar = "",
       currentToken = "",
       currentRow = [],
-      delims = [];
+      delims = "[";
       
   // Set up the delimiters
-  for (d in config.delimiters) {
-    if (config.delimiters[d]) {
-      delims.push(d);
-    }
+  delims += (config["delimiter-space"]) ? " " : "";
+  delims += (config["delimiter-comma"]) ? "," : "";
+  delims += (config["delimiter-tab"]) ? "\t" : "";
+  delims += config["delimiter-custom"] + "]";
+  delims = new RegExp(delims);
+  
+  // Split rows on new lines
+  result = data.split("\n");
+  // Split each row at the delimiters
+  for (var i = 0; i < result.length; i++) {
+    result[i] = result[i].split(delims);
   }
   
-  // Spit the data at new lines
-  while (data.indexOf("\n")) {
-    
-  }
-  
-  // Report to the output
-  $("#" + output).html(JSON.stringify(result));
+  pureData = result;
 };

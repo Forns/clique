@@ -49,6 +49,19 @@ body {
   position: relative;
 }
 
+#dialog {
+  display: none;
+}
+
+.help-button {
+  position: absolute;
+  margin-bottom: 3px;
+}
+
+.status-text {
+  display: none;
+}
+
 /* ACCENTS */
 .rounded-corners {
   -moz-border-radius: 10px;
@@ -84,6 +97,10 @@ h2 {
   margin-top: 0;
   color: #cc0000;
   font-size: 20px;
+}
+
+#dialog {
+  text-align: left;
 }
 
 a:link {
@@ -124,7 +141,7 @@ a:active {
 }
 
 .input-select {
-  height: 220px;
+  height: 240px;
 }
 
 .parse-option {
@@ -183,5 +200,13 @@ a:active {
 }
 
 #file-loading {
+  display: none;
+}
+
+#analyzer {
+  display: none;
+}
+
+#results {
   display: none;
 }

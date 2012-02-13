@@ -20,10 +20,11 @@
         li
           | Reporting: spits back the relevant data analysis and graphical data
     div.centering-container
-      
       span#browser-compat.ui-widget.ui-state-highlight.rounded-corners
+      
   #purifier.main-section.rounded-corners
     h1.ui-dialog-titlebar.ui-widget-header.rounded-corners Data Purification
+    
     h2 [P1] Choose your input method
     #file-select-input.parse-option.input-select.right-column.rounded-corners
       p [P1.2] Select / Drag a file with data:
@@ -35,8 +36,8 @@
       p [P1.1] Input data into the text area:
       textarea#text-input(rows="10", cols="45")
     hr
-    h2 [P2] Choose your configurations and options
     
+    h2 [P2] Choose your configurations and options
     #value-choice.parse-option.right-column.rounded-corners
       #trash-choice
         p [P2.2.1] What to do with un-matched / trash cell data?
@@ -76,8 +77,7 @@
         p.text-input-label Omit Columns:
     hr
     div.centering-container  
-      button#purify-button(disabled="true") Print Data
-    h2 [Temporary] File printout
+      button#purify-button(disabled="true") Purify Data
     #file-out.purifier-output
     #log-zone.purifier-output
     
@@ -88,3 +88,5 @@
   #results.main-section.rounded-corners
     h1.ui-dialog-titlebar.ui-widget-header.rounded-corners Results
     h2 [You must analyze your data before viewing any results]
+    
+#dialog

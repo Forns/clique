@@ -9,34 +9,58 @@
  * http://www.html5rocks.com/en/tutorials/file/dndfiles/
  */
 
+// Loading dialog
+popup(
+  "dialog",
+  "Loading...", 
+  "<p>Loading Spectral Analyzer, please wait...</p>" +
+  "<p><img src='../assets/loading.gif' /></p>",
+  null,
+  {
+    modal: true,
+  }
+);
+
+// Post-purification data
+var pureData = [];
+
 $(function () {
   
   var inputSelected = 0, // 1 = text input, 2 = file
-    file = null,
-    fileData = null,
-    textData = null,
-    
-    // Configuration settings
-    config = {
-      delimiters: {
+      file = null,
+      fileData = null,
+      textData = null,
+      
+      // Configuration settings
+      config = {
         // Delimiter configurations
         "delimiter-space": false,
         "delimiter-comma": false,
         "delimiter-tab": false,
-        "delimiter-custom": ""
+        "delimiter-custom": "",
+        
+        // Omission configurations
+        "first-row-vars": false,
+        "omit-rows": "",
+        "omil-cols": "",
+        
+        // Trash data settings
+        "trash-data": 0, // 0 = zero out, 1 = discard row
+        
+        // Base values and ranges
+        "no-value": 0,
+        "yes-max": 1
       },
-      
-      // Omission configurations
-      "first-row-vars": false
-    },
-    
-    // Post-purification data
-    pureData = [],
   
   // Check that all fields have been satisfied to submit for analysis
   submissionCheck = function () {
-    var disableParsing = true;
-    
+    var disableParsing = true,
+        customDelim = $("#delimiter-custom").val(),
+        omitRows = $("#omit-rows").val(), 
+        omitCols = $("#omit-cols").val(),
+        noValue = $("#no-value").val(),
+        yesMax = $("#yes-max").val();
+        
     // Begin by checking input selection
     switch(inputSelected) {
       case 1: // text-field input
@@ -50,6 +74,9 @@ $(function () {
         disableParsing = (fileData && $("#file-loading").progressbar("value") === 100);
         break;
     }
+    
+    // Parse the user input
+    
     
     // Finish by either enabling or disabling the submission button
     $("#purify-button").button({disabled: disableParsing});
@@ -117,10 +144,28 @@ $(function () {
       var delim = "delimiter-" + d;
       if (data && data.indexOf(delimiters[d]) !== -1 && !config[delim]) {
         $("#" + delim).trigger("click");
-        config.delimiters[delim] = true;
+        config[delim] = true;
       }
     }
-  };
+  },
+  
+  // The titles of the help button dialogs
+  helpTitles = [
+    "Data Input: File",
+    "Data Input: Text",
+    "Trash Data Settings",
+    "Delimiters",
+    "Omission Settings"
+  ],
+  
+  // The messages of the help buttons
+  helpMessages = [
+    "Test message for data input file",
+    "Test message for data input text",
+    "Test message for trash settings",
+    "Test message for delimiters",
+    "Test message for omissions"
+  ];
   
   // Begin by checking the browser compatibility
   if (!(window.File && window.FileReader && window.FileList && window.Blob)) {
@@ -176,16 +221,16 @@ $(function () {
     .button()
     .click(function () {
       textData = $("#text-input").val();
-      var data = textData,
-          delims = config.delimiters;
+      var data = textData;
       if (inputSelected === 2) {
         data = fileData;
       }
       // Make sure there's at least one delimiter chosen
-      if (!(delims["delimiter-space"] || delims["delimiter-comma"] || delims["delimiter-tab"] || delims["delimiter-custom"])) {
+      if (!(config["delimiter-space"] || config["delimiter-comma"] || config["delimiter-tab"] || config["delimiter-custom"])) {
         autoConfig();
       }
       
+      // Performs the actual purification, setting the global pureData
       purifyData(data, config, "file-out", "log-zone");
       $("#file-out")
         .fadeIn(1000)
@@ -207,5 +252,37 @@ $(function () {
         config[$(this).attr("id")] = !config[$(this).attr("id")];
       });
     });
+  
+  // Add a help button to each option section
+  $(".parse-option").each(function () {
+    $(this).prepend(
+      "<div class='help-button'><span class='status-icon'></span><span class='status-text'></span></div></br>"
+    );
+  });
+  
+  // Configure the help buttons
+  $(".status-icon")
+    .button({
+      icons: {
+        primary: "ui-icon-info"
+      }
+    })
+    .each(function (index) {
+      $(this).click(function () {
+        popup(
+          "dialog",
+          helpTitles[index],
+          helpMessages[index],
+          null,
+          {
+            modal: false,
+            width: 500
+          }
+        );
+      });
+    });
+    
+  // Close the loading dialog
+  $("#dialog").dialog("close");
     
 });
