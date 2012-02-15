@@ -82,9 +82,9 @@ $(function () {
     if (config["omit-rows"][0] === "") {config["omit-rows"] = [];}
     config["omit-cols"] = omitCols.split(",");
     if (config["omit-cols"][0] === "") {config["omit-cols"] = [];}
-    config["no-value"] = noValue;
-    config["yes-min"] = yesMin;
-    config["yes-max"] = yesMax;
+    config["no-value"] = Boolean(noValue) ? noValue : 0;
+    config["yes-min"] = Boolean(yesMin) ? yesMin : 1;
+    config["yes-max"] = Boolean(yesMax) ? yesMax : 1;
     
     // Finish by either enabling or disabling the submission button
     $("#purify-button").button({disabled: disableParsing});
@@ -287,21 +287,17 @@ $(function () {
   // Set up options design
   $("#delimiter-choice").buttonset();
   $("#trash-choice").buttonset();
-  $("#first-row-vars")
-    .button()
-    .click(function () {
-      config["first-row-vars"] = !Boolean(config["first-row-vars"]);
-    });
+  $("#first-row-vars").button();
   $("#reset-button")
     .button()
     .click(function () {
       window.location = window.location;
     });
   $("#trash-zero").click(function () {
-    config[trash-data] = 0;
+    config["trash-data"] = 0;
   });
   $("#trash-row").click(function () {
-    config[trash-data] = 1;
+    config["trash-data"] = 1;
   });
   
   // Configure checkboxes to update the config

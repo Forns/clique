@@ -61,7 +61,7 @@ var purifyData = function (data, config, output, log) {
   varCount -= omitCols.length;
   
   // Parse the individual data points based on configs
-  for (var j = 0; j < result.length; j++) {
+  for (var j = (config["first-row-vars"]) ? 1 : 0; j < result.length; j++) {
     // Reset the row to push and the col omissions
     var currentRow = [];
     omitCols = omitColsBlueprint.slice(0);
@@ -89,8 +89,16 @@ var purifyData = function (data, config, output, log) {
       }
       // Cast to number
       result[j][k] = Number(result[j][k]);
+      var currentCol = result[j][k];
+      
+      if (currentCol === noValue) {
+        currentCol = 0;
+      } else if (!(currentCol >= yesMin && currentCol <= yesMax)) {
+        currentCol = NaN;
+      }
+      
       // Verify that it's not trash
-      if (isNaN(result[j][k])) {
+      if (isNaN(currentCol)) {
         // Check config settings for what to do with trash
         if (config["trash-data"]) {
           // Means it was a skip row, so scratch it
@@ -102,7 +110,7 @@ var purifyData = function (data, config, output, log) {
         }
       } else {
         // Good data point, so push it onto the new row
-        currentRow.push(result[j][k]);
+        currentRow.push(currentCol);
       }
     }
     // Don't add a row if it was determined to be trashed
