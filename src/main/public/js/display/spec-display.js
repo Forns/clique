@@ -14,7 +14,7 @@ popup(
   "dialog",
   "Loading...", 
   "<p>Loading Spectral Analyzer, please wait...</p>" +
-  "<p><img src='../assets/loading.gif' /></p>",
+  "<p class='centering-container'><img src='../assets/loading.gif' /></p>",
   null,
   {
     modal: true,
@@ -30,6 +30,7 @@ $(function () {
       file = null,
       fileData = null,
       textData = null,
+      configErr = "",
       
       // Configuration settings
       config = {
@@ -56,9 +57,10 @@ $(function () {
   submissionCheck = function () {
     var disableParsing = true,
         customDelim = $("#delimiter-custom").val(),
-        omitRows = $("#omit-rows").val(), 
+        omitRows = $("#omit-rows").val(),
         omitCols = $("#omit-cols").val(),
         noValue = $("#no-value").val(),
+        yesMin = $("#yes-min").val(),
         yesMax = $("#yes-max").val();
         
     // Begin by checking input selection
@@ -71,15 +73,22 @@ $(function () {
         }
         break;
       case 2: // file input
-        disableParsing = (fileData && $("#file-loading").progressbar("value") === 100);
+        disableParsing = !Boolean(fileData && $("#file-loading").progressbar("value") === 100);
         break;
     }
     
-    // Parse the user input
-    
+    // Parse the user customizations
+    config["omit-rows"] = omitRows.split(",");
+    if (config["omit-rows"][0] === "") {config["omit-rows"] = [];}
+    config["omit-cols"] = omitCols.split(",");
+    if (config["omit-cols"][0] === "") {config["omit-cols"] = [];}
+    config["no-value"] = noValue;
+    config["yes-min"] = yesMin;
+    config["yes-max"] = yesMax;
     
     // Finish by either enabling or disabling the submission button
     $("#purify-button").button({disabled: disableParsing});
+    return !disableParsing;
   },
   
   // Updates the progress of the reader parsing the file
@@ -101,12 +110,12 @@ $(function () {
       
       // Set the reader to parse the given file onload
       reader.onload = (function (f) {
-        $("#file-loading").progressbar({value: 100});
-        $("#loading-status").html("Loading Complete!");
-        submissionCheck();
         return function (e) {
           fileData = reader.result;
           autoConfig();
+          $("#file-loading").progressbar({value: 100});
+          $("#loading-status").html("Loading Complete!");
+          submissionCheck();
         };
       })(file);
       
@@ -220,6 +229,18 @@ $(function () {
   $("#purify-button")
     .button()
     .click(function () {
+      // Set up the loading modal
+      popup(
+        "dialog",
+        "Purifying...", 
+        "<p>Data is being purified, please wait...</p>" +
+        "<p class='centering-container'><img src='../assets/loading.gif' /></p>",
+        null,
+        {
+          modal: true,
+        }
+      );
+      
       textData = $("#text-input").val();
       var data = textData;
       if (inputSelected === 2) {
@@ -230,11 +251,34 @@ $(function () {
         autoConfig();
       }
       
-      // Performs the actual purification, setting the global pureData
-      purifyData(data, config, "file-out", "log-zone");
-      $("#file-out")
-        .fadeIn(1000)
-        .html(data);
+      $("#purifier-contents").fadeOut(1500);
+      setTimeout(function () {
+        // Last check for data validity before running purifier
+        if (submissionCheck()) {
+          // Performs the actual purification, setting the global pureData
+          pureData = purifyData(data, config, "file-out", "log-zone");
+          $("#dialog")
+            .delay(3500)
+            .queue(function () {
+              $(this).dialog("close");
+            });
+          // Display the data nicely
+          for (var i = 0; i < pureData.length; i++) {
+            $("#file-out").append(i + ": " + JSON.stringify(pureData[i]) + "</br>");
+          }
+          $("#file-out")
+            .delay(2000)
+            .slideDown(1000);
+        } else {
+          // Otherwise, there were errors, so check them
+          $("#purifier-contents").fadeIn(1500);
+          
+          // Report errors
+          
+          // Clear errors
+        }
+      }, 500);
+      
     });
   
   // Set up the file loading bar
@@ -243,7 +287,22 @@ $(function () {
   // Set up options design
   $("#delimiter-choice").buttonset();
   $("#trash-choice").buttonset();
-  $("#first-row-vars").button();
+  $("#first-row-vars")
+    .button()
+    .click(function () {
+      config["first-row-vars"] = !Boolean(config["first-row-vars"]);
+    });
+  $("#reset-button")
+    .button()
+    .click(function () {
+      window.location = window.location;
+    });
+  $("#trash-zero").click(function () {
+    config[trash-data] = 0;
+  });
+  $("#trash-row").click(function () {
+    config[trash-data] = 1;
+  });
   
   // Configure checkboxes to update the config
   $(":checkbox")

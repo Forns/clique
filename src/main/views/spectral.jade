@@ -23,64 +23,69 @@
       span#browser-compat.ui-widget.ui-state-highlight.rounded-corners
       
   #purifier.main-section.rounded-corners
+    button#reset-button.right-column Reset
     h1.ui-dialog-titlebar.ui-widget-header.rounded-corners Data Purification
-    
-    h2 [P1] Choose your input method
-    #file-select-input.parse-option.input-select.right-column.rounded-corners
-      p [P1.2] Select / Drag a file with data:
-      input#file-input(type="file")
-      p#file-info
-      #file-loading
-        #loading-status
-    #text-field-input.parse-option.input-select.rounded-corners
-      p [P1.1] Input data into the text area:
-      textarea#text-input(rows="10", cols="45")
-    hr
-    
-    h2 [P2] Choose your configurations and options
-    #value-choice.parse-option.right-column.rounded-corners
-      #trash-choice
-        p [P2.2.1] What to do with un-matched / trash cell data?
-        input#trash-zero(type="radio", name="trash", checked=true)
-        label(for="trash-zero") Zero Out
-        input#trash-row(type="radio", name="trash")
-        label(for="trash-row") Discard Row
-      br
-      p [P2.2.2] Select value bases and ranges
-      p
-        input#no-value.text-input-field(type="text")
-        p.text-input-label "No" / Base Value:
-        input#yes-max.text-input-field(type="text")
-        p.text-input-label "Yes" Max:
-        
-    #delimiter-choice.parse-option.rounded-corners
-      p [P2.1] Select delimiters in the data
-      input#delimiter-comma(type="checkbox")
-      label(for="delimiter-comma") Comma
-      input#delimiter-space(type="checkbox")
-      label(for="delimiter-space") Space
-      input#delimiter-tab(type="checkbox")
-      label(for="delimiter-tab") Tab
-      br
-      p
-        input#delimiter-custom.text-input-field(type="text")
-        p.text-input-label Custom:
-        
-    #special-choice.parse-option.rounded-corners
-      p [P2.3] Choose any special options or omissions
-      input#first-row-vars(type="checkbox")
-      label(for="first-row-vars") First Row Variable Names
-      p
-        input#omit-rows.text-input-field(type="text")
-        p.text-input-label Omit Rows:
-        input#omit-cols.text-input-field(type="text")
-        p.text-input-label Omit Columns:
-    hr
-    div.centering-container  
-      button#purify-button(disabled="true") Purify Data
+    #purifier-contents
+      
+      h2 [P1] Choose your input method
+      #file-select-input.parse-option.input-select.right-column.rounded-corners
+        p [P1.2] Select / Drag a file with data:
+        input#file-input(type="file")
+        p#file-info
+        #file-loading
+          #loading-status
+      #text-field-input.parse-option.input-select.rounded-corners
+        p [P1.1] Input data into the text area:
+        textarea#text-input(rows="10", cols="45")
+      hr
+      
+      h2 [P2] Choose your configurations and options
+      #value-choice.parse-option.right-column.rounded-corners
+        #trash-choice
+          p [P2.2.1] What to do with un-matched / trash cell data?
+          input#trash-zero(type="radio", name="trash", checked=true)
+          label(for="trash-zero") Zero Out
+          input#trash-row(type="radio", name="trash")
+          label(for="trash-row") Discard Row
+        br
+        p [P2.2.2] Select value bases and ranges
+        p
+          input#no-value.text-input-field(type="text")
+          p.text-input-label "No" / Base Value:
+          input#yes-min.text-input-field(type="text")
+          p.text-input-label "Yes" Min:
+          input#yes-max.text-input-field(type="text")
+          p.text-input-label "Yes" Max:
+          
+      #delimiter-choice.parse-option.rounded-corners
+        p [P2.1] Select delimiters in the data
+        input#delimiter-comma(type="checkbox")
+        label(for="delimiter-comma") Comma
+        input#delimiter-space(type="checkbox")
+        label(for="delimiter-space") Space
+        input#delimiter-tab(type="checkbox")
+        label(for="delimiter-tab") Tab
+        br
+        p
+          input#delimiter-custom.text-input-field(type="text")
+          p.text-input-label Custom:
+          
+      #special-choice.parse-option.rounded-corners
+        p [P2.3.1] Choose any special options or omissions
+        input#first-row-vars(type="checkbox")
+        label(for="first-row-vars") First Row Variable Names
+        p [P2.3.2] Comma separated row / col values starting at 0
+        p
+          input#omit-rows.text-input-field(type="text")
+          p.text-input-label Omit Rows:
+          input#omit-cols.text-input-field(type="text")
+          p.text-input-label Omit Columns:
+      hr
+      div.centering-container  
+        button#purify-button(disabled="true") Purify Data
     #file-out.purifier-output
     #log-zone.purifier-output
-    
+      
   #analyzer.main-section.rounded-corners
     h1.ui-dialog-titlebar.ui-widget-header.rounded-corners Spectral Analysis
     h2 [You must first purify your data before analyzing it]
