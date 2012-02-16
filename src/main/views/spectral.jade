@@ -42,13 +42,13 @@
       h2 [P2] Choose your configurations and options
       #value-choice.parse-option.right-column.rounded-corners
         #trash-choice
-          p [P2.2.1] What to do with un-matched / trash cell data?
+          p [P2.3.1] What to do with un-matched / trash cell data?
           input#trash-zero(type="radio", name="trash", checked=true)
           label(for="trash-zero") Zero Out
           input#trash-row(type="radio", name="trash")
           label(for="trash-row") Discard Row
         br
-        p [P2.2.2] Select value bases and ranges
+        p [P2.3.2] Select value bases and ranges
         p
           input#no-value.text-input-field(type="text")
           p.text-input-label "No" / Base Value:
@@ -71,10 +71,10 @@
           p.text-input-label Custom:
           
       #special-choice.parse-option.rounded-corners
-        p [P2.3.1] Choose any special options or omissions
+        p [P2.2.1] Choose any special options or omissions
         input#first-row-vars(type="checkbox")
         label(for="first-row-vars") First Row Variable Names
-        p [P2.3.2] Comma separated row / col values starting at 0
+        p [P2.2.2] Comma separated row / col values starting at 0
         p
           input#omit-rows.text-input-field(type="text")
           p.text-input-label Omit Rows:

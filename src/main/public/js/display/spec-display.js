@@ -18,6 +18,7 @@ popup(
   null,
   {
     modal: true,
+    position: "center"
   }
 );
 
@@ -169,11 +170,32 @@ $(function () {
   
   // The messages of the help buttons
   helpMessages = [
-    "Test message for data input file",
-    "Test message for data input text",
-    "Test message for trash settings",
-    "Test message for delimiters",
-    "Test message for omissions"
+    "<p>The data input allows the user to upload data in one of the following formats:</p>" +
+    "<ul><li>.txt</li><li>.csv</li></ul>" +
+    "<p>Some browsers will allow drag-and-drop onto the file input. Others do not support file reading at all. Chrome is recommended.</p>",
+    
+    "<p>The text input allows the user to manually input data, or copy-paste from another data source.</p>" +
+    "<p>This input data may be further customized, although automatic syntax detection will only occur after navigating out of the text field.</p>",
+    
+    "<p>Trash settings determine if and how a data element that is considered \"trash\" will be handled. " +
+    "A data point that neither matches the \"No\" value nor falls within the \"Yes\" value range will be considered trash. " +
+    "Additionally, data that cannot be parsed into a number or contains text elements will be considered trash.</p>" +
+    "<ul><li>Zero Out: [DEFAULT] All single trash elements will receive the \"No\" indication and be zero'd out.</li></br>" +
+    "<li>Discard Row: A row containing any found trash element will be discarded entirely.</li></br>" +
+    "<li>\"No\" / Base Value: [DEFAULT: 0] The nil value in the given data that indicates the base level.</li></br>" + 
+    "<li>\"Yes\" Min: [DEFAULT: 1] The minimum value for the acceptable response range. Data outside of the range will be considered trash.</li></br>" + 
+    "<li>\"Yes\" Max: [DEFAULT: 1] The maximum value for the acceptable response range. Data outside of the range will be considered trash.</li></ul>",
+    
+    "<p>Delimiters determine the separators between individual elements in your data sets. New lines designate the ends of rows " + 
+    "whereas the chosen delimiters will separate the columns within each row.</p> <p>Clique will attempt to automatically detect any of the " +
+    "three standard delimiters (comma, space, tab) with the added option of defining a custom delimiter. Custom delimiter definition " +
+    "will treat the input as a single delimiter, e.g. \";:\" will look for the semicolon and colon as a single delimiter, not each individually.</p>",
+    
+    "<p>Omission definitions determine what data can be chucked entirely from the purified data:</p>" +
+    "<ul><li>First Row Variables: [DEFAULT: false] When enabled, the first row of the data is omitted from the purifier and analyzer, " +
+    "but preserved for reporting the names of variables based on their respective columns.</li></br>" +
+    "<li>Omit Rows: [DEFAULT: null] Omits all rows denoted by the given list of comma-separated integers (e.g. 0, 2, 5).</li></br>" +
+    "<li>Omit Columns: [DEFAULT: null] Omits all columns denoted by the given list of comma-separated integers (e.g. 1, 2, 4).</li></br></ul>"
   ];
   
   // Begin by checking the browser compatibility
@@ -238,6 +260,7 @@ $(function () {
         null,
         {
           modal: true,
+          position: "center"
         }
       );
       
