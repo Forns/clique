@@ -22,8 +22,17 @@ var popup = function (container, title, message, error, customs) {
     options[op] = customs[op];
   }
   
-  // Display the popup
+  // Add the message
   container
-    .html(message)
-    .dialog(options);
+    .html(message);
+    
+  // Any errors to report?
+  if (error) {
+    for (var i = 0; i < error.length; i++) {
+      container.append("<p class='error-text'>" + error[i] + "</p>")
+    }
+  }
+  
+  // Display the popup
+  container.dialog(options);
 };

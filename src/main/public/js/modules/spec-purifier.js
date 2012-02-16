@@ -10,8 +10,6 @@
 // data elements into the... well, the log...
 var purifyData = function (data, config, output, log) {
   var result = [],
-      currentChar = "",
-      currentToken = "",
       currentRow = [],
       delims = "[",
       varCount = 0,

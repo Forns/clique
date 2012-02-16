@@ -74,6 +74,14 @@ body {
   text-align: center;
 }
 
+.error-text {
+  color: red;
+}
+
+.error-bg {
+  background-color: red !important;
+}
+
 hr {
   margin-top: 20px;
   margin-bottom: 20px;
@@ -137,6 +145,14 @@ a:active {
 /* SPECTRAL */
 #browser-compat {
   padding: 3px;
+  display: none;
+}
+
+#error-button {
+  position: fixed;
+  border: 4px solid red;
+  right: 20px;
+  bottom: 20px;
   display: none;
 }
 

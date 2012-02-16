@@ -31,7 +31,7 @@ $(function () {
       file = null,
       fileData = null,
       textData = null,
-      configErr = "",
+      configErr = [],
       
       // Configuration settings
       config = {
@@ -54,6 +54,32 @@ $(function () {
         "yes-max": 1
       },
   
+  // Add error to the queue
+  validateOrError = function (configValue, errorMessage) {
+    var value = config[configValue],
+        valid = true;
+    // Reset any previous errors
+    $("#" + configValue).removeClass("error-bg");
+    
+    // These should all have number values
+    if ($.isArray(value)) {
+      for (var i = 0; i < value.length; i++) {
+        if (isNaN(Number(value[i]))) {
+          configErr.push(errorMessage);
+          valid = false;
+          break;
+        }
+      }
+    } else {
+      if (isNaN(Number(value))) {
+        configErr.push(errorMessage);
+        valid = false;
+      }
+    }
+    if (!valid) {$("#" + configValue).addClass("error-bg");}
+    return valid;
+  },
+  
   // Check that all fields have been satisfied to submit for analysis
   submissionCheck = function () {
     var disableParsing = true,
@@ -62,7 +88,18 @@ $(function () {
         omitCols = $("#omit-cols").val(),
         noValue = $("#no-value").val(),
         yesMin = $("#yes-min").val(),
-        yesMax = $("#yes-max").val();
+        yesMax = $("#yes-max").val(),
+        values = [
+          ["omit-rows", "[P2.2.2] Error: Non-numeric value for omit-rows."],
+          ["omit-cols", "[P2.2.2] Error: Non-numeric value for omit-cols."],
+          ["no-value", "[P2.3.2] Error: Non-numeric value for base value."],
+          ["yes-min", "[P2.3.2] Error: Non-numeric value for yes min."],
+          ["yes-max", "[P2.3.2] Error: Non-numeric value for yes max."]
+        ],
+        errorShowing = false;
+        
+    // Reset error messages
+    configErr = [];
         
     // Begin by checking input selection
     switch(inputSelected) {
@@ -86,6 +123,18 @@ $(function () {
     config["no-value"] = Boolean(noValue) ? noValue : 0;
     config["yes-min"] = Boolean(yesMin) ? yesMin : 1;
     config["yes-max"] = Boolean(yesMax) ? yesMax : 1;
+    
+    // Check for valid entries
+    for (var i = 0; i < values.length; i++) {
+      if (!validateOrError(values[i][0], values[i][1])) {
+        errorShowing = disableParsing = true;
+        $("#error-button").fadeIn(500);
+      }
+    }
+    
+    if (!errorShowing) {
+      $("#error-button").fadeOut(500);
+    }
     
     // Finish by either enabling or disabling the submission button
     $("#purify-button").button({disabled: disableParsing});
@@ -205,6 +254,11 @@ $(function () {
     .fadeIn(1000);
   }
   
+  // Error checking on textboxes
+  $(":text").change(function () {
+    submissionCheck();
+  });
+  
   // Set up input handlers
   // Handler for text-input
   $("#text-input")
@@ -251,19 +305,6 @@ $(function () {
   $("#purify-button")
     .button()
     .click(function () {
-      // Set up the loading modal
-      popup(
-        "dialog",
-        "Purifying...", 
-        "<p>Data is being purified, please wait...</p>" +
-        "<p class='centering-container'><img src='../assets/loading.gif' /></p>",
-        null,
-        {
-          modal: true,
-          position: "center"
-        }
-      );
-      
       textData = $("#text-input").val();
       var data = textData;
       if (inputSelected === 2) {
@@ -271,8 +312,22 @@ $(function () {
       }
       // Make sure there's at least one delimiter chosen
       if (!(config["delimiter-space"] || config["delimiter-comma"] || config["delimiter-tab"] || config["delimiter-custom"])) {
+        configErr.push("[!] No delimiter chosen; defaulting to auto-detect delimiters.");
         autoConfig();
       }
+      
+      // Set up the loading modal
+      popup(
+        "dialog",
+        "Purifying...", 
+        "<p>Data is being purified, please wait...</p>" +
+        "<p class='centering-container'><img src='../assets/loading.gif' /></p>",
+        configErr,
+        {
+          modal: true,
+          position: "center"
+        }
+      );
       
       $("#purifier-contents").fadeOut(1500);
       setTimeout(function () {
@@ -295,10 +350,6 @@ $(function () {
         } else {
           // Otherwise, there were errors, so check them
           $("#purifier-contents").fadeIn(1500);
-          
-          // Report errors
-          
-          // Clear errors
         }
       }, 500);
       
@@ -311,8 +362,21 @@ $(function () {
   $("#delimiter-choice").buttonset();
   $("#trash-choice").buttonset();
   $("#first-row-vars").button();
+  $("#error-button")
+    .button({icons: {primary: "ui-icon-alert"}})
+    .click(function () {
+      popup(
+        "dialog",
+        "Errors in Input",
+        "The following errors were found in your input:",
+        configErr,
+        {
+          modal: false
+        }
+      );
+    });
   $("#reset-button")
-    .button()
+    .button({icons: {primary: "ui-icon-refresh"}})
     .click(function () {
       window.location = window.location;
     });
