@@ -53,6 +53,7 @@ app.configure('production', function () {
  */
 
 require('./controllers/interface-controller.js')(app);
+require('./controllers/spec-controller.js')(app);
 require('../test/qunit/test-suite-controller.js')(app);
 
 /*

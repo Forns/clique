@@ -123,6 +123,7 @@ $(function () {
     config["no-value"] = Boolean(noValue) ? noValue : 0;
     config["yes-min"] = Boolean(yesMin) ? yesMin : 1;
     config["yes-max"] = Boolean(yesMax) ? yesMax : 1;
+    config["delimiter-custom"] = customDelim;
     
     // Check for valid entries
     for (var i = 0; i < values.length; i++) {
@@ -159,7 +160,7 @@ $(function () {
       reader.onprogress = readerProgress;
       
       // Set the reader to parse the given file onload
-      reader.onload = (function (f) {
+      reader.onloadend = (function (f) {
         return function (e) {
           fileData = reader.result;
           autoConfig();
@@ -306,9 +307,9 @@ $(function () {
     .button()
     .click(function () {
       textData = $("#text-input").val();
-      var data = textData;
+      var raw = textData;
       if (inputSelected === 2) {
-        data = fileData;
+        raw = fileData;
       }
       // Make sure there's at least one delimiter chosen
       if (!(config["delimiter-space"] || config["delimiter-comma"] || config["delimiter-tab"] || config["delimiter-custom"])) {
@@ -333,20 +334,34 @@ $(function () {
       setTimeout(function () {
         // Last check for data validity before running purifier
         if (submissionCheck()) {
-          // Performs the actual purification, setting the global pureData
-          pureData = purifyData(data, config, "file-out", "log-zone");
-          $("#dialog")
-            .delay(3500)
-            .queue(function () {
-              $(this).dialog("close");
-            });
-          // Display the data nicely
-          for (var i = 0; i < pureData.length; i++) {
-            $("#file-out").append(i + ": " + JSON.stringify(pureData[i]) + "</br>");
-          }
-          $("#file-out")
-            .delay(2000)
-            .slideDown(1000);
+          // Ajax call for the actual purification, setting the global pureData
+          $.ajax({
+            type: "POST",
+            url: "/specpure",
+            data: JSON.stringify({raw: raw, config: config}),
+            success: function (result) {
+              pureData = result;
+              $("#dialog")
+                .delay(3500)
+                .queue(function () {
+                  $(this).dialog("close");
+                });
+              // Display the data nicely
+              for (var i = 0; i < pureData.length; i++) {
+                $("#file-out").append(i + ": " + JSON.stringify(pureData[i]) + "</br>");
+              }
+              $("#file-out")
+                .delay(2000)
+                .slideDown(1000);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+              console.log(jqXHR);
+              console.log(textStatus);
+              console.log(errorThrown);
+            },
+            dataType: "json",
+            contentType: "application/json"
+          });
         } else {
           // Otherwise, there were errors, so check them
           $("#purifier-contents").fadeIn(1500);
