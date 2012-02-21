@@ -15,7 +15,7 @@ var express = require('express');
 var app = module.exports = express.createServer();
 
 app.configure(function () {
-  app.set('views', __dirname + '/views');
+  app.set('views', __dirname + '/src/main/views');
   app.set('view engine', 'jade');
   app.set('view options', {
     layout: false
@@ -34,7 +34,7 @@ app.configure(function () {
     secret: 'zombie devops feynman'
   }));
   app.use(app.router);
-  app.use(express['static'](__dirname + '/public'));
+  app.use(express['static'](__dirname + '/src/main/public'));
 });
 
 app.configure('development', function () {
@@ -52,9 +52,9 @@ app.configure('production', function () {
  * CONTROLLERS
  */
 
-require('./controllers/interface-controller.js')(app);
-require('./controllers/spec-controller.js')(app);
-require('../test/qunit/test-suite-controller.js')(app);
+require('./src/main/controllers/interface-controller.js')(app);
+require('./src/main/controllers/spec-controller.js')(app);
+require('./src/test/qunit/test-suite-controller.js')(app);
 
 /*
  * START THE SERVER
