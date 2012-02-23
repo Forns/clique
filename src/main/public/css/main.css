@@ -187,6 +187,10 @@ a:active {
   margin-right: 30px;
 }
 
+#text-input {
+  resize: none;
+}
+
 #file-select-input {
   overflow-y: auto;
 }
