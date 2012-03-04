@@ -120,6 +120,15 @@
     }
     return $M(result);
   };
+
+  // Returns a matrix whose rows are the k-element subsets
+  // of an n-element set
+  Matrix.kSet = function (n, k) {
+    var nChooseK = Math.choose(n, k),
+        result = Matrix.Zero(nChooseK, k);
+        
+    
+  };
   
 })();
 

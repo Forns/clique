@@ -83,14 +83,14 @@ $(function () {
   test("angleOf", function () {
     ok(isNaN(Complex.angleOf($C(0, 0))));
     ok(isNaN(Complex.angleOf(0)));
-    equals(Complex.angleOf(1), 0);
-    equals(Complex.angleOf(-1), 180);
-    equals(Complex.angleOf($C(0, 1)), Math.PI / 2);
-    equals(Complex.angleOf($C(1, 0)), 0);
-    equals(Complex.angleOf($C(1, 1)), Math.PI / 4);
-    equals(Complex.angleOf($C(-1, 1)), 3 * Math.PI / 4);
-    equals(Complex.angleOf($C(-1, -1)), -3 * Math.PI / 4);
-    equals(Complex.angleOf($C(1, -1)), -1 * Math.PI / 4);
+    equal(Complex.angleOf(1), 0);
+    equal(Complex.angleOf(-1), 180);
+    equal(Complex.angleOf($C(0, 1)), Math.PI / 2);
+    equal(Complex.angleOf($C(1, 0)), 0);
+    equal(Complex.angleOf($C(1, 1)), Math.PI / 4);
+    equal(Complex.angleOf($C(-1, 1)), 3 * Math.PI / 4);
+    equal(Complex.angleOf($C(-1, -1)), -3 * Math.PI / 4);
+    equal(Complex.angleOf($C(1, -1)), -1 * Math.PI / 4);
   });
   
   test("log", function () {
@@ -108,8 +108,8 @@ $(function () {
   });
   
   test("pow", function () {
-    equals(Complex.pow(2, 3), 8);
-    equals(Complex.pow(2, 0), 1);
+    equal(Complex.pow(2, 3), 8);
+    equal(Complex.pow(2, 0), 1);
     ok(Complex.pow($C(2), 2), $C(4));
     ok(Complex.pow($C(2), 0), $C(1));
     ok(Complex.pow($C(0, 2), 3), $C(0, -8));
@@ -127,7 +127,7 @@ $(function () {
   });
   
   test("negate", function () {
-    equals(Complex.negate(3), -3);
+    equal(Complex.negate(3), -3);
     ok($C(0, 0).negate().equals($C(0, 0)));
     ok($C(-2, 3).negate().equals($C(2, -3)));
     ok(Complex.negate($C(1, -3)).equals($C(-1, 3)));
@@ -341,38 +341,38 @@ $(function () {
   });
   
   test("Matrix: sums", function () {
-    equals(
+    equal(
       $M(
         [0]
       ).sum(), 0
     );
     
-    equals(
+    equal(
       $M(
         [1]
       ).sum(), 1
     );
     
-    equals(
+    equal(
       $M(
         [1, 0, 1]
       ).sum(), 2
     );
     
-    equals(
+    equal(
       $M([
         [1, 1, 1],
         [2, 2, 2]
       ]).sum(), 9
     );
     
-    equals(
+    equal(
       $M(
         [1, 2, 3]
       ).sum(2), 14
     );
     
-    equals(
+    equal(
       $M([
         [1, 2, 3],
         [1, 2, -3]
@@ -414,19 +414,19 @@ $(function () {
   });
   
   test("Matrix: norm", function () {
-    equals(
+    equal(
       $M([
         [0]
       ]).norm(), 0
     );
     
-    equals(
+    equal(
       $M([
         [0, 1, 0]
       ]).norm(), 1
     );
     
-    equals(
+    equal(
       $M([
         [0, 2, 2],
         [-2, 2, 0]
@@ -545,20 +545,11 @@ $(function () {
   /*
    * Tests for the eig module
    */
-  module("Eigenvectors");
+  module("Spectral Analysis");
   
-  test("Multiplicities", function () {
+  test("kSet", function () {
     // TODO
   });
-  
-  test("gausianElimination", function () {
-    // TODO
-  });
-  
-  test("pivotSwap", function () {
-    // TODO
-  });
-  
   
   /***** TESTING SECTION *****/
   test("testingSection", function() {
