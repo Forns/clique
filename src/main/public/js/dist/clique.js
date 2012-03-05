@@ -1247,6 +1247,41 @@ var Clique = $CQ = function () {};
     }
     return $M(result);
   };
+
+  // Returns a matrix whose rows are the k-element subsets
+  // of an n-element set
+  Matrix.kSet = function (n, k) {
+    var nChooseK = Math.choose(n, k),
+        result = Matrix.Zero(nChooseK, k);
+    
+    // Recursion has terminated, so return null    
+    if (n < k || k <= 0) {
+      return null;
+    
+    // Otherwise, we just have a single row
+    } else if (k === 1) {
+      for (var i = 1; i <= n; i++) {
+        result.setElement(1, i, i);
+      }
+      return result.transpose();
+    
+    // Otherwise, we recurse and construct the rows
+    } else {
+      var subMatrix = Matrix.kSet(n - 1, k - 1),
+          count = 1;
+      // We may have a null return, so just break out
+      if (!subMatrix) {return;}
+      for (var i = 1; i <= subMatrix.rows(); i++) {
+        for (var j = subMatrix.e(i, k - 1) + 1; j < n; j++) {
+          for (var m = 1; m < result.cols(); m++) {
+            result.setElement(count, m, subMatrix.e(i, m));
+            count++;
+          }
+        }
+      }
+      return result;
+    }
+  };
   
 })();
 

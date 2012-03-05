@@ -554,6 +554,7 @@ $(function () {
   /***** TESTING SECTION *****/
   test("testingSection", function() {
     // Left intentionally blank >_> <_<
+    console.log(Matrix.kSet(5, 2));
   });
   
 });
