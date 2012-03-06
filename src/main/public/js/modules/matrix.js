@@ -146,10 +146,8 @@
       if (!subMatrix) {return;}
       for (var i = 1; i <= subMatrix.rows(); i++) {
         for (var j = subMatrix.e(i, k - 1) + 1; j < n; j++) {
-          for (var m = 1; m < result.cols(); m++) {
-            result.setElement(count, m, subMatrix.e(i, m));
-            count++;
-          }
+          result.setRow(count, subMatrix.row(i)); // TODO: Vector concatenation here
+          count++;
         }
       }
       return result;
