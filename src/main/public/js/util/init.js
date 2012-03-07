@@ -14,17 +14,20 @@ var loc = window.location.toString().split("/"),
 loc = loc[loc.length - 1];
 
 // Page specific inclusions
-if (loc === "") {
-  includes.push("./js/display/index-display.js");
-}
-
-if (loc === "test") {
-  includes.push("./js/dist/clique.js");
-}
-
-if (loc === "spectral") {
-  includes.push("./js/util/popup.js");
-  includes.push("./js/display/spec-display.js");
+switch (loc) {
+  case "":
+    includes.push("./js/display/index-display.js");
+    break;
+  case "test":
+    includes.push("./js/dist/clique.js");
+    break;
+  case "spectral":
+    includes.push("./js/util/popup.js");
+    includes.push("./js/display/spec-display.js");
+    break;
+  case "api":
+    includes.push("./js/display/api-display.js");
+    break;
 }
 
 // Perform necessary inclusions

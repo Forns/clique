@@ -248,6 +248,12 @@ $(function () {
     equal($V([$C(2, -1), $C(2, 0), $C(0, 2), 3]).inspect(), "[2-i, 2, 2i, 3]");
   });
   
+  test("Vector: append", function () {
+    ok($V([1]).append().eql($V([1])));
+    ok($V([1]).append(2).eql($V([1, 2])));
+    ok($V([0, 0, 0]).append(0).eql($V([0, 0, 0, 0])));
+  });
+  
   test("Matrix: Complex Elements", function () {
     equal($M([$C(0, 1)]).inspect(), "[i]");
     equal($M([$C(2, -1)]).inspect(), "[2-i]");

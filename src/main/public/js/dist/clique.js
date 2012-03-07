@@ -367,6 +367,14 @@ Vector.prototype = {
   dup: function() {
     return Vector.create(this.elements);
   },
+  
+  // Used to append a new element to the end of a vector
+  append: function(n) {
+    if (!(typeof(n) === "undefined")) {
+      this.elements.push(n);
+    }
+    return this;
+  },
 
   // Maps the vector to another vector according to the given function
   map: function(fn) {
@@ -1273,7 +1281,7 @@ var Clique = $CQ = function () {};
       if (!subMatrix) {return;}
       for (var i = 1; i <= subMatrix.rows(); i++) {
         for (var j = subMatrix.e(i, k - 1) + 1; j < n; j++) {
-          result.setRow(count, subMatrix.row(i));
+          result.setRow(count, subMatrix.row(i).append(j));
           count++;
         }
       }

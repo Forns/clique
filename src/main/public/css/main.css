@@ -51,6 +51,7 @@ body {
 
 #dialog {
   display: none;
+  text-align: left;
 }
 
 .help-button {
@@ -107,10 +108,6 @@ h2 {
   font-size: 20px;
 }
 
-#dialog {
-  text-align: left;
-}
-
 a:link {
   color: #b83f00;
   text-decoration: none;
@@ -140,6 +137,13 @@ a:active {
   padding: 10px;
   width: 200px;
   margin-right: -240px;
+}
+
+/* API */
+#api-nav-button {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
 }
 
 /* SPECTRAL */
