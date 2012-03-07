@@ -146,6 +146,10 @@ a:active {
   bottom: 20px;
 }
 
+#api-list {
+  padding: 0;
+}
+
 /* SPECTRAL */
 #browser-compat {
   padding: 3px;

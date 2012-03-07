@@ -12,10 +12,15 @@ $(function () {
       $("#api-list").dialog({
         title: "Navigation Menu",
         modal: false,
-        resizable: false
+        resizable: false,
+        closeOnEscape: false,
+        position: [30, 200],
+        width: 200
       });
     });
     
   $("#api-nav-button").trigger("click");
+  
+  $("#accordion").accordion();
     
 });
