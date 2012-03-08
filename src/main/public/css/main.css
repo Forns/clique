@@ -108,6 +108,10 @@ h2 {
   font-size: 20px;
 }
 
+h3 {
+  color: #b83f00;
+}
+
 a:link {
   color: #b83f00;
   text-decoration: none;
@@ -148,6 +152,29 @@ a:active {
 
 #api-list {
   padding: 0;
+  overflow-x: hidden;
+  display: none;
+}
+
+.nav-link {
+  margin-bottom: 8px;
+  display: block;
+}
+
+.api-title {
+  margin-top: 30px;
+  padding: 2px;
+  padding-left: 4px;
+  background-color: #444444;
+}
+
+.api-item {
+  padding-left: 20px;
+}
+
+.api-example {
+  font-family: "Courier New", "Lucida Console", Monospace;
+  padding-left: 40px;
 }
 
 /* SPECTRAL */
