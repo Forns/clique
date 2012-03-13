@@ -35,7 +35,10 @@ $(function () {
         title: "Navigation Menu",
         modal: false,
         resizable: false,
+        collapsible: true,
         closeOnEscape: false,
+        show: "fade",
+        hide: "fade",
         position: [30, 200],
         width: 200
       });
@@ -45,7 +48,10 @@ $(function () {
   $("#api-nav-button").trigger("click");
   
   // Set up the accordion options
-  $("#accordion").accordion();
+  $("#accordion").accordion({
+    autoHeight: false,
+    collapsible: true
+  });
   
   // Keeps the navigator in the display
   // Credit to William Duffy for this tip

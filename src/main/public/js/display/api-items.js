@@ -30,6 +30,96 @@ var apiItems = {
       example: "Complex.equal(2, $C(2)); // True<br/>" +
         "Complex.equal($C(2, 1), $C(2, 1)); // True<br/>" +
         "Complex.equal($C(5, 1), 5); // False"
+    },
+    
+    fromRect: {
+      title: "fromRect(a, b)",
+      use: "Mutates the given Complex number to have the real component a and imaginary component b.",
+      example: "var x = $C(1, 2);<br/>x.fromRect(3, 1); // x is now 3 + i"
+    },
+    
+    fromPolar: {
+      title: "fromPolar(r, theta)",
+      use: "Mutates the given Complex number to have the real component r * cos(theta) and imaginary " +
+        "component r * sin(theta) [theta in radians].",
+      example: "var y = $C(0, 0);<br/>y.fromPolar(-1, Math.PI / 2); // x is now -i"
+    },
+    
+    angleOf: {
+      title: "Complex.angleOf(z)",
+      use: "Returns the <strong>principle argument (Arg)</strong> of the given complex number z.",
+      example: "var z = $C(1, 1);<br/>Complex.angleOf(z); // pi + pi * i"
+    },
+    
+    negate: {
+      title: "Complex.negate(z)",
+      use: "With z = x + i * y, Complex.negate(z) returns a new Complex z = -x - i * y<br/>" +
+        "[!] Not a mutator",
+      example: ""
+    },
+    
+    magnitude: {
+      title: "Complex.magnitude(z)",
+      use: "Returns the modulus of z, sqrt(x^2 + y^2) in z = x + i * y",
+      example: ""
+    },
+    
+    log: {
+      title: "Complex.log(n, k)",
+      use: "Returns the log base k of the given number n.<br/>[!] If k unspecified, defaults to base e.",
+      example: ""
+    },
+    
+    exp: {
+      title: "Complex.exp(z)",
+      use: "Returns e^z",
+      example: ""
+    },
+    
+    pow: {
+      title: "Complex.pow(n, k)",
+      use: "Returns n^k",
+      example: ""
+    },
+    
+    round: {
+      title: "Complex.round(n, k)",
+      use: "Returns a new Complex with the real and imaginary components rounded to the nearest integer.",
+      example: ""
+    },
+    
+    add: {
+      title: "Complex.add(a, b)",
+      use: "Adds the two numbers a and b, returning a new Complex if either a or b are Complex.",
+      example: ""
+    },
+    
+    sub: {
+      title: "Complex.sub(a, b)",
+      use: "Subtracts b from a (a - b), returning a new Complex if either a or b are Complex.",
+      example: ""
+    },
+    
+    mult: {
+      title: "Complex.mult(a, b)",
+      use: "Multiplies a by b, returning a new Complex if either a or b are Complex.",
+      example: "// a x b = $C(aReal * bReal - aIm * bIm, aReal * bIm + bReal * aIm);"
+    },
+    
+    divide: {
+      title: "Complex.divide(a, b)",
+      use: "Divides a by b (a / b), returning a new Complex number if either a or b are Complex.",
+      example: "// If z = a + b * i and m = c + d * i, then z / m is:</br>" +
+        "$C(<br/>" +
+        "&nbsp&nbsp(a * c + b * d) / (c * c + d * d),<br/>" +
+        "&nbsp&nbsp(b * c - a * d) / (c * c + d * d)<br/>" +
+        ");"
+    },
+    
+    sqrt: {
+      title: "Complex.sqrt(n)",
+      use: "Returns the square root of n, the result being Complex if n is a real < 0",
+      example: "var x = -1;<br/>Complex.sqrt(x); // Returns $C(0, 1)"
     }
   },
   
