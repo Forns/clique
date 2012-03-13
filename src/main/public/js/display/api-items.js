@@ -205,6 +205,18 @@ var apiItems = {
       example: ""
     },
     
+    e: {
+      title: "e(n)",
+      use: "Returns the n<sup>th</sup> element with 1 as the first index",
+      example: "var v = $V(0, 1, 2, 3);<br/>v.e(2); // 1"
+    },
+    
+    dimensions: {
+      title: "dimensions()",
+      use: "Returns the number of elements in the given Vector.",
+      example: ""
+    },
+    
     thing: {
       title: "",
       use: "",
