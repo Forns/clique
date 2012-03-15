@@ -264,6 +264,13 @@ var apiItems = {
       example: ""
     },
     
+    firstNonZero: {
+      title: "firstNonZero()",
+      use: "Returns an array: [i, j, k] denoting the row i, column j, and value k of the first non-zero element " +
+        "in the matrix. i, j, k are 0 if the matrix is all-zeros.",
+      example: ""
+    },
+    
     indexOf: {
       title: "indexOf(x)",
       use: "Reads the caller’s elements row by row from left to right and returns an object containing the " + 
@@ -373,6 +380,18 @@ var apiItems = {
       example: ""
     },
     
+    norm: {
+      title: "norm",
+      use: "Returns the sqrt of the sum of all matrix elements squared.",
+      example: ""
+    },
+    
+    ones: {
+      title: "Matrix.ones(i, j)",
+      use: "Returns a new matrix consisting exclusively of 1's with i rows and j columns.",
+      example: ""
+    },
+    
     rank: {
       title: "rank()",
       use: "Returns the caller's rank, which is the number of linearly independent rows/columns it contains.",
@@ -411,6 +430,24 @@ var apiItems = {
       example: ""
     },
     
+    setElement: {
+      title: "setElement(i, j, k)",
+      use: "Sets the matrix element at row i, column j to the value k.",
+      example: ""
+    },
+    
+    setRow: {
+      title: "setRow(row, vector)",
+      use: "Sets the given row of the calling matrix to the provided vector.",
+      example: ""
+    },
+    
+    setCol: {
+      title: "setCol(col, vector)",
+      use: "Sets the given column of the calling matrix to the provided vector.",
+      example: ""
+    },
+    
     snapTo: {
       title: "snapTo(x)",
       use: "Returns a copy of the receiver in which any elements that differ from x by less than the value " + 
@@ -418,10 +455,28 @@ var apiItems = {
       example: ""
     },
     
+    sort: {
+      title: "sort()",
+      use: "Sorts the numbers in a matrix's columns in ascending order.<br/>[!] Cannot sort Complex entities.",
+      example: ""
+    },
+    
     subtract: {
       title: "subtract(matrix)",
       use: "Returns the result of subtracting matrix from the receiver. Thus, A.subtract(B) is equivalent to " + 
         "A − B. Returns null if the matrices are different sizes.",
+      example: ""
+    },
+    
+    sort: {
+      title: "sort()",
+      use: "Sorts the numbers in a matrix's columns in ascending order.<br/>[!] Cannot sort Complex entities.",
+      example: ""
+    },
+    
+    swapRows: {
+      title: "swapRows(m, n)",
+      use: "Swaps the positions of matrix rows m and n.",
       example: ""
     },
     
@@ -497,6 +552,12 @@ var apiItems = {
     zero: {
       title: "Vector.zero(n)",
       use: "Returns a vector with n elements, all of which are zero.",
+      example: ""
+    },
+    
+    append: {
+      title: "append(n)",
+      use: "Appends a single value, n, to the end of the Vector.",
       example: ""
     },
     
@@ -610,9 +671,9 @@ var apiItems = {
     
     setElements: {
       title: "setElements(e)",
-      use: "Sets the receiver's elements property equal to the array els. Since version 0.1.1, the " + 
-        "numericality of els�s elements is not checked for performance reasons. It is assumed you�ll " + 
-        "be using this with numbers, and if you throw anything else in then most method calls won�t work.",
+      use: "Sets the receiver's elements property equal to the array e. Since version 0.1.1, the " + 
+        "numericality of e's elements is not checked for performance reasons. It is assumed you'll " + 
+        "be using this with numbers, and if you throw anything else in then most method calls won't work.",
       example: ""
     },
     
