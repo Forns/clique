@@ -156,6 +156,12 @@ a:active {
   display: none;
 }
 
+.nav-box {
+  height: 400px;
+  text-align: left;
+  overflow-x: hidden;
+}
+
 .nav-link {
   margin-bottom: 8px;
   display: block;

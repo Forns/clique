@@ -200,9 +200,276 @@ var apiItems = {
         "// &nbsp&nbsp9 1 5 0 0 1"
     },
     
-    title: {
-      title: "",
-      use: "",
+    canMultiplyFromLeft: {
+      title: "canMultiplyFromLeft(matrix)",
+      use: "A.canMultiplyFromLeft(B) returns true iff AB is a mathematically valid expression. This is the case iff A " + 
+        "has the same number of columns as B has rows. matrix can also be a Vector, as long as it has the same number of " +
+        "elements as the receiver has rows.",
+      example: ""
+    },
+    
+    col: {
+      title: "col(j)",
+      use: "Returns the j<sup>th</sup> column of the caller as a Vector.",
+      example: ""
+    },
+    
+    cols: {
+      title: "cols()",
+      use: "Returns the number of columns of the caller.",
+      example: ""
+    },
+    
+    determinant: {
+      title: "determinant()",
+      use: "If the caller is square, returns its determinant, otherwise returns null. Note that if the caller is singular, " + 
+        "this method will return exactly zero, with no rounding errors.",
+      example: ""
+    },
+    
+    det: {
+      title: "det()",
+      use: "Alias for determinant.",
+      example: ""
+    },
+    
+    diagonal: {
+      title: "diagonal()",
+      use: "If the caller is square, returns its leading-diagonal elements as a Vector. Otherwise, returns null.",
+      example: ""
+    },
+    
+    dimensions: {
+      title: "dimensions()",
+      use: "Returns an object containing the caller's dimensions.",
+      example: "var dims = Matrix.Zero(4, 3).dimensions();<br/>//dims is {rows: 4, cols: 3}"
+    },
+    
+    dup: {
+      title: "dup()",
+      use: "Returns a copy of the caller.",
+      example: ""
+    },
+    
+    e: {
+      title: "e(i, j)",
+      use: "A.e(i,j) returns the element Aij of matrix A, that is the element in the ith row and jth column. " + 
+        "Indexes begin at 1, in agreement with mathematical notation.",
+      example: ""
+    },
+    
+    eql: {
+      title: "eql(matrix)",
+      use: "Returns true iff matrix has all its elements equal to those of the receiver.",
+      example: ""
+    },
+    
+    indexOf: {
+      title: "indexOf(x)",
+      use: "Reads the callerâ€™s elements row by row from left to right and returns an object containing the " + 
+        "indeces of the first exact match. Returns null if no match is found.",
+      example: "var stuff = $M([<br/>" +
+        "&nbsp&nbsp[0,9,4],<br/>" +
+        "&nbsp&nbsp[9,5,8],<br/>" +
+        "&nbsp&nbsp[1,5,3]<br/>" +
+      "]).indexOf(9);<br/><br/>" +
+      "// stuff is {row: 1, col: 2}"
+    },
+    
+    inspect: {
+      title: "inspect()",
+      use: "Returns a string representation of the caller.",
+      example: "alert(Matrix.I(4).inspect());<br/><br/>" +
+        "// alerts:<br/>" +
+        "// [1, 0, 0, 0]<br/>" +
+        "// [0, 1, 0, 0]<br/>" +
+        "// [0, 0, 1, 0]<br/>" +
+        "// [0, 0, 0, 1]"
+    },
+    
+    inverse: {
+      title: "inverse()",
+      use: "Returns the matrix inverse of the receiver, if one exists. If the matrix is singular or not square, " + 
+        "then null is returned. The inverse is computed using Gauss-Jordan elimination.",
+      example: ""
+    },
+    
+    inv: {
+      title: "inv()",
+      use: "Alias for inverse.",
+      example: ""
+    },
+    
+    isSameSizeAs: {
+      title: "isSameSizeAs(matrix)",
+      use: "Returns true iff matrix has the same number of rows and columns as the receiver. matrix can also be a " + 
+        "Vector, as long as it has the same number of elements as the receiver has rows.",
+      example: ""
+    },
+    
+    isSingular: {
+      title: "isSingular()",
+      use: "Returns true iff the caller is square and has zero determinant.",
+      example: ""
+    },
+    
+    isSquare: {
+      title: "isSquare()",
+      use: "Returns true iff the caller is a square matrix.",
+      example: ""
+    },
+    
+    map: {
+      title: "map(iterator)",
+      use: "Maps the caller to another matrix by calling iterator on each element of the caller in turn. iterator " +
+        "receives the row and column index of each element as second and third arguments. Some examples:",
+      example: "// Square all the elements of a matrix:<br/>" +
+        "var A_sq = A.map(function(x) { return x * x; });<br/><br/>" +
+        "// Determine whether a matrix is symmetric:<br/>" +
+        "var is_sym = (A.map(<br/>" +
+          "function(x, i, j) { return (A.e(i,j) == A.e(j,i)) ? 1 : 0; }<br/>" +
+        ").indexOf(0) === null);"
+    },
+    
+    max: {
+      title: "max()",
+      use: "Returns the max value of the elemnt of the caller with the largest absolute value.",
+      example: ""
+    },
+    
+    minor: {
+      title: "minor(i, j, m, n)",
+      use: "This method returns a matrix formed from a subset of the receiverâ€™s elements. It selects elements beginning " + 
+        "at row i and column j of the receiver, and returns a matrix with n rows and m columns. The selection wraps to the " + 
+        "other side of the receiver if n or m is large enough. This is best illustrated by example:",
+      example: "var M = $M([<br/>" +
+      "&nbsp&nbsp[9,2,6,5],<br/>" +
+      "&nbsp&nbsp[0,1,7,4],<br/>" +
+      "&nbsp&nbsp[4,2,6,7],<br/>" +
+      "&nbsp&nbsp[1,8,5,3]<br/>" +
+      "]);<br/><br/>" +
+      "var A = M.minor(2,1,2,3);<br/>" +
+      "// 0 1 7<br/>" +
+      "// 4 2 6<br/><br/>" +
+      "var B = M.minor(1,4,3,3);<br/>" +
+      "// 5 9 2<br/>" +
+      "// 4 0 1<br/>" +
+      "// 7 4 2<br/><br/>" +
+      "// Augment M with itself<br/>" +
+      "var C = M.minor(1,1,4,8);<br/>" +
+      "// 9 2 6 5 9 2 6 5<br/>" +
+      "// 0 1 7 4 0 1 7 4<br/>" +
+      "// 4 2 6 7 4 2 6 7<br/>" +
+      "// 1 8 5 3 1 8 5 3"
+    },
+    
+    multiply: {
+      title: "multiply(object)",
+      use: "If object is a matrix, then this method returns the result of multiplying the receiver by object in that order: " + 
+        "A.multiply(B) means AB. If object is a Vector, then it is converted to a column matrix, multiplied by the receiver, " + 
+        "and the result is returned as a Vector (this saves you having to call col(1) on the result). If object is a scalar, then " + 
+        "the method returns a copy of the receiver with all its elements multiplied by object.<br/><br/> "+ 
+        "[!]This method is aliased as x.",
+      example: ""
+    },
+    
+    rank: {
+      title: "rank()",
+      use: "Returns the caller's rank, which is the number of linearly independent rows/columns it contains.",
+      example: ""
+    },
+    
+    rk: {
+      title: "rk()",
+      use: "Alias for rank.",
+      example: ""
+    },
+    
+    round: {
+      title: "round()",
+      use: "Returns a copy of the caller with all of its elements rounded to the nearest integer.",
+      example: ""
+    },
+    
+    row: {
+      title: "row(i)",
+      use: "Returns the i<sup>th</sup> row of the caller as a Vector.",
+      example: ""
+    },
+    
+    rows: {
+      title: "rows()",
+      use: "Returns the number of rows the caller has.",
+      example: ""
+    },
+    
+    setElements: {
+      title: "setElements(elements)",
+      use: "Sets the receiverâ€™s elements from the array elements. The element arrayâ€™ top-level " + 
+        "elements should be the rows, and each row is an array of values reading from left to right " + 
+        "across the columns. See Matrix.create.",
+      example: ""
+    },
+    
+    snapTo: {
+      title: "snapTo(x)",
+      use: "Returns a copy of the receiver in which any elements that differ from x by less than the value " + 
+        "of Sylvester.precision are set exactly equal to x.",
+      example: ""
+    },
+    
+    subtract: {
+      title: "subtract(matrix)",
+      use: "Returns the result of subtracting matrix from the receiver. Thus, A.subtract(B) is equivalent to " + 
+        "A âˆ’ B. Returns null if the matrices are different sizes.",
+      example: ""
+    },
+    
+    toRightTriangular: {
+      title: "toRightTriangular()",
+      use: "Returns a copy of the receiver converted to right triangular form. The conversion is done only by " + 
+        "adding multiples of rows to other rows, so the determinant (if the matrix is square) is unchanged. This " + 
+        "method can be used on non-square matrices, which lets you use it to solve sets of simultaneous equations. " + 
+        "For example: solving the system of linear equations<br/>" + 
+        "<ul><li>3x + 2y - z = 1</li><li>2x - 2y + 4z = -2</li><li>-x + (1/2)y - z = 0</li></ul><br/><br/>would be written as:",
+      example: "var equations = $M([<br/>" +
+        "&nbsp&nbsp[ 3,   2, -1,  1],<br/>" +
+        "&nbsp&nbsp[ 2,  -2,  4, -2],<br/>" +
+        "&nbsp&nbsp[-1, 0.5, -1,  0]<br/>" +
+      "]);<br/><br/>" +
+      "var eqns = equations.toRightTriangular();<br/>" +
+      "var sol_z = eqns.e(3,4) / eqns.e(3,3);<br/>" +
+      "var sol_y = (eqns.e(2,4) - eqns.e(2,3)*sol_z) / eqns.e(2,2);<br/>" +
+      "var sol_x = (eqns.e(1,4) - eqns.e(1,3)*sol_z - eqns.e(1,2)*sol_y) / eqns.e(1,1);<br/>"
+    },
+    
+    toUpperTriangular: {
+      title: "toUpperTriangular()",
+      use: "Alias for toRightTriangular.",
+      example: ""
+    },
+    
+    trace: {
+      title: "trace()",
+      use: "Returns the trace for square matrices, which is the sum of their leading-diagonal elements.",
+      example: ""
+    },
+    
+    tr: {
+      title: "tr()",
+      use: "Alias for trace.",
+      example: ""
+    },
+    
+    transpose: {
+      title: "transpose()",
+      use: "Returns the matrix transpose of the caller.",
+      example: ""
+    },
+    
+    x: {
+      title: "x(k)",
+      use: "Alias for multiply(k).",
       example: ""
     }
   },
@@ -268,7 +535,7 @@ var apiItems = {
       title: "each(iterator)",
       use: "Calls iterator for each element of the receiver. iterator is passed the index (numbered from 1) " + 
         "of each element as the second argument. For example, the following alerts the index and value of " + 
-        "each of the vectorÕs elements:",
+        "each of the vectorï¿½s elements:",
       example: "$V([4,9,3,6]).each(function(x, i) {<br/>" +
         "&nbsp&nbspalert(i + ': ' + x);<br/>" +
         "});<br/>" +
@@ -344,8 +611,8 @@ var apiItems = {
     setElements: {
       title: "setElements(e)",
       use: "Sets the receiver's elements property equal to the array els. Since version 0.1.1, the " + 
-        "numericality of elsÕs elements is not checked for performance reasons. It is assumed youÕll " + 
-        "be using this with numbers, and if you throw anything else in then most method calls wonÕt work.",
+        "numericality of elsï¿½s elements is not checked for performance reasons. It is assumed youï¿½ll " + 
+        "be using this with numbers, and if you throw anything else in then most method calls wonï¿½t work.",
       example: ""
     },
     
@@ -368,7 +635,7 @@ var apiItems = {
       use: "If the receiver is 3-dimensional, it returns a copy of the receiver. If it is 2-dimensional, " + 
         "it returns a copy of the receiver with an additional third element, which is set to zero. For " + 
         "all other sizes, it returns null. Something is similar is done in many of the methods of the " + 
-        "Line and Plane classes, although for performance reasons they donÕt use this method.",
+        "Line and Plane classes, although for performance reasons they donï¿½t use this method.",
       example: ""
     },
     
