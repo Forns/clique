@@ -17,7 +17,7 @@ var apiItems = {
     angleOf: {
       title: "Complex.angleOf(z)",
       use: "Returns the <strong>principle argument (Arg)</strong> of the given complex number z.",
-      example: "var z = $C(1, 1);<br/>Complex.angleOf(z); // pi + pi * i"
+      example: "var z = $C(1, 1);<br/>Complex.angleOf(z); // (pi / 4) + (pi / 4) * i"
     },
     
     areComplex: {
@@ -175,6 +175,34 @@ var apiItems = {
     zero: {
       title: "Matrix.zero(n, m)",
       use: "Returns a matrix with n rows and m columns, all the elements of which are zero.",
+      example: ""
+    },
+    
+    add: {
+      title: "add(matrix)",
+      use: "Returns the matrix sum of the receiver and matrix. Thus, A.add(B) is equivalent to " + 
+        "A + B. Returns null if the matrices are different sizes.",
+      example: ""
+    },
+    
+    augment: {
+      title: "augment(matrix)",
+      use: "Returns the result of augmenting the receiver with matrix, that is, appending matrix " + 
+        "to the right hand side of the receiver. Both matrices must have the same number of rows for this to work.",
+      example: "var M = $M([<br/>" +
+          "&nbsp&nbsp[8,3,0],<br/>" +
+          "&nbsp&nbsp[4,4,2],<br/>" +
+          "&nbsp&nbsp[9,1,5]<br/>" +
+        "]).augment(Matrix.I(3));<br/><br/>" +
+        "// M is the matrix<br/>" +
+        "// &nbsp&nbsp8 3 0 1 0 0<br/>" +
+        "// &nbsp&nbsp4 4 2 0 1 0<br/>" +
+        "// &nbsp&nbsp9 1 5 0 0 1"
+    },
+    
+    title: {
+      title: "",
+      use: "",
       example: ""
     }
   },
