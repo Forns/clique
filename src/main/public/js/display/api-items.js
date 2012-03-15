@@ -8,12 +8,16 @@
 var apiItems = {
   // Contains API elements for the complex lib
   "complex": {
-    create: {
-      title: "Complex.create(real, imaginary) || $C(real, imaginary)",
-      use: "Returns a new complex number with real (x) and imaginary (y) components " +
-        "of the form x + iy where i is the imaginary unit.",
-      example: "var z = Complex.create(1, -1); // z = 1 - i<br/>" +
-        "var m = $C(0, 3); // m = 3i"
+    add: {
+      title: "Complex.add(a, b)",
+      use: "Adds the two numbers a and b, returning a new Complex if either a or b are Complex.",
+      example: ""
+    },
+    
+    angleOf: {
+      title: "Complex.angleOf(z)",
+      use: "Returns the <strong>principle argument (Arg)</strong> of the given complex number z.",
+      example: "var z = $C(1, 1);<br/>Complex.angleOf(z); // pi + pi * i"
     },
     
     areComplex: {
@@ -23,6 +27,24 @@ var apiItems = {
       example: "Complex.areComplex([$C(1), 2, 3]); // False"
     },
     
+    create: {
+      title: "Complex.create(real, imaginary) || $C(real, imaginary)",
+      use: "Returns a new complex number with real (x) and imaginary (y) components " +
+        "of the form x + iy where i is the imaginary unit.",
+      example: "var z = Complex.create(1, -1); // z = 1 - i<br/>" +
+        "var m = $C(0, 3); // m = 3i"
+    },
+    
+    divide: {
+      title: "Complex.divide(a, b)",
+      use: "Divides a by b (a / b), returning a new Complex number if either a or b are Complex.",
+      example: "// If z = a + b * i and m = c + d * i, then z / m is:</br>" +
+        "$C(<br/>" +
+        "&nbsp&nbsp(a * c + b * d) / (c * c + d * d),<br/>" +
+        "&nbsp&nbsp(b * c - a * d) / (c * c + d * d)<br/>" +
+        ");"
+    },
+    
     equal: {
       title: "Complex.equal(a, b)",
       use: "Compares two numbers, a and b, and returns a boolean denoting if they're, surprise, equal.<br/> " +
@@ -30,6 +52,12 @@ var apiItems = {
       example: "Complex.equal(2, $C(2)); // True<br/>" +
         "Complex.equal($C(2, 1), $C(2, 1)); // True<br/>" +
         "Complex.equal($C(5, 1), 5); // False"
+    },
+    
+    exp: {
+      title: "Complex.exp(z)",
+      use: "Returns e^z",
+      example: ""
     },
     
     fromRect: {
@@ -45,16 +73,9 @@ var apiItems = {
       example: "var y = $C(0, 0);<br/>y.fromPolar(-1, Math.PI / 2); // x is now -i"
     },
     
-    angleOf: {
-      title: "Complex.angleOf(z)",
-      use: "Returns the <strong>principle argument (Arg)</strong> of the given complex number z.",
-      example: "var z = $C(1, 1);<br/>Complex.angleOf(z); // pi + pi * i"
-    },
-    
-    negate: {
-      title: "Complex.negate(z)",
-      use: "With z = x + i * y, Complex.negate(z) returns a new Complex z = -x - i * y<br/>" +
-        "[!] Not a mutator",
+    log: {
+      title: "Complex.log(n, k)",
+      use: "Returns the log base k of the given number n.<br/>[!] If k unspecified, defaults to base e.",
       example: ""
     },
     
@@ -64,15 +85,16 @@ var apiItems = {
       example: ""
     },
     
-    log: {
-      title: "Complex.log(n, k)",
-      use: "Returns the log base k of the given number n.<br/>[!] If k unspecified, defaults to base e.",
-      example: ""
+    mult: {
+      title: "Complex.mult(a, b)",
+      use: "Multiplies a by b, returning a new Complex if either a or b are Complex.",
+      example: "// a x b = $C(aReal * bReal - aIm * bIm, aReal * bIm + bReal * aIm);"
     },
     
-    exp: {
-      title: "Complex.exp(z)",
-      use: "Returns e^z",
+    negate: {
+      title: "Complex.negate(z)",
+      use: "With z = x + i * y, Complex.negate(z) returns a new Complex z = -x - i * y<br/>" +
+        "[!] Not a mutator",
       example: ""
     },
     
@@ -88,32 +110,10 @@ var apiItems = {
       example: ""
     },
     
-    add: {
-      title: "Complex.add(a, b)",
-      use: "Adds the two numbers a and b, returning a new Complex if either a or b are Complex.",
-      example: ""
-    },
-    
     sub: {
       title: "Complex.sub(a, b)",
       use: "Subtracts b from a (a - b), returning a new Complex if either a or b are Complex.",
       example: ""
-    },
-    
-    mult: {
-      title: "Complex.mult(a, b)",
-      use: "Multiplies a by b, returning a new Complex if either a or b are Complex.",
-      example: "// a x b = $C(aReal * bReal - aIm * bIm, aReal * bIm + bReal * aIm);"
-    },
-    
-    divide: {
-      title: "Complex.divide(a, b)",
-      use: "Divides a by b (a / b), returning a new Complex number if either a or b are Complex.",
-      example: "// If z = a + b * i and m = c + d * i, then z / m is:</br>" +
-        "$C(<br/>" +
-        "&nbsp&nbsp(a * c + b * d) / (c * c + d * d),<br/>" +
-        "&nbsp&nbsp(b * c - a * d) / (c * c + d * d)<br/>" +
-        ");"
     },
     
     sqrt: {
@@ -217,9 +217,150 @@ var apiItems = {
       example: ""
     },
     
-    thing: {
-      title: "",
-      use: "",
+    distanceFrom: {
+      title: "distanceFrom(v)",
+      use: "Returns the (always positive) distance of the caller from v.",
+      example: "a.distanceFrom(b) // Equivalent to |a - b|"
+    },
+    
+    dot: {
+      title: "dot(v)",
+      use: "Returns the value of the dot product (aka the scalar product) of the caller with v. " + 
+        "[!] Returns null if the vectors have unequal dimensions.",
+      example: ""
+    },
+    
+    dup: {
+      title: "dup()",
+      use: "Returns a duplicate vector of the calling instance.",
+      example: ""
+    },
+    
+    each: {
+      title: "each(iterator)",
+      use: "Calls iterator for each element of the receiver. iterator is passed the index (numbered from 1) " + 
+        "of each element as the second argument. For example, the following alerts the index and value of " + 
+        "each of the vector’s elements:",
+      example: "$V([4,9,3,6]).each(function(x, i) {<br/>" +
+        "&nbsp&nbspalert(i + ': ' + x);<br/>" +
+        "});<br/>" +
+        "// Alerts: '1: 4', '2: 9', '3: 3', '4: 6'"
+    },
+    
+    eql: {
+      title: "eql(v)",
+      use: "Returns a boolean denoting the equality of the calling vector with v to a defined precision.",
+      example: ""
+    },
+    
+    indexOf: {
+      title: "indexOf(x)",
+      use: "Returns the index position (numbered from 1, just as for e()) of the first element exactly equal to x. If no match is found, returns null.",
+      example: ""
+    },
+    
+    inspect: {
+      title: "inspect()",
+      use: "Returns a string representation of the calling vector.",
+      example: "alert($V([7,-2,5]).inspect());<br/>" +
+        "// alerts '[7, -2, 5]'"
+    },
+    
+    isAntiparallelTo: {
+      title: "isAntiparallelTo(v)",
+      use: "Returns true iff the caller's direction is exactly opposed to that of v, that is, if the angle between them is pi.",
+      example: ""
+    },
+    
+    isParallelTo: {
+      title: "isParallelTo(v)",
+      use: "Returns true iff caller's direction is perpendicular to that of v, that is, if the angle between them is pi/2.",
+      example: ""
+    },
+    
+    map: {
+      title: "map(iterator)",
+      use: "Maps the receiver to another vector by calling iterator with each element in turn. iterator is also passed the " +
+        "index (numbered from 1) of each element as the second argument.",
+      example: "var a = $V([3,4,5]);<br/><br/>" +
+        "// To square the elements of a<br/>" +
+        "var b = a.map(function(x) { return x * x; });<br/><br/>" +
+        "// To add each element's index to its value<br/>" +
+        "var c = a.map(function(x, i) { return x + i; });"
+    },
+    
+    max: {
+      title: "max()",
+      use: "Returns the element of the receiver with the largest absolute value.",
+      example: "$V([0,-6,5]).max(); // returns -6."
+    },
+    
+    modulus: {
+      title: "modulus()",
+      use: "Returns the modulus of the caller, |v| = sqrt(sum(v<sub>i</sub>)<sup>2</sup>)",
+      example: ""
+    },
+    
+    multiply: {
+      title: "multiply(k)",
+      use: "Returns the vector obtained by multiplying all the elements of the caller by the scalar quantity k. Aliased as x(k).",
+      example: ""
+    },
+    
+    round: {
+      title: "round()",
+      use: "Returns a copy of the receiver with all its elements rounded to the nearest integer.",
+      example: ""
+    },
+    
+    setElements: {
+      title: "setElements(e)",
+      use: "Sets the receiver's elements property equal to the array els. Since version 0.1.1, the " + 
+        "numericality of els’s elements is not checked for performance reasons. It is assumed you’ll " + 
+        "be using this with numbers, and if you throw anything else in then most method calls won’t work.",
+      example: ""
+    },
+    
+    snapTo: {
+      title: "snapTo(x)",
+      use: "Returns a copy of the receiver with any elements that differ from x by less than the value of " + 
+        "Sylvester.precision set exactly equal to x. This can be useful for working around rounding errors.",
+      example: ""
+    },
+    
+    subtract: {
+      title: "subtract(v)",
+      use: "If the caller and v have the same number of elements, returns a Vector formed by subtracting " + 
+        "the latter from the former. Otherwise, returns null.",
+      example: ""
+    },
+    
+    to3D: {
+      title: "to3D()",
+      use: "If the receiver is 3-dimensional, it returns a copy of the receiver. If it is 2-dimensional, " + 
+        "it returns a copy of the receiver with an additional third element, which is set to zero. For " + 
+        "all other sizes, it returns null. Something is similar is done in many of the methods of the " + 
+        "Line and Plane classes, although for performance reasons they don’t use this method.",
+      example: ""
+    },
+    
+    toDiagonalMatrix: {
+      title: "toDiagonalMatrix()",
+      use: "Returns an nxn square Matrix, where n is the number of elements in the caller, whose " + 
+        "leading-diagonal elements are the elements of the caller. All the off-diagonal elements are zero.",
+      example: ""
+    },
+    
+    toUnitVector: {
+      title: "toUnitVector()",
+      use: "Returns a copy of the receiver, whose elements have been scaled such that the modulus of the new " + 
+        "vector is equal to 1. If the receiver has zero modulus then a copy of it is returned unchanged.",
+      example: ""
+    },
+    
+    x: {
+      title: "x(k)",
+      use: "Alias for multiply(k).",
       example: ""
     }
   }
