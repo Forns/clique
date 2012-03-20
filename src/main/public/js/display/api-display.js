@@ -12,7 +12,7 @@ $(function () {
       
   // Append these item explanations to the top of the page
   $("#center-zone").append(
-    "<p>" + classIcon + "\t= Signature indicates an instance method<br/>" +
+    "<p>" + classIcon + "\t= Signature indicates a class method<br/>" +
     instanceIcon + "\t= Signature indicates an instance method"
   );
   
