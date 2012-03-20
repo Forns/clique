@@ -183,6 +183,16 @@ a:active {
   padding-left: 40px;
 }
 
+.class-icon {
+  color: red;
+  font-weight: bold;
+}
+
+.instance-icon {
+  color: white;
+  font-weight: bold;
+}
+
 /* SPECTRAL */
 #browser-compat {
   padding: 3px;

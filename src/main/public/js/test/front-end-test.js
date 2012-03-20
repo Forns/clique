@@ -254,6 +254,45 @@ $(function () {
     ok($V([0, 0, 0]).append(0).eql($V([0, 0, 0, 0])));
   });
   
+  test("Vector: sort", function () {
+    ok(Vector.sort($V([1])).eql($V([1])));
+    ok(Vector.sort($V([0, 0, 0])).eql($V([0, 0, 0])));
+    ok(Vector.sort($V([-1, 0, 1])).eql($V([-1, 0, 1])));
+    ok(Vector.sort($V([1, 1, -1, -1, 0])).eql($V([-1, -1, 0, 1, 1])));
+  });
+  
+  test("Vector: sum", function () {
+    equal(Vector.sum($V([1])), 1);
+    equal(Vector.sum($V([1, -1])), 0);
+    equal(Vector.sum($V([1, 2, -4, 8])), 7);
+    ok(Vector.sum($V([1, $C(2, -1), -4, 8])).equals($C(7, -1)));
+  });
+  
+  test("Vector: insert", function () {
+    ok(Vector.insert($V([1]), 1, 2).eql($V([2, 1])));
+    ok(Vector.insert($V([1, 2, 3]), 1, 0).eql($V([0, 1, 2, 3])));
+    ok(Vector.insert($V([1, 2, 3]), 2, 0).eql($V([1, 0, 2, 3])));
+    ok(Vector.insert($V([1, 2, 3]), 4, 0).eql($V([1, 2, 3, 0])));
+  });
+  
+  test("Vector: remove", function () {
+    ok($V([1, 2]).remove(1, 1).eql($V([2])));
+    ok($V([1, 2, 3, 4]).remove(4, 1).eql($V([1, 2, 3])));
+    ok($V([1, 2, 3, 4]).remove(4, 0).eql($V([1, 2, 3, 4])));
+    ok($V([1, 2, 3, 4]).remove(2, 2).eql($V([1, 4])));
+  });
+  
+  test("Vector: ones", function () {
+    ok(Vector.ones(1).eql($V([1])));
+    ok(Vector.ones(4).eql($V([1, 1, 1, 1])));
+  });
+  
+  test("Vector: setElement", function () {
+    ok($V([1]).setElement(1, 2).eql($V([2])));
+    ok($V([1, 2, 3]).setElement(2, 0).eql($V([1, 0, 3])));
+    ok($V([2, 0, 3]).setElement(3, $C(1, 1)).eql($V([2, 0, $C(1, 1)])));
+  });
+  
   test("Matrix: Complex Elements", function () {
     equal($M([$C(0, 1)]).inspect(), "[i]");
     equal($M([$C(2, -1)]).inspect(), "[2-i]");
@@ -555,12 +594,14 @@ $(function () {
   
   test("kSet", function () {
     // TODO
+    ok(true);
   });
   
   /***** TESTING SECTION *****/
   test("testingSection", function() {
     // Left intentionally blank >_> <_<
     console.log(Matrix.kSet(5, 2));
+    ok(true);
   });
   
 });

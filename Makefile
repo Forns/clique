@@ -10,10 +10,11 @@ DIST_DIR = ${PREFIX}/${MAIN_DIR}/dist
 CLIQUE = ${DIST_DIR}/clique.js
 
 BASE_FILES = ${MODULE_DIR}/combinatorics.js\
+	${MODULE_DIR}/vector.js\
 	${MODULE_DIR}/matrix.js
 
 DEPENDENCIES = ${LIB_DIR}/complex.js\
-    ${LIB_DIR}/sylvester.src.js
+	${LIB_DIR}/sylvester.src.js
 
 MODULES = ${MODULE_DIR}/header.js\
 	${DEPENDENCIES}\

@@ -368,14 +368,6 @@ Vector.prototype = {
     return Vector.create(this.elements);
   },
   
-  // Used to append a new element to the end of a vector
-  append: function(n) {
-    if (!(typeof(n) === "undefined")) {
-      this.elements.push(n);
-    }
-    return this;
-  },
-
   // Maps the vector to another vector according to the given function
   map: function(fn) {
     var elements = [];
@@ -1134,6 +1126,81 @@ var Clique = $CQ = function () {};
 
 
 /**
+ * Modifications to the Sylvester Vector objects
+ */
+(function () {
+  
+  /** Helper Methods **/
+  // Helper method for the matrix sorting that determines
+  // ascending sorting method
+  var sortNumber = function (a, b) {
+    return Complex.sub(a, b);
+  };
+  
+  
+  /** Instance Methods **/
+  
+  // Used to append a new element to the end of a vector
+  Vector.prototype.append = function (n) {
+    if (!(typeof(n) === "undefined")) {
+      this.elements.push(n);
+    }
+    return this;
+  };
+  
+  // Removes x elements from position i of the calling vector
+  Vector.prototype.remove = function (i, x) {
+    this.elements.splice(i - 1, x);
+    return this;
+  };
+  
+  // Mutator that sets the vector's element at i to x
+  Vector.prototype.setElement = function (i, x) {
+    this.elements.splice(i - 1, 1, x);
+    return this;
+  };
+  
+  
+  /** Class Methods **/
+ 
+  // Returns the sum of all elements of v
+  Vector.sum = function (v) {
+    var result = 0;
+    for (var i = 1; i <= v.dimensions(); i++) {
+      result = Complex.add(result, v.e(i));
+    }
+    return result;
+  };
+
+  // Returns a new vector of the elements of v with the given sorting function, or ascending
+  // value by default
+  Vector.sort = function (v, sortFunc) {
+    if (!sortFunc) {
+      sortFunc = sortNumber;
+    }
+    return $V(v.elements.sort(sortFunc));
+  };
+  
+  // Inserts a new vector representing the element e inserted into v at index i
+  Vector.insert = function (v, i, e) {
+    var elements = v.elements;
+    elements.splice(i - 1, 0, e);
+    return $V(elements);
+  };
+  
+  // Returns a new vector of n elements consisting solely of 1's
+  Vector.ones = function (n) {
+    result = [];
+    for (var i = 0; i < n; i++) {
+      result[i] = 1;
+    }
+    return $V(result);
+  };
+ 
+})();
+
+
+/**
  * Modifications to the Sylvester Matrix objects
  */
 (function () {
@@ -1256,8 +1323,12 @@ var Clique = $CQ = function () {};
     return $M(result);
   };
 
+
+  /** Experimental Section **/
+
   // Returns a matrix whose rows are the k-element subsets
   // of an n-element set
+  // Algorithm by Michael Orrison
   Matrix.kSet = function (n, k) {
     var nChooseK = Math.choose(n, k),
         result = Matrix.Zero(nChooseK, k);
@@ -1289,13 +1360,50 @@ var Clique = $CQ = function () {};
     }
   };
   
-  /* TODO
   // Takes vector mu of positive integers and returns a matrix whose
   // rows correspond to the tabloids of shape mu
+  // Algorithm by Michael Orrison
   Matrix.tabloids = function (mu) {
+    var size = mu.dimensions(),
+        sumMu = Vector.sum(mu),
+        num = Math.factorial(sumMu),
+        count = 1,
+        result,
+        lam,
+        sumLam,
+        sumKSet,
+        jBloids
+        insertRow;
     
+    // Sort the vector mu in ascending order
+    mu = mu.sort();
+    
+    for (var i = 1; i < size; i++) {
+      num = num / Math.factorial(mu(i));
+    }
+    
+    // Set dimensions of the result
+    result = Matrix.ones(num, sumMu);
+    
+    // Don't bother going through the rigor if we only have 1 element in mu
+    if (size !== 1) {
+      lam = mu.dup();
+      lam.remove(lam.dimensions(), 1); // Slice the end off of lam
+      sumLam = Vector.sum(lam);
+      sumKSet = Matrix.kSet(sumMu, sumLam);
+      // TODO: Figure out what this means: jBloids = 1 + tabloids(lam)
+      for (var k = 1; k <= sumKSet.rows(); k++) {
+        for (var j = 1; j <= jBloids.rows(); j++) {
+          insertRow = Vector.ones(1, sumMu);
+          for (var m = 1; m <= sumLam; m++) {
+            insertRow.setElement(sumKSet.e(k, m), jBloids.e(j, m));
+          }
+          result.setRow(count, insertRow);
+          count++;
+        }
+      }
+    }
   };
-  */
   
 })();
 

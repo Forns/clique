@@ -121,8 +121,12 @@
     return $M(result);
   };
 
+
+  /** Experimental Section **/
+
   // Returns a matrix whose rows are the k-element subsets
   // of an n-element set
+  // Algorithm by Michael Orrison
   Matrix.kSet = function (n, k) {
     var nChooseK = Math.choose(n, k),
         result = Matrix.Zero(nChooseK, k);
@@ -154,13 +158,50 @@
     }
   };
   
-  /* TODO
   // Takes vector mu of positive integers and returns a matrix whose
   // rows correspond to the tabloids of shape mu
+  // Algorithm by Michael Orrison
   Matrix.tabloids = function (mu) {
+    var size = mu.dimensions(),
+        sumMu = Vector.sum(mu),
+        num = Math.factorial(sumMu),
+        count = 1,
+        result,
+        lam,
+        sumLam,
+        sumKSet,
+        jBloids
+        insertRow;
     
+    // Sort the vector mu in ascending order
+    mu = mu.sort();
+    
+    for (var i = 1; i < size; i++) {
+      num = num / Math.factorial(mu(i));
+    }
+    
+    // Set dimensions of the result
+    result = Matrix.ones(num, sumMu);
+    
+    // Don't bother going through the rigor if we only have 1 element in mu
+    if (size !== 1) {
+      lam = mu.dup();
+      lam.remove(lam.dimensions(), 1); // Slice the end off of lam
+      sumLam = Vector.sum(lam);
+      sumKSet = Matrix.kSet(sumMu, sumLam);
+      // TODO: Figure out what this means: jBloids = 1 + tabloids(lam)
+      for (var k = 1; k <= sumKSet.rows(); k++) {
+        for (var j = 1; j <= jBloids.rows(); j++) {
+          insertRow = Vector.ones(1, sumMu);
+          for (var m = 1; m <= sumLam; m++) {
+            insertRow.setElement(sumKSet.e(k, m), jBloids.e(j, m));
+          }
+          result.setRow(count, insertRow);
+          count++;
+        }
+      }
+    }
   };
-  */
   
 })();
 

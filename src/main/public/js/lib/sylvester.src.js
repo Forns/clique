@@ -61,14 +61,6 @@ Vector.prototype = {
     return Vector.create(this.elements);
   },
   
-  // Used to append a new element to the end of a vector
-  append: function(n) {
-    if (!(typeof(n) === "undefined")) {
-      this.elements.push(n);
-    }
-    return this;
-  },
-
   // Maps the vector to another vector according to the given function
   map: function(fn) {
     var elements = [];

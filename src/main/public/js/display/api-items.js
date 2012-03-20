@@ -125,59 +125,6 @@ var apiItems = {
   
   // Contains API elements for the matrix module / Sylvester lib
   "matrix": {
-    create: {
-      title: "Matrix.create(elements) || $M(elements)",
-      use: "Creates and returns a new Matrix instance from the array elements." +
-      "elements should be a nested array: the top level array is the rows, and " +
-      "each row is an array of elements. This means you write out a matrix in " + 
-      "code in the same orientation you would on paper.<br>" +
-      "[!] Every row must have the same number of elements, otherwise the method will return null.",
-      example: "var m = $M([<br/>&nbsp&nbsp[8,3,9],<br/>&nbsp&nbsp[2,0,7],<br/>&nbsp&nbsp[1,9,3]<br/>]);"
-    },
-    
-    diagonal: {
-      title: "Matrix.diagonal(n)",
-      use: "Returns a square matrix whose leading-diagonal elements are the values " +
-        "in the array elements, and whose off-diagonal elements are zero.",
-      example: "var d = Matrix.Diagonal([3,7,1]);<br/><br/>// Matrix:<br/>// 3 0 0<br/>// 0 7 0<br/>// 0 0 1"
-    },
-    
-    identity: {
-      title: "Matrix.I(n)",
-      use: "Returns the n x n identity matrix.",
-      example: ""
-    },
-    
-    random: {
-      title: "Matrix.random(n, m)",
-      use: "Returns a matrix with n rows and m columns, all the elements of which are random numbers between 0 and 1.",
-      example: ""
-    },
-    
-    rotation: {
-      title: "Matrix.Rotation(angle [, axis])",
-      use: "If called with only one argument, returns the 2 x 2 matrix for an anticlockwise rotation " +
-      "of angle radians about the origin. That is, vectors are rotated anticlockwise with respect to " +
-      "the coordinate system, not the other way round." +
-      "If called with two arguments, returns the 3 x 3 matrix for a right-handed rotation of angle " + 
-      "radians about the axis given by the 3-vector axis, keeping the origin fixed.",
-      example: ""
-    },
-    
-    rotationAxis: {
-      title: "Matrix.RotationX(angle), Matrix.RotationY(angle), Matrix.RotationZ(angle)",
-      use: "Each of these return the 3 x 3 matrix representing a right-handed rotation of points in " +
-      "3-dimensional space relative to the coordinate system through an angle of angle radians about the " +
-      "x, y and z axes respectively. They are used as a foundation for the more general Matrix.Rotation.",
-      example: ""
-    },
-    
-    zero: {
-      title: "Matrix.zero(n, m)",
-      use: "Returns a matrix with n rows and m columns, all the elements of which are zero.",
-      example: ""
-    },
-    
     add: {
       title: "add(matrix)",
       use: "Returns the matrix sum of the receiver and matrix. Thus, A.add(B) is equivalent to " + 
@@ -233,10 +180,17 @@ var apiItems = {
       example: ""
     },
     
-    diagonal: {
+    diagonal1: {
       title: "diagonal()",
       use: "If the caller is square, returns its leading-diagonal elements as a Vector. Otherwise, returns null.",
       example: ""
+    },
+    
+    diagonal2: {
+      title: "Matrix.diagonal(n)",
+      use: "Returns a square matrix whose leading-diagonal elements are the values " +
+        "in the array elements, and whose off-diagonal elements are zero.",
+      example: "var d = Matrix.Diagonal([3,7,1]);<br/><br/>// Matrix:<br/>// 3 0 0<br/>// 0 7 0<br/>// 0 0 1"
     },
     
     dimensions: {
@@ -268,6 +222,12 @@ var apiItems = {
       title: "firstNonZero()",
       use: "Returns an array: [i, j, k] denoting the row i, column j, and value k of the first non-zero element " +
         "in the matrix. i, j, k are 0 if the matrix is all-zeros.",
+      example: ""
+    },
+    
+    identity: {
+      title: "Matrix.I(n)",
+      use: "Returns the n x n identity matrix.",
       example: ""
     },
     
@@ -392,6 +352,12 @@ var apiItems = {
       example: ""
     },
     
+    random: {
+      title: "Matrix.random(n, m)",
+      use: "Returns a matrix with n rows and m columns, all the elements of which are random numbers between 0 and 1.",
+      example: ""
+    },
+    
     rank: {
       title: "rank()",
       use: "Returns the caller's rank, which is the number of linearly independent rows/columns it contains.",
@@ -407,6 +373,24 @@ var apiItems = {
     round: {
       title: "round()",
       use: "Returns a copy of the caller with all of its elements rounded to the nearest integer.",
+      example: ""
+    },
+    
+    rotation: {
+      title: "Matrix.Rotation(angle [, axis])",
+      use: "If called with only one argument, returns the 2 x 2 matrix for an anticlockwise rotation " +
+      "of angle radians about the origin. That is, vectors are rotated anticlockwise with respect to " +
+      "the coordinate system, not the other way round." +
+      "If called with two arguments, returns the 3 x 3 matrix for a right-handed rotation of angle " + 
+      "radians about the axis given by the 3-vector axis, keeping the origin fixed.",
+      example: ""
+    },
+    
+    rotationAxis: {
+      title: "Matrix.RotationX(angle), Matrix.RotationY(angle), Matrix.RotationZ(angle)",
+      use: "Each of these return the 3 x 3 matrix representing a right-handed rotation of points in " +
+      "3-dimensional space relative to the coordinate system through an angle of angle radians about the " +
+      "x, y and z axes respectively. They are used as a foundation for the more general Matrix.Rotation.",
       example: ""
     },
     
@@ -526,45 +510,27 @@ var apiItems = {
       title: "x(k)",
       use: "Alias for multiply(k).",
       example: ""
+    },
+    
+    zero: {
+      title: "Matrix.zero(n, m)",
+      use: "Returns a matrix with n rows and m columns, all the elements of which are zero.",
+      example: ""
     }
   },
   
   // Contains API elements for the vector module / Sylvester lib
   "vector": {
-    create: {
-      title: "Vector.create(elements) || $V(elements)",
-      use: "Creates and returns new Vector instance from the array elements.",
-      example: "var v = Vector.create([6,2,9]);"
-    },
-    
-    predefined: {
-      title: "Vector.i, Vector.j, Vector.k",
-      use: "Predefined Vector instances representing the 3-dimensional i, j and k vectors respectively.",
-      example: ""
-    },
-    
-    random: {
-      title: "Vector.random(n)",
-      use: "Returns a vector with n elements, each of which is a random number between 0 and 1.",
-      example: ""
-    },
-    
-    zero: {
-      title: "Vector.zero(n)",
-      use: "Returns a vector with n elements, all of which are zero.",
-      example: ""
-    },
-    
     append: {
       title: "append(n)",
       use: "Appends a single value, n, to the end of the Vector.",
       example: ""
     },
     
-    e: {
-      title: "e(n)",
-      use: "Returns the n<sup>th</sup> element with 1 as the first index",
-      example: "var v = $V(0, 1, 2, 3);<br/>v.e(2); // 1"
+    create: {
+      title: "Vector.create(elements) || $V(elements)",
+      use: "Creates and returns new Vector instance from the array elements.",
+      example: "var v = Vector.create([6,2,9]);"
     },
     
     dimensions: {
@@ -592,11 +558,17 @@ var apiItems = {
       example: ""
     },
     
+    e: {
+      title: "e(n)",
+      use: "Returns the n<sup>th</sup> element with 1 as the first index",
+      example: "var v = $V(0, 1, 2, 3);<br/>v.e(2); // 1"
+    },
+    
     each: {
       title: "each(iterator)",
       use: "Calls iterator for each element of the receiver. iterator is passed the index (numbered from 1) " + 
         "of each element as the second argument. For example, the following alerts the index and value of " + 
-        "each of the vector�s elements:",
+        "each of the vector's elements:",
       example: "$V([4,9,3,6]).each(function(x, i) {<br/>" +
         "&nbsp&nbspalert(i + ': ' + x);<br/>" +
         "});<br/>" +
@@ -613,6 +585,13 @@ var apiItems = {
       title: "indexOf(x)",
       use: "Returns the index position (numbered from 1, just as for e()) of the first element exactly equal to x. If no match is found, returns null.",
       example: ""
+    },
+    
+    insert: {
+      title: "Vector.insert(v, i, e)",
+      use: "Returns a new vector representing element e added to v at index i.",
+      example: "Vector.insert($V([1, 2, 3]), 1, 0); // Returns $V([0, 1, 2, 3]);<br/>" +
+        "Vector.insert($V([1, 2, 3]), 4, 0); // Returns $V([1, 2, 3, 0]);"
     },
     
     inspect: {
@@ -663,15 +642,44 @@ var apiItems = {
       example: ""
     },
     
+    ones: {
+      title: "Vector.ones(n)",
+      use: "Returns a new vector with n elements that are all ones."
+    },
+    
+    predefined: {
+      title: "Vector.i, Vector.j, Vector.k",
+      use: "Predefined Vector instances representing the 3-dimensional i, j and k vectors respectively.",
+      example: ""
+    },
+    
+    random: {
+      title: "Vector.random(n)",
+      use: "Returns a vector with n elements, each of which is a random number between 0 and 1.",
+      example: ""
+    },
+    
+    remove: {
+      title: "remove(i, x)",
+      use: "Mutates the calling vector to remove x items from index i.",
+      example: "$V([1, 2, 3, 4]).remove(2, 2); // Returns the vector, now representing [1, 4]"
+    },
+    
     round: {
       title: "round()",
       use: "Returns a copy of the receiver with all its elements rounded to the nearest integer.",
       example: ""
     },
     
+    setElement: {
+      title: "setElement(i, x)",
+      use: "Sets the caller's i<sup>th</sup> element to x.",
+      example: "var v = $V([1, 2, 3]);<br/>v.setElement(2, 0); // v = [1, 0, 3]"
+    },
+    
     setElements: {
       title: "setElements(e)",
-      use: "Sets the receiver's elements property equal to the array e. Since version 0.1.1, the " + 
+      use: "Sets the caller's elements property equal to the array e. Since version 0.1.1, the " + 
         "numericality of e's elements is not checked for performance reasons. It is assumed you'll " + 
         "be using this with numbers, and if you throw anything else in then most method calls won't work.",
       example: ""
@@ -684,11 +692,24 @@ var apiItems = {
       example: ""
     },
     
+    sort: {
+      title: "Vector.sort(v[, f])",
+      use: "Returns a new Vector representing the sorted items of Vector v using the sorting function f, or " +
+        "ascending numerical sort by default.",
+      example: ""
+    },
+    
     subtract: {
       title: "subtract(v)",
       use: "If the caller and v have the same number of elements, returns a Vector formed by subtracting " + 
         "the latter from the former. Otherwise, returns null.",
       example: ""
+    },
+    
+    sum: {
+      title: "Vector.sum(v)",
+      use: "Returns the sum of all of v's elements.",
+      example: "Vector.sum($V([1, 0, -1, 2])); // Returns 2"
     },
     
     to3D: {
@@ -717,6 +738,12 @@ var apiItems = {
     x: {
       title: "x(k)",
       use: "Alias for multiply(k).",
+      example: ""
+    },
+    
+    zero: {
+      title: "Vector.zero(n)",
+      use: "Returns a vector with n elements, all of which are zero.",
       example: ""
     }
   }
