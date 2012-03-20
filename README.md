@@ -72,6 +72,4 @@ Assuming setup has been successful in the previous steps, you can now run and mo
 
 Happy coding! Don't break anything, or I'll break you!
 
-# API
-
-Don't you wish there was something here?
+# [API](http://clique.cloudno.de/api)
