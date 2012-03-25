@@ -286,6 +286,14 @@ var apiItems = {
       example: ""
     },
     
+    kSet: {
+      title: "Matrix.kSet(n, k)",
+      use: "Produces a matrix whose rows are the k-element subsets of an n-element set.",
+      example: "Matrix.kSet(3, 2); // Produces:<br/><br/>// 1 2<br/>// 1 3<br/>// 2 3<br/><br/>" +
+        "Matrox.kSet(5, 3); // Produces:<br/><br/> // 1 2 3<br/> // 1 2 4<br/> // 1 2 5<br/> // 1 3 4<br/>" +
+        "// 1 3 5<br/> // 1 4 5<br/> // 2 3 4<br/> // 2 3 5<br/> // 2 4 5<br/> // 3 4 5"
+    },
+    
     map: {
       title: "map(iterator)",
       use: "Maps the caller to another matrix by calling iterator on each element of the caller in turn. iterator " +
@@ -462,6 +470,24 @@ var apiItems = {
       title: "swapRows(m, n)",
       use: "Swaps the positions of matrix rows m and n.",
       example: ""
+    },
+    
+    tabloids: {
+      title: "Matrix.tabloids(v)",
+      use: "Takes a Vector v of positive integers and returns a Matrix whose rows correspond to the tabloids of shape v.",
+      example: "Matrix.tabloids($V([1, 2])); // Produces:<br/> // 2 1 1<br/> // 1 2 1<br/> // 1 1 2<br/><br/>" +
+        "Matrix.tabloids($V([2, 3])); // Produces:<br/>" +
+        "<br/>// 2 2 1 1 1" +
+        "<br/>// 2 1 2 1 1" +
+        "<br/>// 2 1 1 2 1" +
+        "<br/>// 2 1 1 1 2" +
+        "<br/>// 1 2 2 1 1" +
+        "<br/>// 1 2 1 2 1" +
+        "<br/>// 1 2 1 1 2" +
+        "<br/>// 1 1 2 2 1" +
+        "<br/>// 1 1 2 1 2" +
+        "<br/>// 1 1 1 2 2"
+
     },
     
     toRightTriangular: {
