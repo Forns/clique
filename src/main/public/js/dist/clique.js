@@ -1322,7 +1322,7 @@ var Clique = $CQ = function () {};
     }
     return $M(result);
   };
-
+  
 
   /** Experimental Section **/
 
@@ -1333,26 +1333,26 @@ var Clique = $CQ = function () {};
     var nChooseK = Math.choose(n, k),
         result = Matrix.Zero(nChooseK, k);
     
-    // Recursion has terminated, so return null    
+    // Recursion has terminated, so return   
     if (n < k || k <= 0) {
-      return null;
+      return;
     
-    // Otherwise, we just have a single row
+    // Otherwise, we construct an ascending integer matrix
     } else if (k === 1) {
-      for (var i = 1; i <= n; i++) {
-        result.setElement(1, i, i);
+      var countingMatrix = [];
+      for (var i = 0; i < n; i++) {
+        countingMatrix[i] = [i + 1];
       }
-      return result.transpose();
+      return $M(countingMatrix);
     
     // Otherwise, we recurse and construct the rows
     } else {
       var subMatrix = Matrix.kSet(n - 1, k - 1),
           count = 1;
-      // We may have a null return, so just break out
-      if (!subMatrix) {return;}
+      
       for (var i = 1; i <= subMatrix.rows(); i++) {
-        for (var j = subMatrix.e(i, k - 1) + 1; j < n; j++) {
-          result.setRow(count, subMatrix.row(i).append(j));
+        for (var j = subMatrix.e(i, k - 1) + 1; j <= n; j++) {
+          result = result.setRow(count, subMatrix.row(i).append(j));
           count++;
         }
       }
@@ -1372,14 +1372,14 @@ var Clique = $CQ = function () {};
         lam,
         sumLam,
         sumKSet,
-        jBloids
+        jBloids,
         insertRow;
     
     // Sort the vector mu in ascending order
-    mu = mu.sort();
+    mu = Vector.sort(mu);
     
-    for (var i = 1; i < size; i++) {
-      num = num / Math.factorial(mu(i));
+    for (var i = 1; i <= size; i++) {
+      num = num / Math.factorial(mu.e(i));
     }
     
     // Set dimensions of the result
@@ -1388,13 +1388,16 @@ var Clique = $CQ = function () {};
     // Don't bother going through the rigor if we only have 1 element in mu
     if (size !== 1) {
       lam = mu.dup();
-      lam.remove(lam.dimensions(), 1); // Slice the end off of lam
+      lam = lam.remove(lam.dimensions(), 1); // Slice the end off of lam
       sumLam = Vector.sum(lam);
       sumKSet = Matrix.kSet(sumMu, sumLam);
-      // TODO: Figure out what this means: jBloids = 1 + tabloids(lam)
+      // Add one to all elements of the recursive matrix
+      jBloids = Matrix.tabloids(lam).map(function(x) {
+        return x + 1;
+      });
       for (var k = 1; k <= sumKSet.rows(); k++) {
         for (var j = 1; j <= jBloids.rows(); j++) {
-          insertRow = Vector.ones(1, sumMu);
+          insertRow = Vector.ones(sumMu);
           for (var m = 1; m <= sumLam; m++) {
             insertRow.setElement(sumKSet.e(k, m), jBloids.e(j, m));
           }
@@ -1403,6 +1406,7 @@ var Clique = $CQ = function () {};
         }
       }
     }
+    return result;
   };
   
 })();

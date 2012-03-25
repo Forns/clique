@@ -588,19 +588,60 @@ $(function () {
   
   
   /*
-   * Tests for the eig module
+   * Tests for the spectral analyzer functions
    */
   module("Spectral Analysis");
   
   test("kSet", function () {
-    // TODO
-    ok(true);
+    ok(Matrix.kSet(1, 1).eql($M([1])));
+    ok(Matrix.kSet(2, 2).eql($M([[1, 2]])));
+    ok(Matrix.kSet(2, 1).eql($M([
+      [1],
+      [2]
+    ])));
+    ok(Matrix.kSet(3, 2).eql($M([
+      [1, 2],
+      [1, 3],
+      [2, 3]
+    ])));
+    ok(Matrix.kSet(5, 3).eql($M([
+      [1, 2, 3],
+      [1, 2, 4],
+      [1, 2, 5],
+      [1, 3, 4],
+      [1, 3, 5],
+      [1, 4, 5],
+      [2, 3, 4],
+      [2, 3, 5],
+      [2, 4, 5],
+      [3, 4, 5]
+    ])));
+  });
+  
+  test("tabloids", function () {
+    ok(Matrix.tabloids($V([1])).eql($M([1])));
+    ok(Matrix.tabloids($V([1, 2])).eql($M([
+      [2, 1, 1],
+      [1, 2, 1],
+      [1, 1, 2]
+    ])));
+    ok(Matrix.tabloids($V([2, 3])).eql($M([
+      [2, 2, 1, 1, 1],
+      [2, 1, 2, 1, 1],
+      [2, 1, 1, 2, 1],
+      [2, 1, 1, 1, 2],
+      [1, 2, 2, 1, 1],
+      [1, 2, 1, 2, 1],
+      [1, 2, 1, 1, 2],
+      [1, 1, 2, 2, 1],
+      [1, 1, 2, 1, 2],
+      [1, 1, 1, 2, 2]
+    ])));
   });
   
   /***** TESTING SECTION *****/
+  // Used for testing functions in progress (if any)
   test("testingSection", function() {
-    // Left intentionally blank >_> <_<
-    console.log(Matrix.kSet(5, 2));
     ok(true);
   });
   
