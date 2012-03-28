@@ -149,7 +149,7 @@ Vector.prototype = {
 
   // Returns the result of multiplying the elements of the vector by the argument
   multiply: function(k) {
-    return this.map(function(x) { return Complex.mult(x, k); });
+    return (k.elements[0] && typeof(k.elements[0][0]) !== "undefined") ? k.multiply(this) : this.map(function(x) { return Complex.mult(x, k); });
   },
 
   x: function(k) { return this.multiply(k); },
@@ -276,7 +276,7 @@ Vector.Random = function(n) {
 };
 
 // Vector filled with zeros
-Vector.Zero = function(n) {
+Vector.zero = function(n) {
   var elements = [];
   do { elements.push(0);
   } while (--n);
@@ -403,7 +403,7 @@ Matrix.prototype = {
     }
     var returnVector = matrix.modulus ? true : false;
     var M = matrix.elements || matrix;
-    if (typeof(M[0][0]) == 'undefined') { M = Matrix.create(M).elements; }
+    if (typeof(M[0][0]) === 'undefined') { M = Matrix.create(M).elements; }
     if (!this.canMultiplyFromLeft(M)) { return null; }
     var ni = this.elements.length, ki = ni, i, nj, kj = M[0].length, j;
     var cols = this.elements[0].length, elements = [], sum, nc, c;
@@ -761,13 +761,13 @@ Matrix.RotationZ = function(t) {
 
 // Random matrix of n rows, m columns
 Matrix.Random = function(n, m) {
-  return Matrix.Zero(n, m).map(
+  return Matrix.zero(n, m).map(
     function() { return Math.random(); }
   );
 };
 
 // Matrix filled with zeros
-Matrix.Zero = function(n, m) {
+Matrix.zero = function(n, m) {
   var els = [], ni = n, i, nj, j;
   do { i = n - ni;
     els[i] = [];

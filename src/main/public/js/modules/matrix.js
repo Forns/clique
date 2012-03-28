@@ -129,7 +129,7 @@
   // Algorithm by Michael Orrison
   Matrix.kSet = function (n, k) {
     var nChooseK = Math.choose(n, k),
-        result = Matrix.Zero(nChooseK, k);
+        result = Matrix.zero(nChooseK, k);
     
     // Recursion has terminated, so return   
     if (n < k || k <= 0) {
@@ -205,6 +205,66 @@
       }
     }
     return result;
+  };
+  
+  // Uses the "Lanczos Iteration with re-orthogonalization" to compute the QR
+  // factorization of the matrix [f fA fA^2...] where A is a symmetric matrix
+  // [Q, R] = lanczos(A, f, epsilon)
+  // Allows user to determine how small the residue vectors must be before terminating
+  // Default value for epsilon set to 10^-8
+  Matrix.lanczos = function (A, f, epsilon) {
+    var orthoganolResult = f.multiply(1 / f.norm()),
+        tridiagonalResult = $M([0]),
+        a = $M([0]), // Vector used in interation
+        b = $M([0]), // Vector used in interation
+        ep = 0,
+        check = 1,
+        n = 1,
+        size = A.cols(),
+        v = Matrix.zero(size, 1); // "Main character" vector
+    epsilon = epsilon || Math.pow(10, -8); // Default case for epsilon
+    
+    // FIRST PASS
+    v = A.multiply(orthoganolResult.col(1));
+    console.log($M(orthoganolResult.col(1)).multiply(v));
+    a.setElement(1, 1, orthoganolResult.col(1).multiply(v));
+    v = v.subtract(a.e(1, 1).multiply(orthoganolResult.col(1)));
+    tridiagonalResult.setElement(1, 1, a.e(1, 1));
+    b.setElement(1, 1, v.norm());
+    if (b.e(1, 1) > epsilon) {
+      orthoganolResult.setCol(2, v.multiply(1 / b.e(1)));
+      tridiagonalResult.setElement(1, 2, b.e(1));
+      tridiagonalResult.setElement(2, 1, b.e(1));
+      n = 2;
+    } else {
+      check = 0;
+    }
+    
+    // THREE TERM RECURRENCE
+    while(check > 0) {
+      v = A.multiply(orthoganolResult.col(n).subtract(b.e(n - 1).multiply(orthoganolResult.col(n - 1))));
+      a.setElement(1, n, orthoganolResult.col(n).multiply(v));
+      v = v.subtract(a.e(1, n).multiply(orthoganolResult.col(n)));
+      tridiagonalResult.setElement(n, n, a.e(n));
+      
+      for (var j = 1; j < n; j++) {
+        ep = orthoganolResult.col(j).multiply(v);
+        v = v.subtract(ep.multiply(orthoganolResult.col(j)));
+      }
+      
+      b.setElement(1, n, Matrix.norm(v));
+      
+      if (b.e(1, n) > epsilon && n < size) {
+        orthoganolResult.setCol(n + 1, v.multiply(1 / b.e(n)));
+        tridiagonalResult.setElement(n, n + 1, b.e(n));
+        tridiagonalResult.setElement(n + 1, n, b.e(n));
+        n++;
+      } else {
+        check = 0;
+      }
+    }
+    
+    return [orthoganolResult, tridiagonalResult];
   };
   
 })();

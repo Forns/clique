@@ -456,7 +456,7 @@ Vector.prototype = {
 
   // Returns the result of multiplying the elements of the vector by the argument
   multiply: function(k) {
-    return this.map(function(x) { return Complex.mult(x, k); });
+    return (k.elements[0] && typeof(k.elements[0][0]) !== "undefined") ? k.multiply(this) : this.map(function(x) { return Complex.mult(x, k); });
   },
 
   x: function(k) { return this.multiply(k); },
@@ -583,7 +583,7 @@ Vector.Random = function(n) {
 };
 
 // Vector filled with zeros
-Vector.Zero = function(n) {
+Vector.zero = function(n) {
   var elements = [];
   do { elements.push(0);
   } while (--n);
@@ -710,8 +710,8 @@ Matrix.prototype = {
     }
     var returnVector = matrix.modulus ? true : false;
     var M = matrix.elements || matrix;
-    if (typeof(M[0][0]) == 'undefined') { M = Matrix.create(M).elements; }
-    if (!this.canMultiplyFromLeft(M)) { return null; }
+    if (matrix[0] && typeof(matrix[0][0]) === 'undefined') { M = Matrix.create(M).elements; }
+    if (!this.canMultiplyFromLeft(M)) { console.log("hi!"); return null; }
     var ni = this.elements.length, ki = ni, i, nj, kj = M[0].length, j;
     var cols = this.elements[0].length, elements = [], sum, nc, c;
     do { i = ki - ni;
@@ -1068,13 +1068,13 @@ Matrix.RotationZ = function(t) {
 
 // Random matrix of n rows, m columns
 Matrix.Random = function(n, m) {
-  return Matrix.Zero(n, m).map(
+  return Matrix.zero(n, m).map(
     function() { return Math.random(); }
   );
 };
 
 // Matrix filled with zeros
-Matrix.Zero = function(n, m) {
+Matrix.zero = function(n, m) {
   var els = [], ni = n, i, nj, j;
   do { i = n - ni;
     els[i] = [];
@@ -1331,7 +1331,7 @@ var Clique = $CQ = function () {};
   // Algorithm by Michael Orrison
   Matrix.kSet = function (n, k) {
     var nChooseK = Math.choose(n, k),
-        result = Matrix.Zero(nChooseK, k);
+        result = Matrix.zero(nChooseK, k);
     
     // Recursion has terminated, so return   
     if (n < k || k <= 0) {
@@ -1407,6 +1407,66 @@ var Clique = $CQ = function () {};
       }
     }
     return result;
+  };
+  
+  // Uses the "Lanczos Iteration with re-orthogonalization" to compute the QR
+  // factorization of the matrix [f fA fA^2...] where A is a symmetric matrix
+  // [Q, R] = lanczos(A, f, epsilon)
+  // Allows user to determine how small the residue vectors must be before terminating
+  // Default value for epsilon set to 10^-8
+  Matrix.lanczos = function (A, f, epsilon) {
+    var orthoganolResult = f.multiply(1 / f.norm()),
+        tridiagonalResult = $M([0]),
+        a = $M([0]), // Vector used in interation
+        b = $M([0]), // Vector used in interation
+        ep = 0,
+        check = 1,
+        n = 1,
+        size = A.cols(),
+        v = Matrix.zero(size, 1); // "Main character" vector
+    epsilon = epsilon || Math.pow(10, -8); // Default case for epsilon
+    
+    // FIRST PASS
+    v = A.multiply(orthoganolResult.col(1));
+    console.log($M(orthoganolResult.col(1)).multiply(v));
+    a.setElement(1, 1, orthoganolResult.col(1).multiply(v));
+    v = v.subtract(a.e(1, 1).multiply(orthoganolResult.col(1)));
+    tridiagonalResult.setElement(1, 1, a.e(1, 1));
+    b.setElement(1, 1, v.norm());
+    if (b.e(1, 1) > epsilon) {
+      orthoganolResult.setCol(2, v.multiply(1 / b.e(1)));
+      tridiagonalResult.setElement(1, 2, b.e(1));
+      tridiagonalResult.setElement(2, 1, b.e(1));
+      n = 2;
+    } else {
+      check = 0;
+    }
+    
+    // THREE TERM RECURRENCE
+    while(check > 0) {
+      v = A.multiply(orthoganolResult.col(n).subtract(b.e(n - 1).multiply(orthoganolResult.col(n - 1))));
+      a.setElement(1, n, orthoganolResult.col(n).multiply(v));
+      v = v.subtract(a.e(1, n).multiply(orthoganolResult.col(n)));
+      tridiagonalResult.setElement(n, n, a.e(n));
+      
+      for (var j = 1; j < n; j++) {
+        ep = orthoganolResult.col(j).multiply(v);
+        v = v.subtract(ep.multiply(orthoganolResult.col(j)));
+      }
+      
+      b.setElement(1, n, Matrix.norm(v));
+      
+      if (b.e(1, n) > epsilon && n < size) {
+        orthoganolResult.setCol(n + 1, v.multiply(1 / b.e(n)));
+        tridiagonalResult.setElement(n, n + 1, b.e(n));
+        tridiagonalResult.setElement(n + 1, n, b.e(n));
+        n++;
+      } else {
+        check = 0;
+      }
+    }
+    
+    return [orthoganolResult, tridiagonalResult];
   };
   
 })();
