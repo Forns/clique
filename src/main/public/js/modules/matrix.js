@@ -215,8 +215,8 @@
   Matrix.lanczos = function (A, f, epsilon) {
     var orthoganolResult = f.multiply(1 / f.norm()),
         tridiagonalResult = $M([0]),
-        a = $M([0]), // Vector used in interation
-        b = $M([0]), // Vector used in interation
+        a = $M([0]), // Vector used in iteration
+        b = $M([0]), // Vector used in iteration
         ep = 0,
         check = 1,
         n = 1,
@@ -225,8 +225,10 @@
     epsilon = epsilon || Math.pow(10, -8); // Default case for epsilon
     
     // FIRST PASS
-    v = A.multiply(orthoganolResult.col(1));
-    console.log($M(orthoganolResult.col(1)).multiply(v));
+    v = $M(A.multiply(orthoganolResult.col(1)));
+    console.log(v);
+    console.log(v.multiply(orthoganolResult.col(1)));
+    console.log(orthoganolResult.col(1).multiply(v));
     a.setElement(1, 1, orthoganolResult.col(1).multiply(v));
     v = v.subtract(a.e(1, 1).multiply(orthoganolResult.col(1)));
     tridiagonalResult.setElement(1, 1, a.e(1, 1));

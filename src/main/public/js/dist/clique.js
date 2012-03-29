@@ -456,7 +456,7 @@ Vector.prototype = {
 
   // Returns the result of multiplying the elements of the vector by the argument
   multiply: function(k) {
-    return (k.elements[0] && typeof(k.elements[0][0]) !== "undefined") ? k.multiply(this) : this.map(function(x) { return Complex.mult(x, k); });
+    return this.map(function(x) { return Complex.mult(x, k); });
   },
 
   x: function(k) { return this.multiply(k); },
@@ -710,8 +710,8 @@ Matrix.prototype = {
     }
     var returnVector = matrix.modulus ? true : false;
     var M = matrix.elements || matrix;
-    if (matrix[0] && typeof(matrix[0][0]) === 'undefined') { M = Matrix.create(M).elements; }
-    if (!this.canMultiplyFromLeft(M)) { console.log("hi!"); return null; }
+    if (typeof(M[0][0]) === 'undefined') { M = Matrix.create(M).elements; }
+    if (!this.canMultiplyFromLeft(M)) { return null; }
     var ni = this.elements.length, ki = ni, i, nj, kj = M[0].length, j;
     var cols = this.elements[0].length, elements = [], sum, nc, c;
     do { i = ki - ni;
@@ -1417,8 +1417,8 @@ var Clique = $CQ = function () {};
   Matrix.lanczos = function (A, f, epsilon) {
     var orthoganolResult = f.multiply(1 / f.norm()),
         tridiagonalResult = $M([0]),
-        a = $M([0]), // Vector used in interation
-        b = $M([0]), // Vector used in interation
+        a = $M([0]), // Vector used in iteration
+        b = $M([0]), // Vector used in iteration
         ep = 0,
         check = 1,
         n = 1,
@@ -1427,8 +1427,10 @@ var Clique = $CQ = function () {};
     epsilon = epsilon || Math.pow(10, -8); // Default case for epsilon
     
     // FIRST PASS
-    v = A.multiply(orthoganolResult.col(1));
-    console.log($M(orthoganolResult.col(1)).multiply(v));
+    v = $M(A.multiply(orthoganolResult.col(1)));
+    console.log(v);
+    console.log(v.multiply(orthoganolResult.col(1)));
+    console.log(orthoganolResult.col(1).multiply(v));
     a.setElement(1, 1, orthoganolResult.col(1).multiply(v));
     v = v.subtract(a.e(1, 1).multiply(orthoganolResult.col(1)));
     tridiagonalResult.setElement(1, 1, a.e(1, 1));

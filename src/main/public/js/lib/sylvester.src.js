@@ -149,7 +149,7 @@ Vector.prototype = {
 
   // Returns the result of multiplying the elements of the vector by the argument
   multiply: function(k) {
-    return (k.elements[0] && typeof(k.elements[0][0]) !== "undefined") ? k.multiply(this) : this.map(function(x) { return Complex.mult(x, k); });
+    return this.map(function(x) { return Complex.mult(x, k); });
   },
 
   x: function(k) { return this.multiply(k); },

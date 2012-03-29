@@ -641,11 +641,11 @@ $(function () {
   
   test("lanczos", function () {
     var a1 = $M([
-          [0.2, -0.3, 0.1, 0.5, -1.2],
-          [-0.3, 0.7, 0, 1.9, 0.6],
-          [0.1, 0, -2, -1, 2],
-          [0.5, 1.9, -1, 0.4, 0.5],
-          [-1.2, 0.6, 2, 0.5, -0.2]
+          [0.2,  -0.3,  0.1, 0.5, -1.2],
+          [-0.3,  0.7,  0,   1.9,  0.6],
+          [0.1,   0,   -2,  -1,    2  ],
+          [0.5,   1.9, -1,   0.4,  0.5],
+          [-1.2,  0.6,  2,   0.5, -0.2]
         ]),
         v1 = $M([1, 2, 3, 4, 5]);
     console.log(Matrix.lanczos(a1, v1));
@@ -654,6 +654,12 @@ $(function () {
   /***** TESTING SECTION *****/
   // Used for testing functions in progress (if any)
   test("testingSection", function() {
+    var a = $M([
+          [1, 2, 3, 4],
+          [1, 1, 1, 1]
+        ]),
+        b = $V([2, 2, 2, 2]);
+    console.log("test mult: " + a.multiply(b).inspect());
     ok(true);
   });
   
