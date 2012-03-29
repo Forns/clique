@@ -654,12 +654,6 @@ $(function () {
   /***** TESTING SECTION *****/
   // Used for testing functions in progress (if any)
   test("testingSection", function() {
-    var a = $M([
-          [1, 2, 3, 4],
-          [1, 1, 1, 1]
-        ]),
-        b = $V([2, 2, 2, 2]);
-    console.log("test mult: " + a.multiply(b).inspect());
     ok(true);
   });
   

@@ -213,8 +213,8 @@
   // Allows user to determine how small the residue vectors must be before terminating
   // Default value for epsilon set to 10^-8
   Matrix.lanczos = function (A, f, epsilon) {
-    var orthoganolResult = f.multiply(1 / f.norm()),
-        tridiagonalResult = $M([0]),
+    var orthogonalResult = f.multiply(1 / f.norm()),
+        tridiagonalResult = $M([[0]]),
         a = $M([0]), // Vector used in iteration
         b = $M([0]), // Vector used in iteration
         ep = 0,
@@ -225,18 +225,20 @@
     epsilon = epsilon || Math.pow(10, -8); // Default case for epsilon
     
     // FIRST PASS
-    v = $M(A.multiply(orthoganolResult.col(1)));
+    v = $M(A.multiply(orthogonalResult.col(1)));
+    console.log("v: ");
     console.log(v);
-    console.log(v.multiply(orthoganolResult.col(1)));
-    console.log(orthoganolResult.col(1).multiply(v));
-    a.setElement(1, 1, orthoganolResult.col(1).multiply(v));
-    v = v.subtract(a.e(1, 1).multiply(orthoganolResult.col(1)));
+    a.setElement(1, 1, $M(orthogonalResult.col(1)).transpose().multiply(v).e(1, 1));
+    console.log("v - a[1,1] x orthRes.col(1):");
+    console.log(v.subtract(orthogonalResult.col(1).multiply(a.e(1, 1))));
+    v = v.subtract(orthogonalResult.col(1).multiply(a.e(1, 1)));
     tridiagonalResult.setElement(1, 1, a.e(1, 1));
     b.setElement(1, 1, v.norm());
     if (b.e(1, 1) > epsilon) {
-      orthoganolResult.setCol(2, v.multiply(1 / b.e(1)));
-      tridiagonalResult.setElement(1, 2, b.e(1));
-      tridiagonalResult.setElement(2, 1, b.e(1));
+      orthogonalResult.setCol(2, v.multiply(1 / b.e(1, 1)));
+      tridiagonalResult.setElement(1, 2, b.e(1, 1));
+      tridiagonalResult.setElement(2, 1, b.e(1, 1)); // Error here
+      console.log("here!");
       n = 2;
     } else {
       check = 0;
@@ -244,20 +246,20 @@
     
     // THREE TERM RECURRENCE
     while(check > 0) {
-      v = A.multiply(orthoganolResult.col(n).subtract(b.e(n - 1).multiply(orthoganolResult.col(n - 1))));
-      a.setElement(1, n, orthoganolResult.col(n).multiply(v));
-      v = v.subtract(a.e(1, n).multiply(orthoganolResult.col(n)));
+      v = A.multiply(orthogonalResult.col(n).subtract(b.e(n - 1).multiply(orthogonalResult.col(n - 1))));
+      a.setElement(1, n, $M(orthogonalResult.col(n)).transpose().multiply(v).e(1, 1));
+      v = v.subtract(a.e(1, n).multiply(orthogonalResult.col(n)));
       tridiagonalResult.setElement(n, n, a.e(n));
       
       for (var j = 1; j < n; j++) {
-        ep = orthoganolResult.col(j).multiply(v);
-        v = v.subtract(ep.multiply(orthoganolResult.col(j)));
+        ep = orthogonalResult.col(j).multiply(v);
+        v = v.subtract(ep.multiply(orthogonalResult.col(j)));
       }
       
       b.setElement(1, n, Matrix.norm(v));
       
       if (b.e(1, n) > epsilon && n < size) {
-        orthoganolResult.setCol(n + 1, v.multiply(1 / b.e(n)));
+        orthogonalResult.setCol(n + 1, v.multiply(1 / b.e(n)));
         tridiagonalResult.setElement(n, n + 1, b.e(n));
         tridiagonalResult.setElement(n + 1, n, b.e(n));
         n++;
@@ -266,7 +268,7 @@
       }
     }
     
-    return [orthoganolResult, tridiagonalResult];
+    return [orthogonalResult, tridiagonalResult];
   };
   
 })();
