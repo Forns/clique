@@ -167,6 +167,10 @@ a:active {
   display: block;
 }
 
+.api-section {
+  display: none;
+}
+
 .api-title {
   margin-top: 40px;
   padding: 2px;

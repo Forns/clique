@@ -51,7 +51,7 @@ $(function () {
         show: "fade",
         hide: "fade",
         position: [30, 200],
-        width: 250
+        width: 275
       });
     });
   
@@ -72,5 +72,9 @@ $(function () {
       .stop()
       .animate({"marginTop": ($(window).scrollTop() + 30) + "px"}, "slow" );      
   });
+  
+  // Display the containers
+  $(".api-section").fadeIn(500);
+  $("#loadig-gif").fadeOut(500);
   
 });

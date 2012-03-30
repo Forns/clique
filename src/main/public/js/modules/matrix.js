@@ -124,6 +124,16 @@
     return $M(result);
   };
   
+  // Returns matrix with columns flipped in the left-right direction, i.e. about a vertical axis
+  Matrix.fliplr = function (matrix) {
+    var cols = matrix.cols(),
+        result = $M(matrix.col(cols));
+    for (var i = 2; i <= cols; i++) {
+      result.setCol(i, matrix.col(cols + 1 - i));
+    }
+    return result;
+  }
+  
 
   /** Experimental Section **/
 

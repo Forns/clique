@@ -225,6 +225,22 @@ var apiItems = {
       example: ""
     },
     
+    fliplr: {
+      title: "Matrix.fliplr(matrix)",
+      use: "Returns matrix with columns flipped in the left-right direction, i.e. about a vertical axis.",
+      example: "Matrix.fliplr($M([<br/>" +
+        "&nbsp&nbsp[0, 1, 2, 3],<br/>" +
+        "&nbsp&nbsp[4, 5, 6, 7],<br/>" +
+        "&nbsp&nbsp[8, 9, 10, 11]<br/>" +
+      "]);<br/><br/>" +
+      "// Returns:<br/>" +
+      "$M([<br/>" +
+        "&nbsp&nbsp[3, 2, 1, 0],<br/>" +
+        "&nbsp&nbsp[7, 6, 5, 4],<br/>" +
+        "&nbsp&nbsp[11, 10, 9, 8]<br/>" +
+      "]);"
+    },
+    
     identity: {
       title: "Matrix.I(n)",
       use: "Returns the n x n identity matrix.",
@@ -296,13 +312,13 @@ var apiItems = {
     
     lanczos: {
       title: "Matrix.lanczos(A, f, epsilon)",
-      use: "Uses the \"Lanczos Iteration with re-orthogonalization\" to compute the QR" +
-        "factorization of the matrix [f fA fA^2...] where A is a symmetric matrix. Allows" +
+      use: "Uses the \"Lanczos Iteration with re-orthogonalization\" to compute the QR " +
+        "factorization of the matrix [f fA fA^2...] where A is a symmetric matrix. Allows " +
         "user to determine how small the residue vectors must be before terminating (DEFAULT epsilon = 10^-8)<br/><br/>" +
         "Returns two Matrices as a 2-element array:<br/>" +
         "[Q, R] = lanczos(A, f, epsilon)<br/><br/>" +
         "Q = orthogonal matrix<br/>R = sparse, tridiagonal matrix",
-      example: "var A = $M([<br/>" +
+      example: "var A = <br/>$M([" +
             "&nbsp&nbsp[0.2,  -0.3,  0.1, 0.5, -1.2],<br/>" +
             "&nbsp&nbsp[-0.3,  0.7,  0,   1.9,  0.6],<br/>" +
             "&nbsp&nbsp[0.1,   0,   -2,  -1,    2  ],<br/>" +
