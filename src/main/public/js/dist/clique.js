@@ -1196,7 +1196,82 @@ var Clique = $CQ = function () {};
     }
     return $V(result);
   };
- 
+  
+  // Takes a vector and a number and returns the number of occurrences of the
+  // number in that set.
+  Vector.histoCount = function (set, number) {
+    counter = 0;
+    for (var i = 1; i <= set.dimensions(); i++) {
+      if (Complex.equal(set.e(i), number)) {
+        counter++;
+      }
+    }
+    return counter;
+  };
+  
+  // Helper function that multiplies the factorials of all elements in countedSet that are
+  // greater than the threshhold
+  // [!] Not in API, but in unit tests
+  Vector.factProduct = function (countedSet, threshhold, countsetFact) {
+    var result = 1;
+    for (var i = 1; i <= countedSet.dimensions(); i++) {
+      if (countedSet.e(i) > threshhold) {
+        result = Complex.mult(result, countsetFact.e(i));
+      }
+    }
+    return result;
+  };
+  
+  /** EXPERIMENTAL FUNCTIONS **/
+  
+  // Maps from multiple-deep tabloid or set to an integer index of possible sets of that shape
+  Vector.setToIndex = function (setArray) {
+    var index = 1,
+        setSize = setArray.dimensions(),
+        highestLevel = setArray.e(1), // Seed with first element for comparing purposes
+        countSet = $V([0]),
+        countSetFact = $V([0]),
+        workingSize,
+        thisLevel,
+        multiplier,
+        index;
+    
+    // Increment each of the elements of the setArray by 1 and see which is the highest
+    setArray = setArray.map(function (x) {
+      var result = Complex.add(x, 1);
+      if (result > highestLevel) {
+        highestLevel = result;
+      }
+      return result;
+    });
+    console.log("highest: " + highestLevel);
+    
+    for (var i = 1; i <= highestLevel; i++) {
+      countSet.setElement(i, Vector.histoCount(setArray, i));
+      countSetFact.setElement(i, Math.factorial(countSet.e(i)));
+    }
+    
+    for (var levelCounter = 1; levelCounter < highestLevel; levelCounter++) {
+      workingSize = setSize;
+      thisLevel = countSet.e(levelCounter);
+      multiplier = Complex.divide(Math.factorial(Complex.sub(workingSize, thisLevel)), Vector.factProduct(countSet, levelCounter + 1, countSetFact));
+      
+      for (k = 1; k <= setSize; k++) {
+        if (k > levelCounter) {
+          workingSize--;
+        } else if (k === levelCounter) {
+          index = Complex.add(index, Complex.mult(Math.choose(thisLevel, workingSize - 1), multiplier));
+          console.log("index: " + index);
+          workingSize--;
+          thisLevel--;
+        }
+      }
+      setSize = Complex.sub(setSize, countSet.e(levelCounter));
+      console.log(setSize);
+    }
+    return index;
+  };
+  
 })();
 
 
@@ -1334,7 +1409,7 @@ var Clique = $CQ = function () {};
       result.setCol(i, matrix.col(cols + 1 - i));
     }
     return result;
-  }
+  };
   
 
   /** Experimental Section **/

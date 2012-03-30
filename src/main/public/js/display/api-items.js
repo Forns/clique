@@ -675,6 +675,11 @@ var apiItems = {
       example: ""
     },
     
+    histoCount: {
+      title: "Vector.histoCount(v, i)",
+      use: "Returns the number of instances of i in v."
+    },
+    
     indexOf: {
       title: "indexOf(x)",
       use: "Returns the index position (numbered from 1, just as for e()) of the first element exactly equal to x. If no match is found, returns null.",

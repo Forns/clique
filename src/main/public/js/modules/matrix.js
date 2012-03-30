@@ -132,7 +132,7 @@
       result.setCol(i, matrix.col(cols + 1 - i));
     }
     return result;
-  }
+  };
   
 
   /** Experimental Section **/

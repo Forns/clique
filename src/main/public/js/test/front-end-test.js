@@ -293,6 +293,18 @@ $(function () {
     ok($V([2, 0, 3]).setElement(3, $C(1, 1)).eql($V([2, 0, $C(1, 1)])));
   });
   
+  test("Vector: histoCount", function () {
+    equal(Vector.histoCount($V([1]), 1), 1);
+    equal(Vector.histoCount($V([1]), 1), 1);
+    equal(Vector.histoCount($V([$C(1)]), 1), 1);
+    equal(Vector.histoCount($V([$C(1, 1)]), $C(1, 1)), 1);
+    equal(Vector.histoCount($V([1, 2, 3, 4]), 2), 1);
+    equal(Vector.histoCount($V([$C(1, 1), $C(1, 1), $C(1, 1)]), $C(1, 1)), 3);
+    equal(Vector.histoCount($V([$C(1, 1), $C(1, -1), $C(-1, 1)]), $C(1, 1)), 1);
+    equal(Vector.histoCount($V([$C(1, 1), 0, $C(1, 1)]), -1), 0);
+    equal(Vector.histoCount($V([$C(1, 0), $C(1, -1), 1]), 1), 2);
+  });
+  
   test("Matrix: Complex Elements", function () {
     equal($M([$C(0, 1)]).inspect(), "[i]");
     equal($M([$C(2, -1)]).inspect(), "[2-i]");
@@ -687,7 +699,18 @@ $(function () {
       [null, null, null, 1.5633, -0.4654]
     ])));
     
-  })
+  });
+  
+  // [!] Helper function, not in API
+  test("factProduct", function () {
+    equal(Vector.factProduct($V([1]), 1, $V([1])), 1);
+    equal(Vector.factProduct($V([1, 2]), 1, $V([1, 2])), 2);
+    equal(Vector.factProduct($V([1, 2, 5, 2, 6]), 4, $V([1, 2, 6, 24, 120])), 720);
+  });
+  
+  test("setToIndex", function () {
+    equal(Vector.setToIndex($V([1, 2, 3])), 6);
+  });
   
   /***** TESTING SECTION *****/
   // Used for testing functions in progress (if any)
