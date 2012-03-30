@@ -39,6 +39,9 @@
   
   // Sets a single matrix element to the given value
   Matrix.prototype.setElement = function (i, j, element) {
+    if (!this.elements[i - 1]) {
+      this.elements[i - 1] = [];
+    }
     this.elements[i - 1][j - 1] = element;
     return this;
   };
@@ -214,7 +217,7 @@
   // Default value for epsilon set to 10^-8
   Matrix.lanczos = function (A, f, epsilon) {
     var orthogonalResult = f.multiply(1 / f.norm()),
-        tridiagonalResult = $M([[0]]),
+        tridiagonalResult = $M([[0]]), // Sparse matrix
         a = $M([0]), // Vector used in iteration
         b = $M([0]), // Vector used in iteration
         ep = 0,
@@ -226,19 +229,14 @@
     
     // FIRST PASS
     v = $M(A.multiply(orthogonalResult.col(1)));
-    console.log("v: ");
-    console.log(v);
     a.setElement(1, 1, $M(orthogonalResult.col(1)).transpose().multiply(v).e(1, 1));
-    console.log("v - a[1,1] x orthRes.col(1):");
-    console.log(v.subtract(orthogonalResult.col(1).multiply(a.e(1, 1))));
     v = v.subtract(orthogonalResult.col(1).multiply(a.e(1, 1)));
     tridiagonalResult.setElement(1, 1, a.e(1, 1));
     b.setElement(1, 1, v.norm());
     if (b.e(1, 1) > epsilon) {
-      orthogonalResult.setCol(2, v.multiply(1 / b.e(1, 1)));
+      orthogonalResult.setCol(2, $V(v.multiply(1 / b.e(1, 1)).col(1)));
       tridiagonalResult.setElement(1, 2, b.e(1, 1));
-      tridiagonalResult.setElement(2, 1, b.e(1, 1)); // Error here
-      console.log("here!");
+      tridiagonalResult.setElement(2, 1, b.e(1, 1));
       n = 2;
     } else {
       check = 0;
@@ -246,22 +244,23 @@
     
     // THREE TERM RECURRENCE
     while(check > 0) {
-      v = A.multiply(orthogonalResult.col(n).subtract(b.e(n - 1).multiply(orthogonalResult.col(n - 1))));
+      v = A.multiply(orthogonalResult.col(n)).subtract(orthogonalResult.col(n - 1).multiply(b.e(1, n - 1)));
       a.setElement(1, n, $M(orthogonalResult.col(n)).transpose().multiply(v).e(1, 1));
-      v = v.subtract(a.e(1, n).multiply(orthogonalResult.col(n)));
-      tridiagonalResult.setElement(n, n, a.e(n));
+      v = v.subtract(orthogonalResult.col(n).multiply(a.e(1, n)));
+      tridiagonalResult.setElement(n, n, a.e(1, n));
       
+      // Re-orthogonalize here
       for (var j = 1; j < n; j++) {
-        ep = orthogonalResult.col(j).multiply(v);
-        v = v.subtract(ep.multiply(orthogonalResult.col(j)));
+        ep = $M(orthogonalResult.col(j)).transpose().multiply(v);
+        v = v.subtract(orthogonalResult.col(j).multiply(ep.e(1)));
       }
       
-      b.setElement(1, n, Matrix.norm(v));
+      b.setElement(1, n, v.modulus());
       
       if (b.e(1, n) > epsilon && n < size) {
-        orthogonalResult.setCol(n + 1, v.multiply(1 / b.e(n)));
-        tridiagonalResult.setElement(n, n + 1, b.e(n));
-        tridiagonalResult.setElement(n + 1, n, b.e(n));
+        orthogonalResult.setCol(n + 1, v.multiply(1 / b.e(1, n)));
+        tridiagonalResult.setElement(n, n + 1, b.e(1, n));
+        tridiagonalResult.setElement(n + 1, n, b.e(1, n));
         n++;
       } else {
         check = 0;

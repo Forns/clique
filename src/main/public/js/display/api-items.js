@@ -294,6 +294,58 @@ var apiItems = {
         "// 1 3 5<br/> // 1 4 5<br/> // 2 3 4<br/> // 2 3 5<br/> // 2 4 5<br/> // 3 4 5"
     },
     
+    lanczos: {
+      title: "Matrix.lanczos(A, f, epsilon)",
+      use: "Uses the \"Lanczos Iteration with re-orthogonalization\" to compute the QR" +
+        "factorization of the matrix [f fA fA^2...] where A is a symmetric matrix. Allows" +
+        "user to determine how small the residue vectors must be before terminating (DEFAULT epsilon = 10^-8)<br/><br/>" +
+        "Returns two Matrices as a 2-element array:<br/>" +
+        "[Q, R] = lanczos(A, f, epsilon)<br/><br/>" +
+        "Q = orthogonal matrix<br/>R = sparse, tridiagonal matrix",
+      example: "var A = $M([<br/>" +
+            "&nbsp&nbsp[0.2,  -0.3,  0.1, 0.5, -1.2],<br/>" +
+            "&nbsp&nbsp[-0.3,  0.7,  0,   1.9,  0.6],<br/>" +
+            "&nbsp&nbsp[0.1,   0,   -2,  -1,    2  ],<br/>" +
+            "&nbsp&nbsp[0.5,   1.9, -1,   0.4,  0.5],<br/>" +
+            "&nbsp&nbsp[-1.2,  0.6,  2,   0.5, -0.2]<br/>" +
+          "]),<br/>" +
+          "f = $M([1, 2, 3, 4, 5]),<br/>" +
+          "result = Matrix.lanczos(A, f);<br/><br/>" +
+          
+          "// result[0] = Q =<br/>" +
+          "$M([<br/>" +
+            "&nbsp&nbsp[0.1348, -0.4881, -0.3154,  0.4853,  0.6392],<br/>" +
+            "&nbsp&nbsp[0.2697,  0.7945, -0.0792, -0.0348,  0.5371],<br/>" +
+            "&nbsp&nbsp[0.4045, -0.3609,  0.2171, -0.7484,  0.3143],<br/>" +
+            "&nbsp&nbsp[0.5394, -0.0126,  0.7011,  0.4507, -0.1196],<br/>" +
+            "&nbsp&nbsp[0.6742,  0.0065, -0.5963,  0.0054, -0.4356]<br/>" +
+          "]);<br/><br/>"+
+          
+          "// result[1] = R =<br/>" +
+          "$M([<br/>" +
+            "&nbsp&nbsp[1.3855, 1.5154],<br/>" +
+            "&nbsp&nbsp[1.5154, 0.4602, 1.1599],<br/>" +
+            "&nbsp&nbsp[null, 1.1599, -2.0401, 2.0014],<br/>" +
+            "&nbsp&nbsp[null, null, 2.0014, -0.2401, 1.5633],<br/>" +
+            "&nbsp&nbsp[null, null, null, 1.5633, -0.4654]<br/>" +
+          "]);<br/><br/>" +
+          
+          "// Sparse representation of result[1] = R =<br/>" +
+          "// (1,1)       1.3855<br/>" +
+          "// (2,1)       1.5154<br/>" +
+          "// (1,2)       1.5154<br/>" +
+          "// (2,2)       0.4602<br/>" +
+          "// (3,2)       1.1599<br/>" +
+          "// (2,3)       1.1599<br/>" +
+          "// (3,3)      -2.0401<br/>" +
+          "// (4,3)       2.0014<br/>" +
+          "// (3,4)       2.0014<br/>" +
+          "// (4,4)      -0.2401<br/>" +
+          "// (5,4)       1.5633<br/>" +
+          "// (4,5)       1.5633<br/>" +
+          "// (5,5)      -0.4654"
+    },
+    
     map: {
       title: "map(iterator)",
       use: "Maps the caller to another matrix by calling iterator on each element of the caller in turn. iterator " +

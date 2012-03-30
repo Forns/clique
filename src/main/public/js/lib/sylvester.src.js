@@ -24,7 +24,7 @@
 
 var Sylvester = {
   version: '0.1.3',
-  precision: 1e-6
+  precision: 1e-4
 };
 
 function Vector() {}
