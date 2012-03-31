@@ -15,6 +15,9 @@
   
   // The standard choose function: n! / (k!*(n-k)!)
   Math.choose = function (n, k) {
+    if ((n === 0 && k === 0) || k > n) {
+      return 0;
+    }
     return Math.factorial(n) / (Math.factorial(k) * Math.factorial(n - k));
   };
   

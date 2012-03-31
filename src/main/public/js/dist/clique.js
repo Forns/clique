@@ -1119,6 +1119,9 @@ var Clique = $CQ = function () {};
   
   // The standard choose function: n! / (k!*(n-k)!)
   Math.choose = function (n, k) {
+    if ((n === 0 && k === 0) || k > n) {
+      return 0;
+    }
     return Math.factorial(n) / (Math.factorial(k) * Math.factorial(n - k));
   };
   
@@ -1200,9 +1203,13 @@ var Clique = $CQ = function () {};
   // Takes a vector and a number and returns the number of occurrences of the
   // number in that set.
   Vector.histoCount = function (set, number) {
-    counter = 0;
+    var counter = 0,
+        currentItem;
     for (var i = 1; i <= set.dimensions(); i++) {
-      if (Complex.equal(set.e(i), number)) {
+      currentItem = set.e(i);
+      if (!(typeof(currentItem) === "number" || Complex.areComplex(currentItem))) {
+        counter += Vector.histoCount(currentItem, number);
+      } else if (Complex.equal(set.e(i), number)) {
         counter++;
       }
     }
@@ -1214,10 +1221,8 @@ var Clique = $CQ = function () {};
   // [!] Not in API, but in unit tests
   Vector.factProduct = function (countedSet, threshhold, countsetFact) {
     var result = 1;
-    for (var i = 1; i <= countedSet.dimensions(); i++) {
-      if (countedSet.e(i) > threshhold) {
-        result = Complex.mult(result, countsetFact.e(i));
-      }
+    for (var i = threshhold; i <= countedSet.dimensions(); i++) {
+      result = Complex.mult(result, countsetFact.e(i));
     }
     return result;
   };
@@ -1244,8 +1249,6 @@ var Clique = $CQ = function () {};
       }
       return result;
     });
-    console.log("highest: " + highestLevel);
-    
     for (var i = 1; i <= highestLevel; i++) {
       countSet.setElement(i, Vector.histoCount(setArray, i));
       countSetFact.setElement(i, Math.factorial(countSet.e(i)));
@@ -1256,18 +1259,17 @@ var Clique = $CQ = function () {};
       thisLevel = countSet.e(levelCounter);
       multiplier = Complex.divide(Math.factorial(Complex.sub(workingSize, thisLevel)), Vector.factProduct(countSet, levelCounter + 1, countSetFact));
       
-      for (k = 1; k <= setSize; k++) {
-        if (k > levelCounter) {
+      for (k = 1; k <= setArray.dimensions(); k++) {
+        var currentValue = setArray.e(k);
+        if (currentValue > levelCounter) {
           workingSize--;
-        } else if (k === levelCounter) {
-          index = Complex.add(index, Complex.mult(Math.choose(thisLevel, workingSize - 1), multiplier));
-          console.log("index: " + index);
+        } else if (currentValue === levelCounter) {
+          index = Complex.add(index, Complex.mult(Math.choose(workingSize - 1, thisLevel), multiplier));
           workingSize--;
           thisLevel--;
         }
       }
       setSize = Complex.sub(setSize, countSet.e(levelCounter));
-      console.log(setSize);
     }
     return index;
   };

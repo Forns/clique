@@ -303,6 +303,25 @@ $(function () {
     equal(Vector.histoCount($V([$C(1, 1), $C(1, -1), $C(-1, 1)]), $C(1, 1)), 1);
     equal(Vector.histoCount($V([$C(1, 1), 0, $C(1, 1)]), -1), 0);
     equal(Vector.histoCount($V([$C(1, 0), $C(1, -1), 1]), 1), 2);
+    equal(Vector.histoCount($V([
+      $V([1, 2, 1, $C(1, 1)]),
+      $V([3, $C(4, 1), -1, -1]),
+      $V([2, 2, 2, $C(1)])
+    ]), 1), 3);
+    equal(Vector.histoCount($V([
+      $V([
+        $V([1, 1, 1]),
+        $V([2, 2, 1])
+      ]),
+      $V([
+        $V([0, 0, 0]),
+        $V([2, 2, -1])
+      ]),
+      $V([
+        $V([1, 0, 1]),
+        $V([2, 2, 2])
+      ])
+    ]), 1), 6);
   });
   
   test("Matrix: Complex Elements", function () {
@@ -705,11 +724,17 @@ $(function () {
   test("factProduct", function () {
     equal(Vector.factProduct($V([1]), 1, $V([1])), 1);
     equal(Vector.factProduct($V([1, 2]), 1, $V([1, 2])), 2);
-    equal(Vector.factProduct($V([1, 2, 5, 2, 6]), 4, $V([1, 2, 6, 24, 120])), 720);
+    equal(Vector.factProduct($V([1, 2, 5, 2, 6]), 4, $V([1, 2, 6, 24, 120])), 2880);
   });
   
   test("setToIndex", function () {
     equal(Vector.setToIndex($V([1, 2, 3])), 6);
+    equal(Vector.setToIndex($V([3, 5, 12, 24])), 24);
+    equal(Vector.setToIndex($V([1, 23, 45, 711])), 24);
+    equal(Vector.setToIndex($V([1, 23, 45, 12])), 20);
+    equal(Vector.setToIndex($V([4, 2])), 1);
+    equal(Vector.setToIndex($V([2])), 1);
+    equal(Vector.setToIndex($V([100, 23, 45, 12, 32, 17, 6, 11])), 5293);
   });
   
   /***** TESTING SECTION *****/
