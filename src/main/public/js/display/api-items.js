@@ -784,6 +784,13 @@ var apiItems = {
       example: ""
     },
     
+    setToIndex: {
+      title: "Vector.setToIndex(v)",
+      use: "Maps from vector set to an integer index of possible sets of that shape.",
+      example: "Vector.setToIndex($V([1, 2, 3])); // Returns 6<br/><br/>" +
+        "Vector.setToIndex($V([100, 23, 45, 12, 32, 17, 6, 11])); // Returns 5293"
+    },
+    
     snapTo: {
       title: "snapTo(x)",
       use: "Returns a copy of the receiver with any elements that differ from x by less than the value of " + 

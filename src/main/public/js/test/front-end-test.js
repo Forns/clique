@@ -737,6 +737,10 @@ $(function () {
     equal(Vector.setToIndex($V([100, 23, 45, 12, 32, 17, 6, 11])), 5293);
   });
   
+  test("radonTransform", function () {
+    ok(true);
+  });
+  
   /***** TESTING SECTION *****/
   // Used for testing functions in progress (if any)
   test("testingSection", function() {
