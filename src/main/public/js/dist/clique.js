@@ -1136,8 +1136,14 @@ var Clique = $CQ = function () {};
   /** Helper Methods **/
   // Helper method for the matrix sorting that determines
   // ascending sorting method
-  var sortNumber = function (a, b) {
-    return Complex.sub(a, b);
+  var sortAscending = function (a, b) {
+    var result = Complex.sub(a, b);
+    return result.real || result;
+  },
+  
+  sortDescending = function (a, b) {
+    var result = sortAscending(a, b) * -1;
+    return result.real || result;
   };
   
   
@@ -1179,7 +1185,7 @@ var Clique = $CQ = function () {};
   // value by default
   Vector.sort = function (v, sortFunc) {
     if (!sortFunc) {
-      sortFunc = sortNumber;
+      sortFunc = sortAscending;
     }
     return $V(v.elements.sort(sortFunc));
   };
@@ -1274,46 +1280,6 @@ var Clique = $CQ = function () {};
     return index;
   };
   
-  // Returns the Radon transform R: M^lam --> M^lam+ where lam is a partition of an integer n
-  Vector.radonTransform = function (lam) {
-    var size = lam.dimensions(),
-        lamSum = Vector.sum(lam),       // Number being partitioned
-        newPartition = lam.dup(),
-        tabs = Matrix.tabloids(lam),    // The starting tabloids
-        tabSize = tabs.rows(),
-        newTabs,                        // The "goal" tabloids
-        newTabsSize,
-        count = 0,
-        zeros,
-        index,
-        result = [];                    // The final Radon transform
-        
-        newPartition.setElement(1, Complex.add(newPartition.e(1), 1));
-        newPartition.setElement(size, Complex.sub(newPartition.e(1), 1));
-        newTabs = Matrix.tabloids(newPartition);
-        newTabsSize = newTabs.rows();
-        
-    for (var i = 1; i <= tabSize; i++) {
-      count = 0;
-      zeros = $V([1, lamSum]);
-      for (var j = 1; count < lam.e(size); j++) {
-        if (Complex.equal(tabs.e(i, j), size)) {
-          zeros = tabs.row(i);
-          zeros.setElement(j, 1);
-          index = Vector.setToIndex(zeros);
-          if (typeof(result[index]) === "undefined") {
-            result[index] = [];
-          }
-          result[index][i] = (typeof(result[index][i]) === "undefined") ? 1 : result[index][i] + 1;
-          count++;
-        }
-      }
-    }
-    alert("returning!");
-    alert(JSON.stringify(result));
-    return $M(result);
-  };
-  
 })();
 
 
@@ -1324,8 +1290,14 @@ var Clique = $CQ = function () {};
   
   // Helper method for the matrix sorting that determines
   // ascending sorting method
-  var sortNumber = function (a, b) {
-    return Complex.sub(a, b);
+  var sortAscending = function (a, b) {
+    var result = Complex.sub(a, b);
+    return result.real || result;
+  },
+  
+  sortDescending = function (a, b) {
+    var result = sortAscending(a, b) * -1;
+    return result.real || result;
   };
   
   // Sets the given row of matrix to the given vector
@@ -1432,7 +1404,7 @@ var Clique = $CQ = function () {};
       matrix.col(i).each(function (x, i) {
         currentCol.push(x);
       });
-      currentCol = currentCol.sort(sortNumber);
+      currentCol = currentCol.sort(sortAscending);
       for (var j = 0; j < currentCol.length; j++) {
         if (typeof(result[j]) === "undefined") {
           result[j] = [];
@@ -1597,6 +1569,68 @@ var Clique = $CQ = function () {};
     }
     
     return [orthogonalResult, tridiagonalResult];
+  };
+  
+  // Returns a matrix whose all-zero rows are trimmed off
+  Matrix.sparse = function (matrix) {
+    var result = $M([0]);
+    for (var i = 1; i < matrix.rows(); i++) {
+      var nonZeros = false;
+      for (var j = 1; j < matrix.cols(); j++) {
+        if (!Complex.equal(matrix.e(i, j), 0)) {
+          nonZeros = true;
+          break;
+        }
+      }
+      if (nonZeros) {
+        result.setRow(i, matrix.row(i));
+      }
+    }
+    return result;
+  };
+  
+  // Returns the Radon transform R: M^lam --> M^lam+ where lam is a partition of an integer n
+  Matrix.radonTransform = function (lam) {
+    // Begin by ensuring that the numbers in lam are in descending order
+    lam = Vector.sort(lam, sortDescending);
+    
+    var size = lam.dimensions(),
+        lamSum = Vector.sum(lam),       // Number being partitioned
+        newPartition = lam.dup(),
+        tabs = Matrix.tabloids(lam),    // The starting tabloids
+        tabSize = tabs.rows(),
+        newTabs,                        // The "goal" tabloids
+        newTabSize,
+        count = 0,
+        zeros,
+        index;
+        
+    newPartition.setElement(1, Complex.add(newPartition.e(1), 1));
+    newPartition.setElement(size, Complex.sub(newPartition.e(1), 1));
+    newTabs = Matrix.tabloids(newPartition);
+    newTabSize = newTabs.rows();
+    
+    // The final Radon transform
+    result = Matrix.zero(newTabSize, tabSize);
+        
+    for (var i = 1; i <= tabSize; i++) {
+      count = 0;
+      zeros = Vector.zero(lamSum);
+      for (var j = 1; count < lam.e(size); j++) {
+        var currentElement = tabs.e(i, j);
+        if (currentElement === null) {
+          break;
+        }
+        if (Complex.equal(currentElement, size)) {
+          zeros = tabs.row(i);
+          zeros.setElement(j, 1);
+          index = Vector.setToIndex(zeros);
+          result.setElement(index, i, result.e(index, i) + 1);
+          count = count + 1;
+        }
+      }
+    }
+    return result;
   };
   
 })();

@@ -6,8 +6,14 @@
   /** Helper Methods **/
   // Helper method for the matrix sorting that determines
   // ascending sorting method
-  var sortNumber = function (a, b) {
-    return Complex.sub(a, b);
+  var sortAscending = function (a, b) {
+    var result = Complex.sub(a, b);
+    return result.real || result;
+  },
+  
+  sortDescending = function (a, b) {
+    var result = sortAscending(a, b) * -1;
+    return result.real || result;
   };
   
   
@@ -49,7 +55,7 @@
   // value by default
   Vector.sort = function (v, sortFunc) {
     if (!sortFunc) {
-      sortFunc = sortNumber;
+      sortFunc = sortAscending;
     }
     return $V(v.elements.sort(sortFunc));
   };
@@ -142,46 +148,6 @@
       setSize = Complex.sub(setSize, countSet.e(levelCounter));
     }
     return index;
-  };
-  
-  // Returns the Radon transform R: M^lam --> M^lam+ where lam is a partition of an integer n
-  Vector.radonTransform = function (lam) {
-    var size = lam.dimensions(),
-        lamSum = Vector.sum(lam),       // Number being partitioned
-        newPartition = lam.dup(),
-        tabs = Matrix.tabloids(lam),    // The starting tabloids
-        tabSize = tabs.rows(),
-        newTabs,                        // The "goal" tabloids
-        newTabsSize,
-        count = 0,
-        zeros,
-        index,
-        result = [];                    // The final Radon transform
-        
-        newPartition.setElement(1, Complex.add(newPartition.e(1), 1));
-        newPartition.setElement(size, Complex.sub(newPartition.e(1), 1));
-        newTabs = Matrix.tabloids(newPartition);
-        newTabsSize = newTabs.rows();
-        
-    for (var i = 1; i <= tabSize; i++) {
-      count = 0;
-      zeros = $V([1, lamSum]);
-      for (var j = 1; count < lam.e(size); j++) {
-        if (Complex.equal(tabs.e(i, j), size)) {
-          zeros = tabs.row(i);
-          zeros.setElement(j, 1);
-          index = Vector.setToIndex(zeros);
-          if (typeof(result[index]) === "undefined") {
-            result[index] = [];
-          }
-          result[index][i] = (typeof(result[index][i]) === "undefined") ? 1 : result[index][i] + 1;
-          count++;
-        }
-      }
-    }
-    alert("returning!");
-    alert(JSON.stringify(result));
-    return $M(result);
   };
   
 })();

@@ -637,6 +637,10 @@ $(function () {
     );
   });
   
+  test("Matrix: sparse", function () {
+    ok(true);
+  });
+  
   /*
    * Tests for the spectral analyzer functions
    */
@@ -738,6 +742,12 @@ $(function () {
   });
   
   test("radonTransform", function () {
+    /* Temporary Omission
+    console.log(Matrix.radonTransform($V([2, 2])).inspect());
+    ok(Matrix.radonTransform($V([2, 1])).eql($M([
+      [1, 1, 1]
+    ])));
+   */
     ok(true);
   });
   
