@@ -348,6 +348,31 @@
     return result;
   };
   
+  // Returns the Jucys-Murphy element R_i associated with the space of tabloids given
+  // to us by the tabloid matrix M
+  Matrix.jucysMurphyElement = function (M, i) {
+    var dim = M.rows(),
+        result = Matrix.zero(dim, dim),
+        compVector = Vector.zero(M.cols()),
+        check = 0,
+        currentIndex;
+        
+    for (var k = 1; k <= dim; k++) {
+      for (var j = 1; j < i; j++) {
+        if (Complex.equal(M.e(k, i), M.e(k, j))) {
+          result.setElement(k, k, result.e(k, k) + 1);
+        } else {
+          compVector = M.row(k);
+          compVector.setElement(j, M.e(k, i));
+          compVector.setElement(i, M.e(k, j));
+          currentIndex = Vector.setToIndex(compVector);
+          result.setElement(currentIndex, k, result.e(currentIndex, k) + 1);
+        }
+      }
+    }
+    return result;
+  };
+  
 })();
 
 

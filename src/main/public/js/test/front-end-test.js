@@ -764,7 +764,17 @@ $(function () {
       [1, 1, 1]
     ])));
    */
+    // TODO: Find out what radonTransforms look like...
     ok(true);
+  });
+  
+  test("jucysMurphyElement", function () {
+    ok(Matrix.jucysMurphyElement($M([
+      [1, 2, 3]
+    ]), 1), $M([
+      0
+    ]));
+    // TODO: Find out what JM does...
   });
   
 
