@@ -150,6 +150,62 @@
     return index;
   };
   
+  // Helper function that computes the base level in the tabloid above the one passed
+  // to it as the threshhold. Size is the number of elements on the level of threshhold
+  // or below
+  // [!] Function is not in the API, but is within tests
+  Vector.multiplier = function (countedSet, threshhold, size) {
+    var result = Math.factorial(size);
+    for (var i = threshhold; i <= countedSet.dimensions(); i++) {
+      result /= Math.factorial(countedSet.e(i));
+    }
+    return result;
+  };
+  
+  // Maps to tabloid given integer index and a vector containing the shape of
+  // the tabloid. This vector is defined in accordance with the following:
+  // 1 chosen from 4 chosen from 5 chosen from 9 yields rows of width:
+  // 9-5, 5-4, 4-1, 1 respectively. So the vector would be passed as [4, 1, 3, 1]
+  Vector.indexToSet = function (index, shapeVector) {
+    var setSize = Vector.sum(shapeVector),
+        result = Vector.zero(setSize),
+        nextSize = setSize,
+        internalSum,
+        internalIndex,
+        selectedSize,
+        workingSize,
+        base;
+    index--;
+    
+    for (var i = 1; i <= shapeVector.dimensions(); i++) {
+      internalSum = 0;                             // The working sum just for this line
+      selectedSize = shapeVector.e(i);
+      workingSize = nextSize;
+      nextSize -= selectedSize;                    // Saved for next iteration
+      base = Vector.multiplier(shapeVector, i+1, nextSize);
+      internalIndex = Math.floor(Complex.divide(index, base));  // To serve as this step's index
+      index -= Complex.mult(internalIndex, base);  // Saved for next iteration
+      
+      // The "workhorse" loop: loops through elements and sets appropriate ones to current line in tabloid
+      for (var j = 1; j <= setSize; j++) {
+        if (Complex.equal(result.e(j), 0)) {
+          if (Complex.equal(selectedSize, 0)) {
+            workingSize--;
+          } else if (internalSum + Math.choose(workingSize - 1, selectedSize) > internalIndex) {
+            workingSize--;
+          } else {
+            internalSum += Math.choose(workingSize - 1, selectedSize);
+            result.setElement(j, i);
+            workingSize--;
+            selectedSize--;
+          }
+        }
+      }
+    }
+    
+    return result;
+  };
+  
 })();
 
 

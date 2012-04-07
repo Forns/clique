@@ -686,6 +686,17 @@ var apiItems = {
       example: ""
     },
     
+    indexToSet: {
+      title: "Vector.indexToSet(index, shapeVector)",
+      use: "Maps to tabloid given integer index and a vector containing the shape of " +
+        "the tabloid. This vector is defined in accordance with the following: " +
+        "1 chosen from 4 chosen from 5 chosen from 9 yields rows of width: " +
+        "9-5, 5-4, 4-1, 1 respectively. So the vector would be passed as [4, 1, 3, 1]",
+        example: "Vector.indexToSet(1, $V([1, 2])); // Returns $V([2, 2, 1])<br/>" +
+          "Vector.indexToSet(2, $V([1, 2])); // Returns $V([2, 1, 2])<br/>" +
+          "Vector.indexToSet(3, $V([1, 2, 3])); // Returns $V([3, 3, 2, 2, 3, 1])<br/>"
+    },
+    
     insert: {
       title: "Vector.insert(v, i, e)",
       use: "Returns a new vector representing element e added to v at index i.",

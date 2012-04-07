@@ -324,6 +324,13 @@ $(function () {
     ]), 1), 6);
   });
   
+  test("Vector: multiplier", function () {
+    equal(Vector.multiplier($V([1]), 1, 1), 1);
+    equal(Vector.multiplier($V([1, 2]), 3, 1), 1);
+    equal(Vector.multiplier($V([1, 2, 3]), 3, 1), 0.16666666666666666);
+    equal(Vector.multiplier($V([0, 2, 5, 4]), 2, 1), 0.00017361111111111112);
+  });
+  
   test("Matrix: Complex Elements", function () {
     equal($M([$C(0, 1)]).inspect(), "[i]");
     equal($M([$C(2, -1)]).inspect(), "[2-i]");
@@ -741,6 +748,15 @@ $(function () {
     equal(Vector.setToIndex($V([100, 23, 45, 12, 32, 17, 6, 11])), 5293);
   });
   
+  test("indexToSet", function () {
+    ok(Vector.indexToSet(1, $V([1])).eql($V([1])));
+    ok(Vector.indexToSet(1, $V([1, 2])).eql($V([2, 2, 1])));
+    ok(Vector.indexToSet(2, $V([1, 2])).eql($V([2, 1, 2])));
+    ok(Vector.indexToSet(1, $V([1, 2, 3])).eql($V([3, 3, 3, 2, 2, 1])));
+    ok(Vector.indexToSet(2, $V([1, 2, 3])).eql($V([3, 3, 2, 3, 2, 1])));
+    ok(Vector.indexToSet(3, $V([1, 2, 3])).eql($V([3, 3, 2, 2, 3, 1])));
+  });
+  
   test("radonTransform", function () {
     /* Temporary Omission
     console.log(Matrix.radonTransform($V([2, 2])).inspect());
@@ -751,6 +767,7 @@ $(function () {
     ok(true);
   });
   
+
   /***** TESTING SECTION *****/
   // Used for testing functions in progress (if any)
   test("testingSection", function() {
