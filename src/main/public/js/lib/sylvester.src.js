@@ -779,7 +779,6 @@ Matrix.zero = function(n, m) {
   return Matrix.create(els);
 };
 
-
 // Utility functions
-var $V = Vector.create;
-var $M = Matrix.create;
+var $V = Vector.create,
+    $M = Matrix.create;

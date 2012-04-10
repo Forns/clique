@@ -1086,19 +1086,55 @@ Matrix.zero = function(n, m) {
   return Matrix.create(els);
 };
 
-
 // Utility functions
-var $V = Vector.create;
-var $M = Matrix.create;
+var $V = Vector.create,
+    $M = Matrix.create;
+
+
+/**
+ * Sparse Matrix custom class
+ */
+function Sparse () {};
+Sparse.prototype = {
+  rows: function () {
+    return this.rows;
+  },
+  
+  cols: function () {
+    return this.cols;
+  },
+  
+  // Returns the element at the given index if it exists,
+  // 0 if it doesn't, and null if out of the sparse's bounds
+  e: function (row, col) {
+    if (row > this.rows() || col > this.cols()) {
+      return null;
+    }
+    var element = this.elements["(" + row + "," + col + ")"];
+    if (typeof(element) !== "undefined") {
+      return element;
+    } else {
+      return 0;
+    }
+  }
+};
+
+// Sparse matrix creation with the given number of rows
+// and columns; represents an all-0 matrix with those dimensions
+Sparse.create = function (rows, cols) {
+  var s = new Sparse();
+  s.rows = rows || 0;
+  s.cols = cols || 0;
+  s.elements = {};
+  return s;
+};
+
 
 /**
  * ****************
  * CLIQUE Functions
  * ****************
  */
-
-// Global clique object
-var Clique = $CQ = function () {};
 
 (function() {
 
@@ -1625,24 +1661,6 @@ var Clique = $CQ = function () {};
     }
     
     return [orthogonalResult, tridiagonalResult];
-  };
-  
-  // Returns a matrix whose all-zero rows are trimmed off
-  Matrix.sparse = function (matrix) {
-    var result = $M([0]);
-    for (var i = 1; i < matrix.rows(); i++) {
-      var nonZeros = false;
-      for (var j = 1; j < matrix.cols(); j++) {
-        if (!Complex.equal(matrix.e(i, j), 0)) {
-          nonZeros = true;
-          break;
-        }
-      }
-      if (nonZeros) {
-        result.setRow(i, matrix.row(i));
-      }
-    }
-    return result;
   };
   
   // Returns the Radon transform R: M^lam --> M^lam+ where lam is a partition of an integer n

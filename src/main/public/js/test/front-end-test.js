@@ -7,16 +7,6 @@
 $(function () {
   
   /*
-   * Ensure that the clique.js library is present
-   */
-  module("Library Inclusion");
-  
-  test("clique.js", function () {
-    ok($CQ, "clique.js library not found; ensure you've made the build.");
-  });
-  
-  
-  /*
    * Tests for the Complex Number library 
    */
   module("Complex");
@@ -644,9 +634,6 @@ $(function () {
     );
   });
   
-  test("Matrix: sparse", function () {
-    ok(true);
-  });
   
   /*
    * Tests for the spectral analyzer functions

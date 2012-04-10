@@ -286,24 +286,6 @@
     return [orthogonalResult, tridiagonalResult];
   };
   
-  // Returns a matrix whose all-zero rows are trimmed off
-  Matrix.sparse = function (matrix) {
-    var result = $M([0]);
-    for (var i = 1; i < matrix.rows(); i++) {
-      var nonZeros = false;
-      for (var j = 1; j < matrix.cols(); j++) {
-        if (!Complex.equal(matrix.e(i, j), 0)) {
-          nonZeros = true;
-          break;
-        }
-      }
-      if (nonZeros) {
-        result.setRow(i, matrix.row(i));
-      }
-    }
-    return result;
-  };
-  
   // Returns the Radon transform R: M^lam --> M^lam+ where lam is a partition of an integer n
   Matrix.radonTransform = function (lam) {
     // Begin by ensuring that the numbers in lam are in descending order
