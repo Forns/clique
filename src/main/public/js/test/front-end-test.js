@@ -634,6 +634,105 @@ $(function () {
     );
   });
   
+  test("Sparse: create", function () {
+    var s1 = Sparse.create(),
+        s2 = $S(),
+        s3 = Sparse.create(0, 0),
+        s4 = $S(2, 3),
+        s5 = $S(-2, -1);
+    equal(s1.rows(), 0);
+    ok(s1.elements);
+    equal(s1.cols(), 0);
+    equal(s2.rows(), 0);
+    equal(s2.cols(), 0);
+    equal(s3.rows(), 0);
+    equal(s4.rows(), 2);
+    equal(s4.cols(), 3);
+    equal(s5.rows(), 0);
+    equal(s5.cols(), 0);
+  });
+  
+  test("Sparse: setElement && e", function () {
+    var s1 = $S(),
+        s2 = $S(1, 1),
+        s3 = $S(1, 0),
+        s4 = $S(1, 4),
+        s5 = $S(3, 3);
+        
+    // Test set-up
+    s2.setElement(1, 1, 2);
+    s3.setElement(1, 0, $C(1));
+    s4.setElement(1, 3, $C(0, -1));
+    s5.setElement(2, 2, 5);
+    s5.setElement(3, 1, $C(2, 2));
+    
+    equal(s1.e(1, 1), null);
+    equal(s2.e(1, 1), 2);
+    equal(s3.e(1, 1), null);
+    equal(s4.e(1, 2), 0);
+    equal(s5.e(1, 3), 0);
+    equal(s5.e(4, 4), null);
+    equal(s5.e(4, 4), null);
+    ok(Complex.equal(s4.e(1, 3), $C(0, -1)));
+    ok(Complex.equal(s5.e(3, 1), $C(2, 2)));
+  });
+  
+  test("Sparse: equal", function () {
+    var s0 = $S(),
+        s1 = $S(1, 1),
+        s2 = $S(1, 3),
+        s3 = $S(2, 3),
+        s4 = $S(2, 3),
+        s5 = $S(2, 3),
+        m1 = $M([
+          [0]
+        ]),
+        m2 = $M([
+          [0, $C(1, -1), 0]
+        ])
+        m3 = $M([
+          [1, 0, 0],
+          [0, 0, -1]
+        ]);
+        
+    // Test set-up
+    s2.setElement(1, 2, $C(1, -1));
+    s3.setElement(1, 1, 1);
+    s3.setElement(2, 3, -1);
+    s4.setElement(1, 1, 1);
+    s4.setElement(2, 3, -1);
+    s5.setElement(1, 1, 1);
+    
+    ok(!s0.equal(m1));
+    ok(!s2.equal(m3));
+    ok(!s0.equal(s1));
+    ok(!s3.equal(s5));
+    ok(s1.equal(m1));
+    ok(s2.equal(m2));
+    ok(s3.equal(m3));
+    ok(s4.equal(s3));
+    ok(s3.equal(s4));
+    ok(s3.equal(s3)); // lol
+  });
+  
+  test("Sparse: inspect", function () {
+    var s0 = $S(),
+        s1 = $S(1, 1),
+        s2 = $S(3, 1),
+        s3 = $S(3, 2);
+    
+    equal(s0.inspect(), "0 x 0 all-0 sparse matrix");
+    equal(s1.inspect(), "1 x 1 all-0 sparse matrix");
+    s1.setElement(1, 1, 1);
+    equal(s1.inspect(), "(1,1) = 1");
+    s1.setElement(1, 1, 0);
+    equal(s1.inspect(), "1 x 1 all-0 sparse matrix");
+    equal(s2.inspect(), "3 x 1 all-0 sparse matrix");
+    s2.setElement(2, 1, $C(1));
+    equal(s2.inspect(), "(2,1) = 1");
+    equal(s3.inspect(), "3 x 2 all-0 sparse matrix");
+  });
+  
   
   /*
    * Tests for the spectral analyzer functions
