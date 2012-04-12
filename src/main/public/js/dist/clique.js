@@ -1116,6 +1116,7 @@ Sparse.prototype = {
     } else {
       return 0;
     }
+    return null;
   },
   
   // Determines if the given sparse or matrix is equal to the calling sparse
@@ -1197,6 +1198,27 @@ Sparse.create = function (rows, cols) {
   s.elements = {};
   return s;
 };
+
+// Takes the given matrix and turns it into a sparse matrix
+Sparse.sparse = function (matrix) {
+  if (!(matrix instanceof Matrix)) {
+    return null;
+  };
+  // Iterate through the given matrix, adding elements to the sparse only
+  // when they do not equal 0
+  var mRows = matrix.rows(),
+      mCols = matrix.cols(),
+      result = $S(mRows, mCols);
+  for (var i = 1; i <= mRows; i++) {
+    for (var j = 1; j <= mCols; j++) {
+      var currentElement = matrix.e(i, j);
+      if (!Complex.equal(currentElement, 0)) {
+        result.setElement(i, j, currentElement);
+      }
+    }
+  }
+  return result;
+}
 
 var $S = Sparse.create;
 
@@ -1576,6 +1598,22 @@ var $S = Sparse.create;
       }
     }
     return $M(result);
+  };
+  
+  // Returns a full matrix (all 0-elements fleshed out) from the given sparse
+  Matrix.full = function (sparse) {
+    var result = Matrix.zero(sparse.rows(), sparse.cols()),
+        sparseElements = sparse.elements,
+        splitter = [],
+        i = 1,
+        j = 1;
+    for (var key in sparseElements) {
+      splitter = key.split(",");
+      i = parseInt(splitter[0].substring(1, splitter[0].length));
+      j = parseInt(splitter[1].substring(0, splitter[1].length - 1));
+      result.setElement(i, j, sparseElements[key]);
+    }
+    return result;
   };
   
   // Returns matrix with columns flipped in the left-right direction, i.e. about a vertical axis

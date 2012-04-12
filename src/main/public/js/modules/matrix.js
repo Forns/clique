@@ -130,6 +130,22 @@
     return $M(result);
   };
   
+  // Returns a full matrix (all 0-elements fleshed out) from the given sparse
+  Matrix.full = function (sparse) {
+    var result = Matrix.zero(sparse.rows(), sparse.cols()),
+        sparseElements = sparse.elements,
+        splitter = [],
+        i = 1,
+        j = 1;
+    for (var key in sparseElements) {
+      splitter = key.split(",");
+      i = parseInt(splitter[0].substring(1, splitter[0].length));
+      j = parseInt(splitter[1].substring(0, splitter[1].length - 1));
+      result.setElement(i, j, sparseElements[key]);
+    }
+    return result;
+  };
+  
   // Returns matrix with columns flipped in the left-right direction, i.e. about a vertical axis
   Matrix.fliplr = function (matrix) {
     var cols = matrix.cols(),

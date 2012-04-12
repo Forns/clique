@@ -25,6 +25,7 @@ Sparse.prototype = {
     } else {
       return 0;
     }
+    return null;
   },
   
   // Determines if the given sparse or matrix is equal to the calling sparse
@@ -106,6 +107,27 @@ Sparse.create = function (rows, cols) {
   s.elements = {};
   return s;
 };
+
+// Takes the given matrix and turns it into a sparse matrix
+Sparse.sparse = function (matrix) {
+  if (!(matrix instanceof Matrix)) {
+    return null;
+  };
+  // Iterate through the given matrix, adding elements to the sparse only
+  // when they do not equal 0
+  var mRows = matrix.rows(),
+      mCols = matrix.cols(),
+      result = $S(mRows, mCols);
+  for (var i = 1; i <= mRows; i++) {
+    for (var j = 1; j <= mCols; j++) {
+      var currentElement = matrix.e(i, j);
+      if (!Complex.equal(currentElement, 0)) {
+        result.setElement(i, j, currentElement);
+      }
+    }
+  }
+  return result;
+}
 
 var $S = Sparse.create;
 

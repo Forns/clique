@@ -614,6 +614,45 @@ $(function () {
     );
   });
   
+  test("Matrix: full", function () {
+    var m1 = $M([
+          [0]
+        ]),
+        m2 = $M([
+          [0, 0, 0]
+        ]),
+        m3 = $M([
+          [0],
+          [0],
+          [0],
+          [0]
+        ]),
+        m4 = $M([
+          [0, 0, 0],
+          [0, 0, 0]
+        ]),
+        m5 = $M([
+          [0, 1, 0],
+          [0, 0, $C(1, -1)]
+        ]),
+        s1 = $S(1, 1),
+        s2 = $S(1, 3),
+        s3 = $S(4, 1),
+        s4 = $S(2, 3),
+        s5 = $S(2, 3);
+        
+    ok(Matrix.full(s1).eql(m1));
+    s1.setElement(1, 1, 1);
+    m1.setElement(1, 1, 1);
+    ok(Matrix.full(s1).eql(m1));
+    ok(Matrix.full(s2).eql(m2));
+    ok(Matrix.full(s3).eql(m3));
+    ok(Matrix.full(s4).eql(m4));
+    s5.setElement(1, 2, 1);
+    s5.setElement(2, 3, $C(1, -1));
+    ok(Matrix.full(s5).eql(m5));
+  });
+  
   test("Matrix: fliplr", function () {
     ok(
       Matrix.fliplr($M([[0]])).eql($M([[0]]))
@@ -731,6 +770,44 @@ $(function () {
     s2.setElement(2, 1, $C(1));
     equal(s2.inspect(), "(2,1) = 1");
     equal(s3.inspect(), "3 x 2 all-0 sparse matrix");
+    s3.setElement(1, 2, $C(0, -1));
+    s3.setElement(2, 2, $C(2, 2));
+    s3.setElement(3, 1, -5);
+    equal(s3.inspect(), "(1,2) = -i\n(2,2) = 2+2i\n(3,1) = -5");
+  });
+  
+  test("Sparse: sparse", function () {
+    var s1 = $S(1, 1),
+        s2 = $S(1, 3),
+        s3 = $S(2, 4),
+        s4 = $S(3, 3),
+        m1 = $M([
+          [0]
+        ]),
+        m2 = $M([
+          [0, 0, 0]
+        ]),
+        m3 = $M([
+          [0, 1, 0]
+        ]),
+        m4 = $M([
+          [0, 0, 0, 1],
+          [0, 0, $C(1, -2), 0]
+        ]),
+        m5 = $M([
+          [0, 0, 0],
+          [0, 0, 0],
+          [0, 0, 0]
+        ]);
+    
+    ok(Sparse.sparse(m1).equal(s1));
+    ok(Sparse.sparse(m2).equal(s2));
+    s2.setElement(1, 2, 1);
+    ok(Sparse.sparse(m3).equal(s2));
+    s3.setElement(1, 4, 1);
+    s3.setElement(2, 3, $C(1, -2));
+    ok(Sparse.sparse(m4).equal(s3));
+    ok(Sparse.sparse(m5).equal(s4));
   });
   
   
