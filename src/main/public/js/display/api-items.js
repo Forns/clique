@@ -893,6 +893,15 @@ var apiItems = {
       example: ""
     },
     
+    e: {
+      title: "e(i, j)",
+      use: "Returns the element located in the sparse at row i, column j.<br/><br/>" +
+        "[!] If (i, j) is outside of the sparse's bounds, e(i, j) will return null.<br/>" +
+        "[!] If (i, j) is within the bounds of the sparse, but not mapped, e(i, j) will return 0.",
+      example: "var s1 = $S(),<br/>&nbsp&nbsp&nbsp&nbsps2 = $S(2, 3, [2, 1, 5]);<br/><br/>s1.e(1, 1); // Returns null<br/>" +
+        "s2.e(1, 1); // Returns 0<br/>s2.e(2, 1); // Returns 5"
+    },
+    
     equal: {
       title: "equal(matrix)",
       use: "Compares the calling sparse's elements to the given matrix, which can be of type Matrix OR Sparse.<br/><br/>" +
