@@ -928,7 +928,7 @@ $(function () {
     ])));
     
     // Test the sparse matrix result
-    ok(result1[1].equal($S(0, 0,
+    ok(result1[1].equal($S(5, 5,
       [1, 1, 1.3855], [1, 2, 1.5154],
       [2, 1, 1.5154], [2, 2, 0.4602], [2, 3, 1.1599],
       [3, 2, 1.1599], [3, 3, -2.0401], [3, 4, 2.0014],
@@ -965,14 +965,10 @@ $(function () {
   });
   
   test("radonTransform", function () {
-    /* Temporary Omission
-    console.log(Matrix.radonTransform($V([2, 2])).inspect());
-    ok(Matrix.radonTransform($V([2, 1])).eql($M([
+    ok(Matrix.radonTransform($V([2, 1])).equal($M([
       [1, 1, 1]
     ])));
-   */
-    // TODO: Find out what radonTransforms look like...
-    ok(true);
+    // TODO: Run some more comparison cases through Matlab
   });
   
   test("jucysMurphyElement", function () {

@@ -1813,7 +1813,7 @@ var $S = Sparse.create;
     newTabSize = newTabs.rows();
     
     // The final Radon transform
-    result = Matrix.zero(newTabSize, tabSize);
+    result = $S();
         
     for (var i = 1; i <= tabSize; i++) {
       count = 0;
