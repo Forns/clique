@@ -95,6 +95,16 @@ Sparse.prototype = {
       this.elements["(" + i + "," + j + ")"] = x;
     }
     return this;
+  },
+  
+  // Sets the given elements (accessed through the arguments map) in the sparse
+  // e.g. s.setElements([1, 1, 3], [2, 3, -5]); will set element (1,1) = 3 and (2,3) = -5
+  setElements: function () {
+    for (var entry in arguments) {
+      var argEntry = arguments[entry];
+      this.setElement(argEntry[0], argEntry[1], argEntry[2]);
+    }
+    return this;
   }
 };
 
@@ -105,6 +115,14 @@ Sparse.create = function (rows, cols) {
   s.sRows = (rows && rows >= 0) ? rows : 0;
   s.sCols = (cols && cols >= 0) ? cols : 0;
   s.elements = {};
+  
+  // You can instantiate the sparse with any post-dimension setters
+  // SOOO GHETTOOOOO
+  delete arguments["0"];
+  delete arguments["1"];
+  for (var arg in arguments) {
+    s.setElements(arguments[arg]);
+  }
   return s;
 };
 

@@ -42,6 +42,6 @@ ${CLIQUE}: ${MODULES} | ${DIST_DIR}
 		${CLIQUE}
 
 clean:
-	@@echo "[-] Removing Distriution directory:" ${DIST_DIR}
+	@@echo "[-] Removing Distribution directory:" ${DIST_DIR}
 	@@rm -rf ${DIST_DIR}
 	@@echo "[!] Removal complete!"

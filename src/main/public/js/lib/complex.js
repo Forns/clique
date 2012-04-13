@@ -18,7 +18,8 @@ var Complex = $C = function () {};
   };
   
   // Sets the sensitivity for equivalence checks
-  Complex.sensitivity = 0.000001;
+  // Default is the Sylvester setting
+  Complex.sensitivity = 1e-4;
   
   Complex.prototype = {
     
@@ -132,7 +133,7 @@ var Complex = $C = function () {};
       if (Complex.areComplex(b)) {
         return Math.abs(b.real - a) <= Complex.sensitivity && !b.im;
       }
-      return a === b;
+      return Math.abs(a - b) <= Complex.sensitivity;
     }
   };
   

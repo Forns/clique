@@ -716,6 +716,33 @@ $(function () {
     ok(Complex.equal(s5.e(3, 1), $C(2, 2)));
   });
   
+  test("Sparse: setElements", function () {
+    var s1 = $S(),
+        s2 = $S(1, 1),
+        s3 = $S(2, 3)
+        m1 = $M([
+          [1]
+        ]),
+        m2 = $M([
+          [1, 0, 1],
+          [0, 0, 0]
+        ]),
+        m3 = $M([
+          [1, 0, 1],
+          [0, 0, 0],
+          [0, $C(1, -2), 0]
+        ]);
+        
+    s1.setElements();
+    ok(s1.equal(s1));
+    s2.setElements([1, 1, 1]);
+    ok(s2.equal(m1));
+    s2.setElements([1, 3, 1], [2, 3, 0]);
+    ok(s2.equal(m2));
+    s3.setElements([1, 1, 1], [1, 3, 1], [3, 2, $C(1, -2)]);
+    ok(s3.equal(m3));
+  });
+  
   test("Sparse: equal", function () {
     var s0 = $S(),
         s1 = $S(1, 1),
@@ -723,6 +750,7 @@ $(function () {
         s3 = $S(2, 3),
         s4 = $S(2, 3),
         s5 = $S(2, 3),
+        s6 = $S(2, 2),
         m1 = $M([
           [0]
         ]),
@@ -732,6 +760,11 @@ $(function () {
         m3 = $M([
           [1, 0, 0],
           [0, 0, -1]
+        ]),
+        m4 = $M([
+          [0, 1, 0],
+          [0, 0, 0],
+          [0, 0, 1]
         ]);
         
     // Test set-up
@@ -741,6 +774,7 @@ $(function () {
     s4.setElement(1, 1, 1);
     s4.setElement(2, 3, -1);
     s5.setElement(1, 1, 1);
+    s6.setElement(3, 2, 0);
     
     ok(!s0.equal(m1));
     ok(!s2.equal(m3));
@@ -752,6 +786,16 @@ $(function () {
     ok(s4.equal(s3));
     ok(s3.equal(s4));
     ok(s3.equal(s3)); // lol
+    ok(s6.equal($S(3, 2)));
+    s6.setElement(3, 3, 0);
+    ok(s6.equal($S(3, 3)));
+    s1.setElement(2, 3, -1);
+    s1.setElement(1, 1, 1);
+    ok(s1.equal(m3));
+    
+    // In-line instantiation
+    ok($S(1, 3, [1, 2, $C(1, -1)]).equal(m2));
+    ok($S(2, 1, [1, 2, 1], [3, 3, 1]).equal(m4));
   });
   
   test("Sparse: inspect", function () {
@@ -884,13 +928,13 @@ $(function () {
     ])));
     
     // Test the sparse matrix result
-    ok(result1[1].eql($M([
-      [1.3855, 1.5154],
-      [1.5154, 0.4602, 1.1599],
-      [null, 1.1599, -2.0401, 2.0014],
-      [null, null, 2.0014, -0.2401, 1.5633],
-      [null, null, null, 1.5633, -0.4654]
-    ])));
+    ok(result1[1].equal($S(0, 0,
+      [1, 1, 1.3855], [1, 2, 1.5154],
+      [2, 1, 1.5154], [2, 2, 0.4602], [2, 3, 1.1599],
+      [3, 2, 1.1599], [3, 3, -2.0401], [3, 4, 2.0014],
+      [4, 3, 2.0014], [4, 4, -0.2401], [4, 5, 1.5633],
+      [5, 4, 1.5633], [5, 5, -0.4654]
+    )));
     
   });
   

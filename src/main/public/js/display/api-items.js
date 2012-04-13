@@ -48,7 +48,8 @@ var apiItems = {
     equal: {
       title: "Complex.equal(a, b)",
       use: "Compares two numbers, a and b, and returns a boolean denoting if they're, surprise, equal.<br/> " +
-        "[!] Required for comparisons against complex numbers.",
+        "[!] Required for comparisons against complex numbers.<br/>" +
+        "[!] Compares a and b to a level of precision defined by Complex.sensitivity",
       example: "Complex.equal(2, $C(2)); // True<br/>" +
         "Complex.equal($C(2, 1), $C(2, 1)); // True<br/>" +
         "Complex.equal($C(5, 1), 5); // False"

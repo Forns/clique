@@ -249,7 +249,7 @@
   // Default value for epsilon set to 10^-8
   Matrix.lanczos = function (A, f, epsilon) {
     var orthogonalResult = f.multiply(1 / f.norm()),
-        tridiagonalResult = $M([[0]]), // Sparse matrix
+        tridiagonalResult = $S(), // Sparse matrix for collecting parallel computed results
         a = $M([0]), // Vector used in iteration
         b = $M([0]), // Vector used in iteration
         ep = 0,
