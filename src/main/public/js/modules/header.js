@@ -14,3 +14,6 @@
  * Copyright 2007, James Coglan
  */
 
+var Clique = function () {};
+Clique.precision = 1e-4;
+

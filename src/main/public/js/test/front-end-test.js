@@ -21,10 +21,10 @@ $(function () {
     equal($C().real, 0);
   });
   
-  test("equals & equal", function () {
-    ok($C(0, 0).equals($C(0, 0)));
-    ok($C(1, -4).equals($C(1, -4)));
-    ok($C(0).equals(0));
+  test("equal & equal", function () {
+    ok($C(0, 0).equal($C(0, 0)));
+    ok($C(1, -4).equal($C(1, -4)));
+    ok($C(0).equal(0));
     ok(Complex.equal(0, $C(0)));
     ok(Complex.equal(-2, $C(-2)));
     ok(Complex.equal($C(5, 0), 5));
@@ -55,19 +55,19 @@ $(function () {
         complex3 = $C(4, 0),
         complex4 = $C(12.818, -2.222);
     
-    ok(complex1.fromRect(1, -2).equals(complex2));
-    ok(complex1.equals(complex2));
-    ok(complex2.fromRect(4, 0).equals(complex3));
-    ok(!complex2.equals(complex1));
-    ok(complex3.fromRect(12.818, -2.222).equals(complex3));
+    ok(complex1.fromRect(1, -2).equal(complex2));
+    ok(complex1.equal(complex2));
+    ok(complex2.fromRect(4, 0).equal(complex3));
+    ok(!complex2.equal(complex1));
+    ok(complex3.fromRect(12.818, -2.222).equal(complex3));
   });
   
   test("fromPolar", function () {
-    ok($C(0, 0).fromPolar(1, 0).equals($C(1, 0)));
-    ok($C(0, 0).fromPolar(0, 0).equals($C(0, 0)));
-    ok($C(0, 0).fromPolar(1.52, 0).equals($C(1.52, 0)));
-    ok($C(0, 0).fromPolar(-1.52, 0).equals($C(-1.52, 0)));
-    ok($C(0, 0).fromPolar(-1, Math.PI / 2).equals($C(-1 * Math.cos(Math.PI / 2), -1 * Math.sin(Math.PI / 2))));
+    ok($C(0, 0).fromPolar(1, 0).equal($C(1, 0)));
+    ok($C(0, 0).fromPolar(0, 0).equal($C(0, 0)));
+    ok($C(0, 0).fromPolar(1.52, 0).equal($C(1.52, 0)));
+    ok($C(0, 0).fromPolar(-1.52, 0).equal($C(-1.52, 0)));
+    ok($C(0, 0).fromPolar(-1, Math.PI / 2).equal($C(-1 * Math.cos(Math.PI / 2), -1 * Math.sin(Math.PI / 2))));
   });
   
   test("angleOf", function () {
@@ -86,15 +86,15 @@ $(function () {
   test("log", function () {
     ok(isNaN(Complex.log(50, 1)));
     ok(isNaN(Complex.log($C(23, -50), 1)));
-    ok(Complex.log($C(0, -3), Math.E).equals($C(Math.log(3) / Math.log(Math.E), -1 * Math.PI / 2)));
-    ok(Complex.log($C(1, 1), Math.E).equals($C(Complex.log(Math.sqrt(2), Math.E), Math.PI / 4)));
+    ok(Complex.log($C(0, -3), Math.E).equal($C(Math.log(3) / Math.log(Math.E), -1 * Math.PI / 2)));
+    ok(Complex.log($C(1, 1), Math.E).equal($C(Complex.log(Math.sqrt(2), Math.E), Math.PI / 4)));
   });
   
   test("exp", function () {
     ok(Complex.exp(0), 1);
-    ok(Complex.exp($C(1, 0)).equals($C(Math.E)));
-    ok(Complex.exp($C(0, 1)).equals($C(0.5403023058681398, 0.8414709848078965)));
-    ok(Complex.exp($C(-1, -1)).equals($C(0.19876611034641298, -0.3095598756531122)));
+    ok(Complex.exp($C(1, 0)).equal($C(Math.E)));
+    ok(Complex.exp($C(0, 1)).equal($C(0.5403023058681398, 0.8414709848078965)));
+    ok(Complex.exp($C(-1, -1)).equal($C(0.19876611034641298, -0.3095598756531122)));
   });
   
   test("pow", function () {
@@ -118,16 +118,16 @@ $(function () {
   
   test("negate", function () {
     equal(Complex.negate(3), -3);
-    ok($C(0, 0).negate().equals($C(0, 0)));
-    ok($C(-2, 3).negate().equals($C(2, -3)));
-    ok(Complex.negate($C(1, -3)).equals($C(-1, 3)));
-    ok(Complex.negate($C(0.8983777, -3.78172)).equals($C(-0.8983777, 3.78172)));
+    ok($C(0, 0).negate().equal($C(0, 0)));
+    ok($C(-2, 3).negate().equal($C(2, -3)));
+    ok(Complex.negate($C(1, -3)).equal($C(-1, 3)));
+    ok(Complex.negate($C(0.8983777, -3.78172)).equal($C(-0.8983777, 3.78172)));
   });
   
   test("conjugate", function () {
-    ok($C(0, 0).conjugate().equals($C(0, 0)));
-    ok($C(-2, 3).conjugate().equals($C(-2, -3)));
-    ok($C(0.222, 0.222).conjugate().equals($C(0.222, -0.222)));
+    ok($C(0, 0).conjugate().equal($C(0, 0)));
+    ok($C(-2, 3).conjugate().equal($C(-2, -3)));
+    ok($C(0.222, 0.222).conjugate().equal($C(0.222, -0.222)));
   });
   
   test("magnitude", function () {
@@ -148,51 +148,51 @@ $(function () {
   
   test("add", function () {
     equal(Complex.add(1, 2), 3);
-    ok(Complex.add($C(1), 2).equals($C(3)));
-    ok(Complex.add(3, $C(-1)).equals($C(2)));
-    ok(Complex.add($C(1, 1), 2).equals($C(3, 1)));
-    ok(Complex.add($C(1, -1), $C(0, 2)).equals($C(1, 1)));
-    ok(Complex.add($C(-2.5, -1.25), $C(3, 1)).equals($C(0.5, -0.25)));
+    ok(Complex.add($C(1), 2).equal($C(3)));
+    ok(Complex.add(3, $C(-1)).equal($C(2)));
+    ok(Complex.add($C(1, 1), 2).equal($C(3, 1)));
+    ok(Complex.add($C(1, -1), $C(0, 2)).equal($C(1, 1)));
+    ok(Complex.add($C(-2.5, -1.25), $C(3, 1)).equal($C(0.5, -0.25)));
   });
   
   test("sub", function () {
     equal(Complex.sub(1, 2), -1);
-    ok(Complex.sub($C(1), 2).equals($C(-1)));
-    ok(Complex.sub(3, $C(-1)).equals($C(4)));
-    ok(Complex.sub($C(1, 1), 2).equals($C(-1, 1)));
-    ok(Complex.sub($C(1, -1), $C(0, 2)).equals($C(1, -3)));
-    ok(Complex.sub($C(-2.5, -1.25), $C(3, 1)).equals($C(-5.5, -2.25)));
+    ok(Complex.sub($C(1), 2).equal($C(-1)));
+    ok(Complex.sub(3, $C(-1)).equal($C(4)));
+    ok(Complex.sub($C(1, 1), 2).equal($C(-1, 1)));
+    ok(Complex.sub($C(1, -1), $C(0, 2)).equal($C(1, -3)));
+    ok(Complex.sub($C(-2.5, -1.25), $C(3, 1)).equal($C(-5.5, -2.25)));
   });
   
   test("mult", function () {
     equal(Complex.mult(1, 2), 2);
-    ok(Complex.mult($C(1), 2).equals($C(2)));
-    ok(Complex.mult(3, $C(-1)).equals($C(-3)));
-    ok(Complex.mult($C(1, 1), 2).equals($C(2, 2)));
-    ok(Complex.mult($C(1, -1), $C(0, 2)).equals($C(2, 2)));
-    ok(Complex.mult($C(1, -1), $C(-2, -3)).equals($C(-5, -1)));
-    ok(Complex.mult($C(1, -1), 0).equals($C(0, 0)));
-    ok(Complex.mult($C(1, -1), $C(0, 0)).equals($C(0, 0)));
-    ok(Complex.mult($C(-0.5, -0.5), $C(-0.5, 0.5)).equals($C(0.5, 0)));
+    ok(Complex.mult($C(1), 2).equal($C(2)));
+    ok(Complex.mult(3, $C(-1)).equal($C(-3)));
+    ok(Complex.mult($C(1, 1), 2).equal($C(2, 2)));
+    ok(Complex.mult($C(1, -1), $C(0, 2)).equal($C(2, 2)));
+    ok(Complex.mult($C(1, -1), $C(-2, -3)).equal($C(-5, -1)));
+    ok(Complex.mult($C(1, -1), 0).equal($C(0, 0)));
+    ok(Complex.mult($C(1, -1), $C(0, 0)).equal($C(0, 0)));
+    ok(Complex.mult($C(-0.5, -0.5), $C(-0.5, 0.5)).equal($C(0.5, 0)));
   });
   
   test("divide", function () {
     equal(Complex.divide(1, 1), 1);
     equal(Complex.divide(0, 70234), 0);
     equal(Complex.divide(1, 5), 0.2);
-    ok(Complex.divide($C(1), 2).equals($C(0.5)));
-    ok(Complex.divide(1, $C(2)).equals($C(0.5)));
-    ok(Complex.divide(5, $C(2, 1)).equals($C(2, -1)));
-    ok(Complex.divide($C(4, -2), $C(-2, 4)).equals($C(-0.8, -0.6)));
-    ok(Complex.divide($C(-0.5, -0.5), $C(-0.5, 0.5)).equals($C(0, 1)));
+    ok(Complex.divide($C(1), 2).equal($C(0.5)));
+    ok(Complex.divide(1, $C(2)).equal($C(0.5)));
+    ok(Complex.divide(5, $C(2, 1)).equal($C(2, -1)));
+    ok(Complex.divide($C(4, -2), $C(-2, 4)).equal($C(-0.8, -0.6)));
+    ok(Complex.divide($C(-0.5, -0.5), $C(-0.5, 0.5)).equal($C(0, 1)));
   });
   
   test("sqrt", function () {
     equal(Complex.sqrt(0), 0);
     equal(Complex.sqrt(4), 2);
-    ok(Complex.sqrt(-4).equals($C(0, 2)));
-    ok(Complex.sqrt($C(-4)).equals($C(0, 2)));
-    ok(Complex.sqrt($C(0.5, -0.5)).equals($C(0.7768869870150187, -0.32179712645279135)));
+    ok(Complex.sqrt(-4).equal($C(0, 2)));
+    ok(Complex.sqrt($C(-4)).equal($C(0, 2)));
+    ok(Complex.sqrt($C(0.5, -0.5)).equal($C(0.7768869870150187, -0.32179712645279135)));
   });
   
   test("toString", function () {
@@ -239,48 +239,48 @@ $(function () {
   });
   
   test("Vector: append", function () {
-    ok($V([1]).append().eql($V([1])));
-    ok($V([1]).append(2).eql($V([1, 2])));
-    ok($V([0, 0, 0]).append(0).eql($V([0, 0, 0, 0])));
+    ok($V([1]).append().equal($V([1])));
+    ok($V([1]).append(2).equal($V([1, 2])));
+    ok($V([0, 0, 0]).append(0).equal($V([0, 0, 0, 0])));
   });
   
   test("Vector: sort", function () {
-    ok(Vector.sort($V([1])).eql($V([1])));
-    ok(Vector.sort($V([0, 0, 0])).eql($V([0, 0, 0])));
-    ok(Vector.sort($V([-1, 0, 1])).eql($V([-1, 0, 1])));
-    ok(Vector.sort($V([1, 1, -1, -1, 0])).eql($V([-1, -1, 0, 1, 1])));
+    ok(Vector.sort($V([1])).equal($V([1])));
+    ok(Vector.sort($V([0, 0, 0])).equal($V([0, 0, 0])));
+    ok(Vector.sort($V([-1, 0, 1])).equal($V([-1, 0, 1])));
+    ok(Vector.sort($V([1, 1, -1, -1, 0])).equal($V([-1, -1, 0, 1, 1])));
   });
   
   test("Vector: sum", function () {
     equal(Vector.sum($V([1])), 1);
     equal(Vector.sum($V([1, -1])), 0);
     equal(Vector.sum($V([1, 2, -4, 8])), 7);
-    ok(Vector.sum($V([1, $C(2, -1), -4, 8])).equals($C(7, -1)));
+    ok(Vector.sum($V([1, $C(2, -1), -4, 8])).equal($C(7, -1)));
   });
   
   test("Vector: insert", function () {
-    ok(Vector.insert($V([1]), 1, 2).eql($V([2, 1])));
-    ok(Vector.insert($V([1, 2, 3]), 1, 0).eql($V([0, 1, 2, 3])));
-    ok(Vector.insert($V([1, 2, 3]), 2, 0).eql($V([1, 0, 2, 3])));
-    ok(Vector.insert($V([1, 2, 3]), 4, 0).eql($V([1, 2, 3, 0])));
+    ok(Vector.insert($V([1]), 1, 2).equal($V([2, 1])));
+    ok(Vector.insert($V([1, 2, 3]), 1, 0).equal($V([0, 1, 2, 3])));
+    ok(Vector.insert($V([1, 2, 3]), 2, 0).equal($V([1, 0, 2, 3])));
+    ok(Vector.insert($V([1, 2, 3]), 4, 0).equal($V([1, 2, 3, 0])));
   });
   
   test("Vector: remove", function () {
-    ok($V([1, 2]).remove(1, 1).eql($V([2])));
-    ok($V([1, 2, 3, 4]).remove(4, 1).eql($V([1, 2, 3])));
-    ok($V([1, 2, 3, 4]).remove(4, 0).eql($V([1, 2, 3, 4])));
-    ok($V([1, 2, 3, 4]).remove(2, 2).eql($V([1, 4])));
+    ok($V([1, 2]).remove(1, 1).equal($V([2])));
+    ok($V([1, 2, 3, 4]).remove(4, 1).equal($V([1, 2, 3])));
+    ok($V([1, 2, 3, 4]).remove(4, 0).equal($V([1, 2, 3, 4])));
+    ok($V([1, 2, 3, 4]).remove(2, 2).equal($V([1, 4])));
   });
   
   test("Vector: ones", function () {
-    ok(Vector.ones(1).eql($V([1])));
-    ok(Vector.ones(4).eql($V([1, 1, 1, 1])));
+    ok(Vector.ones(1).equal($V([1])));
+    ok(Vector.ones(4).equal($V([1, 1, 1, 1])));
   });
   
   test("Vector: setElement", function () {
-    ok($V([1]).setElement(1, 2).eql($V([2])));
-    ok($V([1, 2, 3]).setElement(2, 0).eql($V([1, 0, 3])));
-    ok($V([2, 0, 3]).setElement(3, $C(1, 1)).eql($V([2, 0, $C(1, 1)])));
+    ok($V([1]).setElement(1, 2).equal($V([2])));
+    ok($V([1, 2, 3]).setElement(2, 0).equal($V([1, 0, 3])));
+    ok($V([2, 0, 3]).setElement(3, $C(1, 1)).equal($V([2, 0, $C(1, 1)])));
   });
   
   test("Vector: histoCount", function () {
@@ -338,7 +338,7 @@ $(function () {
         [0, 1, 1],
         [9, 8, 7]
       ]).setElement(1, 2, 5)
-      .eql($M([
+      .equal($M([
         [0, 5, 1],
         [9, 8, 7]
       ]))
@@ -349,7 +349,7 @@ $(function () {
         [0, 1, 1],
         [9, 8, 7]
       ]).setElement(2, 2, -5)
-      .eql($M([
+      .equal($M([
         [0, 1, 1],
         [9, -5, 7]
       ]))
@@ -360,7 +360,7 @@ $(function () {
         [0, 1, 1],
         [9, 8, 7]
       ]).setElement(2, 2, $C(5, -5))
-      .eql($M([
+      .equal($M([
         [0, 1, 1],
         [9, $C(5, -5), 7]
       ]))
@@ -372,7 +372,7 @@ $(function () {
       $M([
         [0, 1, 0]
       ]).setRow(1, $V([1, 1, 1]))
-      .eql($M([
+      .equal($M([
         [1, 1, 1]
       ]))
     );
@@ -382,7 +382,7 @@ $(function () {
         [0, 1, 0],
         [2, 3, 2]
       ]).setRow(2, $V([1, 1, 1]))
-      .eql($M([
+      .equal($M([
         [0, 1, 0],
         [1, 1, 1]
       ]))
@@ -394,7 +394,7 @@ $(function () {
       $M([
         [0, 1, 1]
       ]).setCol(1, $V([-2]))
-      .eql($M([
+      .equal($M([
         [-2, 1, 1]
       ]))
     );
@@ -405,7 +405,7 @@ $(function () {
         [2, 3, 4],
         [4, 5, 6]
       ]).setCol(2, $V([5, 5, 5]))
-      .eql($M([
+      .equal($M([
         [0, 5, 1],
         [2, 5, 4],
         [4, 5, 6]
@@ -456,21 +456,21 @@ $(function () {
       $M([
         [1, 2, 3],
         [1, $C(2, 2), -3]
-      ]).sum(1).equals($C(6, 2))
+      ]).sum(1).equal($C(6, 2))
     );
   });
   
   test("Matrix: ones", function () {
     ok(
       Matrix.ones(1, 1)
-      .eql($M([
+      .equal($M([
         [1]
       ]))
     );
     
     ok(
       Matrix.ones(2, 2)
-      .eql($M([
+      .equal($M([
         [1, 1],
         [1, 1]
       ]))
@@ -478,7 +478,7 @@ $(function () {
     
     ok(
       Matrix.ones(3, 4)
-      .eql($M([
+      .equal($M([
         [1, 1, 1, 1],
         [1, 1, 1, 1],
         [1, 1, 1, 1]
@@ -510,7 +510,7 @@ $(function () {
       $M([
         [0, 2, 2],
         [-2, $C(2), 0]
-      ]).norm().equals($C(4))
+      ]).norm().equal($C(4))
     );
   });
   
@@ -518,7 +518,7 @@ $(function () {
     ok(
       Matrix.sort(
         $M([1])
-      ).eql($M(
+      ).equal($M(
         [1]
       ))
     );
@@ -526,7 +526,7 @@ $(function () {
     ok(
       Matrix.sort(
         $M([1, 2])
-      ).eql($M(
+      ).equal($M(
         [1, 2]
       ))
     );
@@ -537,7 +537,7 @@ $(function () {
           [1, 2, 3],
           [2, 1, 2]
         ])
-      ).eql($M([
+      ).equal($M([
         [1, 1, 2],
         [2, 2, 3]
       ]))
@@ -550,7 +550,7 @@ $(function () {
           [2, 1, -2],
           [5, 0, 0]
         ])
-      ).eql($M([
+      ).equal($M([
         [-1, 0, -3],
         [2, 1, -2],
         [5, 2, 0]
@@ -593,7 +593,7 @@ $(function () {
         [5, 5, 5],
         [6, 7, 8]
       ]).swapRows(2, 3)
-      .eql($M([
+      .equal($M([
         [0, 1, 0],
         [6, 7, 8],
         [5, 5, 5]
@@ -606,7 +606,7 @@ $(function () {
         [5, 5, 5],
         [6, 7, 8]
       ]).swapRows(2, 2)
-      .eql($M([
+      .equal($M([
         [0, 1, 0],
         [5, 5, 5],
         [6, 7, 8]
@@ -641,31 +641,31 @@ $(function () {
         s4 = $S(2, 3),
         s5 = $S(2, 3);
         
-    ok(Matrix.full(s1).eql(m1));
+    ok(Matrix.full(s1).equal(m1));
     s1.setElement(1, 1, 1);
     m1.setElement(1, 1, 1);
-    ok(Matrix.full(s1).eql(m1));
-    ok(Matrix.full(s2).eql(m2));
-    ok(Matrix.full(s3).eql(m3));
-    ok(Matrix.full(s4).eql(m4));
+    ok(Matrix.full(s1).equal(m1));
+    ok(Matrix.full(s2).equal(m2));
+    ok(Matrix.full(s3).equal(m3));
+    ok(Matrix.full(s4).equal(m4));
     s5.setElement(1, 2, 1);
     s5.setElement(2, 3, $C(1, -1));
-    ok(Matrix.full(s5).eql(m5));
+    ok(Matrix.full(s5).equal(m5));
   });
   
   test("Matrix: fliplr", function () {
     ok(
-      Matrix.fliplr($M([[0]])).eql($M([[0]]))
+      Matrix.fliplr($M([[0]])).equal($M([[0]]))
     );
     ok(
-      Matrix.fliplr($M([[0, 1, 2, 3, 4]])).eql($M([[4, 3, 2, 1, 0]]))
+      Matrix.fliplr($M([[0, 1, 2, 3, 4]])).equal($M([[4, 3, 2, 1, 0]]))
     );
     ok(
       Matrix.fliplr($M([
         [0, 1, 2, 3],
         [4, 5, 6, 7],
         [8, 9, 10, 11]
-      ])).eql($M([
+      ])).equal($M([
         [3, 2, 1, 0],
         [7, 6, 5, 4],
         [11, 10, 9, 8]
@@ -861,18 +861,18 @@ $(function () {
   module("Spectral Analysis");
   
   test("kSet", function () {
-    ok(Matrix.kSet(1, 1).eql($M([1])));
-    ok(Matrix.kSet(2, 2).eql($M([[1, 2]])));
-    ok(Matrix.kSet(2, 1).eql($M([
+    ok(Matrix.kSet(1, 1).equal($M([1])));
+    ok(Matrix.kSet(2, 2).equal($M([[1, 2]])));
+    ok(Matrix.kSet(2, 1).equal($M([
       [1],
       [2]
     ])));
-    ok(Matrix.kSet(3, 2).eql($M([
+    ok(Matrix.kSet(3, 2).equal($M([
       [1, 2],
       [1, 3],
       [2, 3]
     ])));
-    ok(Matrix.kSet(5, 3).eql($M([
+    ok(Matrix.kSet(5, 3).equal($M([
       [1, 2, 3],
       [1, 2, 4],
       [1, 2, 5],
@@ -887,13 +887,13 @@ $(function () {
   });
   
   test("tabloids", function () {
-    ok(Matrix.tabloids($V([1])).eql($M([1])));
-    ok(Matrix.tabloids($V([1, 2])).eql($M([
+    ok(Matrix.tabloids($V([1])).equal($M([1])));
+    ok(Matrix.tabloids($V([1, 2])).equal($M([
       [2, 1, 1],
       [1, 2, 1],
       [1, 1, 2]
     ])));
-    ok(Matrix.tabloids($V([2, 3])).eql($M([
+    ok(Matrix.tabloids($V([2, 3])).equal($M([
       [2, 2, 1, 1, 1],
       [2, 1, 2, 1, 1],
       [2, 1, 1, 2, 1],
@@ -919,7 +919,7 @@ $(function () {
         result1 = Matrix.lanczos(a1, v1);
 
     // Test the orthogonal matrix result
-    ok(result1[0].eql($M([
+    ok(result1[0].equal($M([
       [0.1348, -0.4881, -0.3154,  0.4853,  0.6392],
       [0.2697,  0.7945, -0.0792, -0.0348,  0.5371],
       [0.4045, -0.3609,  0.2171, -0.7484,  0.3143],
@@ -956,12 +956,12 @@ $(function () {
   });
   
   test("indexToSet", function () {
-    ok(Vector.indexToSet(1, $V([1])).eql($V([1])));
-    ok(Vector.indexToSet(1, $V([1, 2])).eql($V([2, 2, 1])));
-    ok(Vector.indexToSet(2, $V([1, 2])).eql($V([2, 1, 2])));
-    ok(Vector.indexToSet(1, $V([1, 2, 3])).eql($V([3, 3, 3, 2, 2, 1])));
-    ok(Vector.indexToSet(2, $V([1, 2, 3])).eql($V([3, 3, 2, 3, 2, 1])));
-    ok(Vector.indexToSet(3, $V([1, 2, 3])).eql($V([3, 3, 2, 2, 3, 1])));
+    ok(Vector.indexToSet(1, $V([1])).equal($V([1])));
+    ok(Vector.indexToSet(1, $V([1, 2])).equal($V([2, 2, 1])));
+    ok(Vector.indexToSet(2, $V([1, 2])).equal($V([2, 1, 2])));
+    ok(Vector.indexToSet(1, $V([1, 2, 3])).equal($V([3, 3, 3, 2, 2, 1])));
+    ok(Vector.indexToSet(2, $V([1, 2, 3])).equal($V([3, 3, 2, 3, 2, 1])));
+    ok(Vector.indexToSet(3, $V([1, 2, 3])).equal($V([3, 3, 2, 2, 3, 1])));
   });
   
   test("radonTransform", function () {

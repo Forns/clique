@@ -14,6 +14,9 @@
  * Copyright 2007, James Coglan
  */
 
+var Clique = function () {};
+Clique.precision = 1e-4;
+
 /**
  * complex.js
  *
@@ -35,7 +38,7 @@ var Complex = $C = function () {};
   
   // Sets the sensitivity for equivalence checks
   // Default is the Sylvester setting
-  Complex.sensitivity = 1e-4;
+  Complex.sensitivity = Clique.precision;
   
   Complex.prototype = {
     
@@ -100,7 +103,7 @@ var Complex = $C = function () {};
     },
     
     // Returns true if the two complex numbers are equal
-    equals: function (z) {
+    equal: function (z) {
       return Complex.equal(this, z);
     },
     
@@ -332,7 +335,7 @@ var Complex = $C = function () {};
 
 var Sylvester = {
   version: '0.1.3',
-  precision: 1e-4
+  precision: Clique.precision
 };
 
 function Vector() {}
@@ -354,7 +357,7 @@ Vector.prototype = {
   },
 
   // Returns true iff the vector is equal to the argument
-  eql: function(vector) {
+  equal: function(vector) {
     var n = this.elements.length;
     var V = vector.elements || vector;
     if (n != V.length) { return false; }
@@ -636,7 +639,7 @@ Matrix.prototype = {
   // Returns true iff the matrix is equal to the argument. You can supply
   // a vector as the argument, in which case the receiver must be a
   // one-column matrix equal to the vector.
-  eql: function(matrix) {
+  equal: function(matrix) {
     var M = matrix.elements || matrix;
     if (typeof(M[0][0]) == 'undefined') { M = Matrix.create(M).elements; }
     if (this.elements.length != M.length ||

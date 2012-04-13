@@ -46,7 +46,7 @@ var apiItems = {
     },
     
     equal: {
-      title: "Complex.equal(a, b)",
+      title: "Complex.equal(a, b) || c.equal(b)",
       use: "Compares two numbers, a and b, and returns a boolean denoting if they're, surprise, equal.<br/> " +
         "[!] Required for comparisons against complex numbers.<br/>" +
         "[!] Compares a and b to a level of precision defined by Complex.sensitivity",
@@ -213,8 +213,8 @@ var apiItems = {
       example: ""
     },
     
-    eql: {
-      title: "eql(matrix)",
+    equal: {
+      title: "equal(matrix)",
       use: "Returns true iff matrix has all its elements equal to those of the receiver.",
       example: ""
     },
@@ -240,6 +240,13 @@ var apiItems = {
         "&nbsp&nbsp[7, 6, 5, 4],<br/>" +
         "&nbsp&nbsp[11, 10, 9, 8]<br/>" +
       "]);"
+    },
+    
+    full: {
+      title: "Matrix.full(sparse)",
+      use: "Returns a full matrix representation of the given sparse matrix.",
+      example: "var s = $S(2, 2, [1, 1, 1], [2, 2, 2]);<br/><br/>" +
+        "Matrix.full(s); // Returns a new Matrix: [[1, 0], [0, 2]]"
     },
     
     identity: {
@@ -670,8 +677,8 @@ var apiItems = {
         "// Alerts: '1: 4', '2: 9', '3: 3', '4: 6'"
     },
     
-    eql: {
-      title: "eql(v)",
+    equal: {
+      title: "equal(v)",
       use: "Returns a boolean denoting the equality of the calling vector with v to a defined precision.",
       example: ""
     },
@@ -863,6 +870,84 @@ var apiItems = {
       title: "Vector.zero(n)",
       use: "Returns a vector with n elements, all of which are zero.",
       example: ""
+    }
+  },
+  
+  "sparse": {
+    create: {
+      title: "Sparse.create([x, y[, elements...]]) || $S([x, y[, elements...]])",
+      use: "Creates a new sparse matrix, optionally with the given dimensions and set elements. " +
+        "If elements are not specified, the sparse is assumed to be an x by y all-0 sparse matrix.<br/></br>" +
+        "[!] Elements are defined by js arrays [x, y, e] where x is the row, y the column, and e the data element.",
+      example: "var s1 = Sparse.create(), // Blank sparse<br/>" +
+        "&nbsp&nbsp&nbsp&nbsps2 = $S(), // Blank sparse<br/>" +
+        "&nbsp&nbsp&nbsp&nbsps3 = $S(1, 1), // A 1 x 1 all-0 sparse<br/>" +
+        "&nbsp&nbsp&nbsp&nbsps4 = $S(0, 0, [1, 2, 1]); // A 1x2 sparse (dynamically expanded) with (1,2) = 1<br/>" +
+        "&nbsp&nbsp&nbsp&nbsps5 = $S(3, 2, [1, 1, $C(1, -1)], [3, 2, -1]); // A 3x2 sparse with (1,1) = 1-i, (3,2) = -1"
+    },
+    
+    cols: {
+      title: "cols()",
+      use: "Returns the number of designated columns in the sparse.<br/><br/>" +
+        "[!] Dynamically updated if a setElement or setElements command expands the sparse's dimensions.",
+      example: ""
+    },
+    
+    equal: {
+      title: "equal(matrix)",
+      use: "Compares the calling sparse's elements to the given matrix, which can be of type Matrix OR Sparse.<br/><br/>" +
+        "[!] Comparisons are made using Complex.equal(...) on an element by element basis, differences tolerated to Clique.precision",
+      example: "var s = $S(3, 3, [1, 2, 1], [3, 3, 1]),<br/>" +
+        "&nbsp&nbsp&nbsp&nbspm = $M([<br/>" +
+          "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp[0, 1, 0],<br/>" +
+          "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp[0, 0, 0],<br/>" +
+          "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp[0, 0, 1]<br/>" +
+        "&nbsp&nbsp&nbsp&nbsp]);<br/><br/>" +
+        "s.equal(m); // Returns true"
+    },
+    
+    inspect: {
+      title: "inspect()",
+      use: "Returns a string representation of the calling sparse's key-value pairs.",
+      example: "var s1 = $S(3, 2),<br/>" +
+        "&nbsp&nbsp&nbsp&nbsps2 = $S(2, 2, [1, 1, 1], [2, 1, 3]);<br/><br/>" +
+        "s1.inspect();<br/>// Returns:<br/>3 x 2 all-0 sparse matrix<br/><br/>" +
+        "s2.inspect();<br/>// Returns:<br/>(1,1) = 1<br/>(2,1) = 3"
+    },
+    
+    rows: {
+      title: "rows()",
+      use: "Returns the number of designated rows in the sparse.<br/><br/>" +
+        "[!] Dynamically updated if a setElement or setElements command expands the sparse's dimensions.",
+      example: ""
+    },
+    
+    setElement: {
+      title: "setElement(i, j, x)",
+      use: "Sets element (i, j) = x in the calling sparse.<br/><br/>" +
+        "[!] Dynamically expands the bounds of the sparse if either i or j are outside of its dimensions.",
+      example: "var s1 = $S(1, 2);<br/>s.setElement(1, 2, 1); // (1,2) = 1 now<br/><br/>" +
+        "var s2 = $S(1, 2);<br/>s.setElement(3, 3, $C(1, -1)); // (3,3) = 1-i now, and s2 is a 3x3 sparse"
+    },
+    
+    setElements: {
+      title: "setElements(arguments[, moreArguments])",
+      use: "Iteratively sets elements of the calling sparse to arguments of the form [i, j, x], where " +
+        "i is the row to set, j the column to set, and x the data element to input.",
+      example: "var s = $S(1, 1);<br/><br/>s.setElements([1, 1, 1], [2, 3, $C(1, 1)]); // s is now a 2x3 sparse with " +
+        "(1,1) = 1 and (2,3) = 1+i"
+    },
+    
+    sparse: {
+      title: "Sparse.sparse(matrix)",
+      use: "Converts the given matrix (of type Matrix, derp) into a sparse matrix. Useful for compressing large matrices " +
+        "with many zero-elements.",
+      example: "var m = $M([<br/>" +
+        "&nbsp&nbsp[0, 0, 0]<br/>" +
+        "&nbsp&nbsp[0, 1, 0]<br/>" +
+        "&nbsp&nbsp[0, 0, 0]<br/>" +
+      "]);<br/><br/>" +
+      "m = Sparse.sparse(m); // m is now a 3x3 sparse with (2,2) = 1"
     }
   }
 };

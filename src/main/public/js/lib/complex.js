@@ -19,7 +19,7 @@ var Complex = $C = function () {};
   
   // Sets the sensitivity for equivalence checks
   // Default is the Sylvester setting
-  Complex.sensitivity = 1e-4;
+  Complex.sensitivity = Clique.precision;
   
   Complex.prototype = {
     
@@ -84,7 +84,7 @@ var Complex = $C = function () {};
     },
     
     // Returns true if the two complex numbers are equal
-    equals: function (z) {
+    equal: function (z) {
       return Complex.equal(this, z);
     },
     

@@ -8,7 +8,12 @@ $(function () {
   
   // Display technique for denoting class vs instance methods
   var classIcon = "[ <span class='class-icon'>C</span> ]",
-      instanceIcon = "[ <span class='instance-icon'>I</span> ]";
+      instanceIcon = "[ <span class='instance-icon'>I</span> ]",
+      
+      // Helper function for displaying the class names in a less ghetto fashion
+      capFirst = function (string) {
+        return string.charAt(0).toUpperCase() + string.substring(1);
+      };
       
   // Append these item explanations to the top of the page
   $("#center-zone").append(
@@ -18,9 +23,23 @@ $(function () {
   
   // Begin populating the API categories using api-items.js
   for (category in apiItems) {
+    var categoryTitle = capFirst(category),
+        categoryDiv,
+        categoryItems;
+    
+    // Construct the containers and nav elements pertaining to each category    
+    $("#container").append(
+      "<div id='" + category + "' class='main-section rounded-corners api-section'>" +
+      "<h1 class='ui-dialog-titlebar ui-widget-header rounded-corners'>" + categoryTitle + "</h1></div>"
+    );
+    $("#accordion").append(
+      "<h3><a id='" + category +"-tab' href='#'>" + categoryTitle + "</a></h3>" +
+      "<div id='" + category + "-navigation' class='nav-box'></div>"
+    );
+    
     // Go through each category in turn
-    var categoryDiv = $("#" + category),
-        categoryItems = apiItems[category];
+    categoryDiv = $("#" + category);
+    categoryItems = apiItems[category];
     for (element in categoryItems) {
       // Each element will be a new API item
       var item = categoryItems[element],
