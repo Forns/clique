@@ -329,17 +329,22 @@ Matrix.prototype = {
   // a vector as the argument, in which case the receiver must be a
   // one-column matrix equal to the vector.
   equal: function(matrix) {
-    var M = matrix.elements || matrix;
-    if (typeof(M[0][0]) == 'undefined') { M = Matrix.create(M).elements; }
-    if (this.elements.length != M.length ||
-        this.elements[0].length != M[0].length) { return false; }
-    var ni = this.elements.length, ki = ni, i, nj, kj = this.elements[0].length, j;
-    do { i = ki - ni;
-      nj = kj;
-      do { j = kj - nj;
-        if (Complex.magnitude(Complex.sub(this.elements[i][j], M[i][j])) > Sylvester.precision) { return false; }
-      } while (--nj);
-    } while (--ni);
+    // Handle the sparse comparison case
+    if (matrix instanceof Sparse) {
+      return matrix.equal(this);
+    } else {
+      var M = matrix.elements || matrix;
+      if (typeof(M[0][0]) == 'undefined') { M = Matrix.create(M).elements; }
+      if (this.elements.length != M.length ||
+          this.elements[0].length != M[0].length) { return false; }
+      var ni = this.elements.length, ki = ni, i, nj, kj = this.elements[0].length, j;
+      do { i = ki - ni;
+        nj = kj;
+        do { j = kj - nj;
+          if (Complex.magnitude(Complex.sub(this.elements[i][j], M[i][j])) > Sylvester.precision) { return false; }
+        } while (--nj);
+      } while (--ni);
+    }
     return true;
   },
 

@@ -398,7 +398,6 @@ $(function () {
         [-2, 1, 1]
       ]))
     );
-    
     ok(
       $M([
         [0, 1, 1],
@@ -411,6 +410,46 @@ $(function () {
         [4, 5, 6]
       ]))
     );
+  });
+  
+  test("Matrix: setRange", function () {
+    var s1 = $S(3, 3),
+        s3 = $S(2, 4, [2, 2, 2], [2, 3, -1]),
+        s4 = $S(2, 2, [1, 1, 1], [2, 1, 1]),
+        
+        m1 = $M([
+          [0, 0, 0],
+          [0, 1, 1],
+          [0, 1, 2]
+        ]),
+        m2 = $M([
+          [0, 0, 0, 0],
+          [0, $C(1), $C(0, 1), 0],
+          [0, 1, 1, 0]
+        ]),
+        m4 = $M([
+          [1, 1],
+          [2, 2],
+          [3, 3]
+        ]),
+        
+        // Correct answers
+        a1 = $S(3, 3, [1, 1, 1], [1, 2, 1], [2, 1, 1], [2, 2, 2]),
+        a2 = $S(3, 4, [3, 3, 1]),
+        a3 = $M([
+          [0, 0, 0, 0],
+          [0, 2, -1, 0]
+        ]),
+        a4 = $M([
+          [1, 0],
+          [1, 0],
+          [3, 3]
+        ]);
+        
+    ok(s1.setRange(1, 1, 2, 2, m1, 2, 2, 3, 3).equal(a1));
+    ok(m2.setRange(2, 2, 4, 4, m1, 1, 1, 2, 2).equal(a2));
+    ok($S(2, 4).setRange(2, 2, 2, 3, s3, 2, 2, 2, 4).equal(a3));
+    ok(m4.setRange(1, 1, 3, 3, s4).equal(a4));
   });
   
   test("Matrix: sums", function () {
@@ -968,16 +1007,53 @@ $(function () {
     ok(Matrix.radonTransform($V([2, 1])).equal($M([
       [1, 1, 1]
     ])));
-    // TODO: Run some more comparison cases through Matlab
+    ok(Matrix.radonTransform($V([2, 2])).equal($S(0, 0, 
+      [1, 1, 1], [1, 2, 1], [1, 3, 1],
+      [2, 1, 1], [2, 4, 1], [2, 5, 1],
+      [3, 2, 1], [3, 4, 1], [3, 6, 1],
+      [4, 3, 1], [4, 5, 1], [4, 6, 1]
+    )));
+    ok(Matrix.radonTransform($V([2, 1, 1])).equal($S(0, 0, 
+      [1, 2, 1], [1, 4, 1], [1, 6, 1],
+      [2, 1, 1], [2, 8, 1], [2, 10, 1],
+      [3, 3, 1], [3, 7, 1], [3, 12, 1],
+      [4, 5, 1], [4, 9, 1], [4, 11, 1]
+    )));
   });
   
   test("jucysMurphyElement", function () {
+    var m1 = Matrix.tabloids($V([2, 1]));
+    
     ok(Matrix.jucysMurphyElement($M([
       [1, 2, 3]
-    ]), 1), $M([
-      0
-    ]));
-    // TODO: Find out what JM does...
+    ]), 1).equal(
+      $S(1, 1)
+    ));
+    ok(Matrix.jucysMurphyElement(m1, 1).equal(
+      $S(3, 3)));
+    ok(Matrix.jucysMurphyElement(m1, 2).equal(
+      $S(3, 3, [2, 1, 1], [1, 2, 1], [3, 3, 1]
+    )));
+    ok(Matrix.jucysMurphyElement(m1, 3).equal(
+      $S(3, 3,
+        [1, 1, 1], [1, 3, 1],
+        [2, 2, 1], [2, 3, 1],
+        [3, 1, 1], [3, 2, 1]
+    )));
+  });
+  
+  test("jucysMurphyAll", function () {
+    var m1 = Matrix.tabloids($V([2, 1]));
+    
+    ok(Matrix.jucysMurphyAll(m1).equal(
+      $S(0, 0,
+        [1, 2, 1], [1, 4, 1], [1, 6, 1],
+        [2, 1, 1], [2, 5, 1], [2, 6, 1],
+        [3, 3, 1], [3, 4, 1], [3, 5, 1]
+    )));
+    // Could be room for more tests, but manual entry of larger sets
+    // would be grueling. Visual inspection of more complex results agree
+    // with Matlab's outputs
   });
   
 

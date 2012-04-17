@@ -310,6 +310,27 @@ var apiItems = {
       example: ""
     },
     
+    jucysMurphyAll: {
+      title: "Matrix.jucysMurphyAll(M)",
+      use: "Computes all of the Jucys-Murphy elements for the tabloid space given by M. " +
+        "The result is the sparse matrix [R_2, ..., R_n]",
+      example: "var M = Matrix.tabloids($V([2, 1]));<br/><br/>" +
+        "Matrix.jucysMurphyAll(M);<br/>" +
+        "// Returns a sparse equivalent to:<br/>" +
+        "// (1,2) = 1<br/>// (1,4) = 1<br/>// (1,6) = 1<br/>// (2,1) = 1<br/>// (2,5) = 1<br/>" +
+        "// (2,6) = 1<br/>// (3,3) = 1<br/>// (3,4) = 1<br/>// (3,5) = 1"
+    },
+    
+    jucysMurphyElement: {
+      title: "Matrix.jucysMurphyElement(M, i)",
+      use: "Returns the Jucys-Murphy element R_i associated with the space of tabloids given " +
+        "by the tabloid matrix M",
+      example: "var M = Matrix.tabloids($V([2, 1]));<br/><br/>" +
+        "Matrix.jucysMurphyElement(M, 3);<br/>" +
+        "// Returns a sparse equivalent to:<br/>" +
+        "// (1,1) = 1<br/>// (1,3) = 1<br/> // (2,2) = 1<br/>// (2,3) = 1<br/>// (3,1) = 1<br/>// (3,2) = 1"
+    },
+    
     kSet: {
       title: "Matrix.kSet(n, k)",
       use: "Produces a matrix whose rows are the k-element subsets of an n-element set.",
@@ -355,19 +376,19 @@ var apiItems = {
           ");<br/><br/>" +
           
           "// Sparse representation of result[1] = R =<br/>" +
-          "// (1,1)       1.3855<br/>" +
-          "// (2,1)       1.5154<br/>" +
-          "// (1,2)       1.5154<br/>" +
-          "// (2,2)       0.4602<br/>" +
-          "// (3,2)       1.1599<br/>" +
-          "// (2,3)       1.1599<br/>" +
-          "// (3,3)      -2.0401<br/>" +
-          "// (4,3)       2.0014<br/>" +
-          "// (3,4)       2.0014<br/>" +
-          "// (4,4)      -0.2401<br/>" +
-          "// (5,4)       1.5633<br/>" +
-          "// (4,5)       1.5633<br/>" +
-          "// (5,5)      -0.4654"
+          "// (1,1) =      1.3855<br/>" +
+          "// (2,1) =      1.5154<br/>" +
+          "// (1,2) =      1.5154<br/>" +
+          "// (2,2) =      0.4602<br/>" +
+          "// (3,2) =      1.1599<br/>" +
+          "// (2,3) =      1.1599<br/>" +
+          "// (3,3) =     -2.0401<br/>" +
+          "// (4,3) =      2.0014<br/>" +
+          "// (3,4) =      2.0014<br/>" +
+          "// (4,4) =     -0.2401<br/>" +
+          "// (5,4) =      1.5633<br/>" +
+          "// (4,5) =      1.5633<br/>" +
+          "// (5,5) =     -0.4654"
     },
     
     map: {
@@ -502,6 +523,21 @@ var apiItems = {
       title: "setElement(i, j, k)",
       use: "Sets the matrix element at row i, column j to the value k.",
       example: ""
+    },
+    
+    setRange: {
+      title: "setRange(startRow1, startColumn1, endRow1, endColumn1, otherMatrix[, startRow2, startColumn2, endRow2, endColumn2])",
+      use: "Sets elements in the calling sparse or matrix to those from otherMatrix (can be sparse) within the given bounds of each.<br/><br/>" +
+        "[!] If the dimensions of the ranges differ, the smaller of the two will be used with element changes trimmed from the right / bottom.<br/>" +
+        "[!] If the otherMatrix's bounds are not defined in the call, they will default to otherMatrix's size",
+      example: "var m1 = $M([<br/>" +
+          "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp[0, 0, 0],<br/>" +
+          "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp[0, 1, 1],<br/>" +
+          "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp[0, 1, 2]<br/>" +
+        "&nbsp&nbsp&nbsp&nbsp]),<br/>" +
+        "&nbsp&nbsp&nbsp&nbsps1 = $S(3, 3, [2, 2, 2], [3, 2, 3]);<br/><br/>" +
+        "m1.setRange(2, 1, 3, 1, s1, 2, 2, 3, 2);<br/>" +
+        "// m1 is now the matrix:<br/>[0, 0, 0]<br/>[2, 1, 1]<br/>[3, 1, 2]"
     },
     
     setRow: {
@@ -947,6 +983,21 @@ var apiItems = {
         "(1,1) = 1 and (2,3) = 1+i"
     },
     
+    setRange: {
+      title: "setRange(startRow1, startColumn1, endRow1, endColumn1, otherMatrix[, startRow2, startColumn2, endRow2, endColumn2])",
+      use: "Sets elements in the calling sparse or matrix to those from otherMatrix (can be sparse) within the given bounds of each.<br/><br/>" +
+        "[!] If the dimensions of the ranges differ, the smaller of the two will be used with element changes trimmed from the right / bottom.<br/>" +
+        "[!] If the otherMatrix's bounds are not defined in the call, they will default to otherMatrix's size",
+      example: "var m1 = $M([<br/>" +
+          "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp[0, 0, 0],<br/>" +
+          "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp[0, 1, 1],<br/>" +
+          "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp[0, 1, 2]<br/>" +
+        "&nbsp&nbsp&nbsp&nbsp]),<br/>" +
+        "&nbsp&nbsp&nbsp&nbsps1 = $S(3, 3, [2, 2, 2], [3, 2, 3]);<br/><br/>" +
+        "m1.setRange(2, 1, 3, 1, s1, 2, 2, 3, 2);<br/>" +
+        "// m1 is now the matrix:<br/>[0, 0, 0]<br/>[2, 1, 1]<br/>[3, 1, 2]"
+    },
+    
     sparse: {
       title: "Sparse.sparse(matrix)",
       use: "Converts the given matrix (of type Matrix, derp) into a sparse matrix. Useful for compressing large matrices " +
@@ -957,6 +1008,18 @@ var apiItems = {
         "&nbsp&nbsp[0, 0, 0]<br/>" +
       "]);<br/><br/>" +
       "m = Sparse.sparse(m); // m is now a 3x3 sparse with (2,2) = 1"
+    }
+  },
+  
+  
+  // Contains general API elements regarding usages and properties of the objects
+  "general" : {
+    precision: {
+      title: "Clique.precision",
+      use: "Determines the tolerance of error between two numbers being compared by Clique's various " +
+        "equivalence tests.<br/><br/>" +
+        "[!] Default: 1e-4",
+      example: ""
     }
   }
 };

@@ -105,6 +105,12 @@ Sparse.prototype = {
       this.setElement(argEntry[0], argEntry[1], argEntry[2]);
     }
     return this;
+  },
+  
+  // Sets the given dimensions of the calling Sparse to the given dimensions
+  // of the provided Sparse "otherMatrix"
+  setRange: function (startRow1, startColumn1, endRow1, endColumn1, otherMatrix, startRow2, startColumn2, endRow2, endColumn2) {
+    return Matrix.setRange(this, startRow1, startColumn1, endRow1, endColumn1, otherMatrix, startRow2, startColumn2, endRow2, endColumn2);
   }
 };
 

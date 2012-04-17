@@ -640,17 +640,22 @@ Matrix.prototype = {
   // a vector as the argument, in which case the receiver must be a
   // one-column matrix equal to the vector.
   equal: function(matrix) {
-    var M = matrix.elements || matrix;
-    if (typeof(M[0][0]) == 'undefined') { M = Matrix.create(M).elements; }
-    if (this.elements.length != M.length ||
-        this.elements[0].length != M[0].length) { return false; }
-    var ni = this.elements.length, ki = ni, i, nj, kj = this.elements[0].length, j;
-    do { i = ki - ni;
-      nj = kj;
-      do { j = kj - nj;
-        if (Complex.magnitude(Complex.sub(this.elements[i][j], M[i][j])) > Sylvester.precision) { return false; }
-      } while (--nj);
-    } while (--ni);
+    // Handle the sparse comparison case
+    if (matrix instanceof Sparse) {
+      return matrix.equal(this);
+    } else {
+      var M = matrix.elements || matrix;
+      if (typeof(M[0][0]) == 'undefined') { M = Matrix.create(M).elements; }
+      if (this.elements.length != M.length ||
+          this.elements[0].length != M[0].length) { return false; }
+      var ni = this.elements.length, ki = ni, i, nj, kj = this.elements[0].length, j;
+      do { i = ki - ni;
+        nj = kj;
+        do { j = kj - nj;
+          if (Complex.magnitude(Complex.sub(this.elements[i][j], M[i][j])) > Sylvester.precision) { return false; }
+        } while (--nj);
+      } while (--ni);
+    }
     return true;
   },
 
@@ -1200,6 +1205,12 @@ Sparse.prototype = {
       this.setElement(argEntry[0], argEntry[1], argEntry[2]);
     }
     return this;
+  },
+  
+  // Sets the given dimensions of the calling Sparse to the given dimensions
+  // of the provided Sparse "otherMatrix"
+  setRange: function (startRow1, startColumn1, endRow1, endColumn1, otherMatrix, startRow2, startColumn2, endRow2, endColumn2) {
+    return Matrix.setRange(this, startRow1, startColumn1, endRow1, endColumn1, otherMatrix, startRow2, startColumn2, endRow2, endColumn2);
   }
 };
 
@@ -1544,6 +1555,36 @@ var $S = Sparse.create;
     return this;
   };
   
+  // Sets the given dimensions of the calling Matrix to the given dimensions
+  // of the provided Matrix "otherMatrix"
+  Matrix.setRange = function (originalMatrix, startRow1, startColumn1, endRow1, endColumn1, otherMatrix, startRow2, startColumn2, endRow2, endColumn2) {
+    // [!] Users may optionally omit the otherMatrix bounds, which will default to the matrix's size
+    startRow2 = (typeof(startRow2) === "undefined") ? 1 : startRow2;
+    startColumn2 = (typeof(startColumn2) === "undefined") ? 1 : startColumn2;
+    endRow2 = (typeof(endRow2) === "undefined") ? otherMatrix.rows() : endRow2;
+    endColumn2 = (typeof(endColumn2) === "undefined") ? otherMatrix.cols() : endColumn2;
+        
+    // Normalize the ranges, making sure that they do not differ; if they do,
+    // take the shortest and use that instead, trimming from right / bottom bounds as applicable
+    var rowMax = Math.min(endRow1 - startRow1, endRow2 - startRow2),
+        colMax = Math.min(endColumn1 - startColumn1, endColumn2 - startColumn2);
+        
+    // Iterate through the elements, stopping at the maxes for each iteration
+    for (var i = 0; i <= rowMax; i++) {
+      var currentOriginalRow = startRow1 + i,
+          currentOtherRow = startRow2 + i;
+      for (var j = 0; j <= colMax; j++) {
+        originalMatrix.setElement(currentOriginalRow, startColumn1 + j, otherMatrix.e(currentOtherRow, startColumn2 + j));
+      }
+    }
+    return originalMatrix;
+  };
+  
+  // See above method, which is the workhorse for this function
+  Matrix.prototype.setRange = function (startRow1, startColumn1, endRow1, endColumn1, otherMatrix, startRow2, startColumn2, endRow2, endColumn2) {
+    return Matrix.setRange(this, startRow1, startColumn1, endRow1, endColumn1, otherMatrix, startRow2, startColumn2, endRow2, endColumn2);
+  };
+  
   // Swaps rows in the given matrix
   Matrix.prototype.swapRows = function (i, j) {
     var swapped = this.elements[i - 1];
@@ -1842,7 +1883,7 @@ var $S = Sparse.create;
   // to us by the tabloid matrix M
   Matrix.jucysMurphyElement = function (M, i) {
     var dim = M.rows(),
-        result = Matrix.zero(dim, dim),
+        result = $S(dim, dim),
         compVector = Vector.zero(M.cols()),
         check = 0,
         currentIndex;
@@ -1859,6 +1900,20 @@ var $S = Sparse.create;
           result.setElement(currentIndex, k, result.e(currentIndex, k) + 1);
         }
       }
+    }
+    return result;
+  };
+  
+  // Computes all of the Jucys-Murphy elements for the tabloid space given by M.
+  // The result is the matrix [R_2, ..., R_n]
+  Matrix.jucysMurphyAll = function (M) {
+    var n = M.cols(),
+        d = M.rows(),
+        result = $S(d, (n - 2) * d);
+        
+    // Does the heavy lifting by computing the JM element for each value of i
+    for (var i = 2; i <= n; i++) {
+      result.setRange(1, 1 + (i - 2) * d, d, (i - 1) * d, Matrix.jucysMurphyElement(M, i));
     }
     return result;
   };
