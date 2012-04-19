@@ -251,7 +251,7 @@ Vector.prototype = {
 
   // Set vector's elements from an array
   setElements: function(els) {
-    this.elements = (els.elements || els).slice();
+    this.elements = (typeof(els) === "undefined") ? [] : (els.elements || els).slice();
     return this;
   }
 };
@@ -664,8 +664,13 @@ Matrix.prototype = {
   // Set the matrix's elements from an array. If the argument passed
   // is a vector, the resulting matrix will be a single column.
   setElements: function(els) {
+    // Handle the case for an empty matrix
+    if (typeof(els) === "undefined" || els.length === 0) {
+      this.elements = [];
+      return this;
+    }
     var i, elements = els.elements || els;
-    if (typeof(elements[0][0]) != 'undefined') {
+    if (typeof(elements[0][0]) !== 'undefined') {
       var ni = elements.length, ki = ni, nj, kj, j;
       this.elements = [];
       do { i = ki - ni;

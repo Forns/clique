@@ -21,7 +21,9 @@
   
   // Used to append a new element to the end of a vector
   Vector.prototype.append = function (n) {
-    if (!(typeof(n) === "undefined")) {
+    if (n instanceof Vector) {
+      this.elements = this.elements.concat(n.elements);
+    } else if (!(typeof(n) === "undefined")) {
       this.elements.push(n);
     }
     return this;
@@ -35,7 +37,11 @@
   
   // Mutator that sets the vector's element at i to x
   Vector.prototype.setElement = function (i, x) {
-    this.elements.splice(i - 1, 1, x);
+    if (!this.elements.length) {
+      this.elements[i - 1] = x;
+    } else {
+      this.elements.splice(i - 1, 1, x);
+    }
     return this;
   };
   
@@ -63,7 +69,11 @@
   // Inserts a new vector representing the element e inserted into v at index i
   Vector.insert = function (v, i, e) {
     var elements = v.elements;
-    elements.splice(i - 1, 0, e);
+    if (elements.length){
+      elements.splice(i - 1, 0, e);
+    } else {
+      elements[i] = e;
+    }
     return $V(elements);
   };
   
@@ -110,8 +120,8 @@
     var index = 1,
         setSize = setArray.dimensions(),
         highestLevel = setArray.e(1), // Seed with first element for comparing purposes
-        countSet = $V([0]),
-        countSetFact = $V([0]),
+        countSet = $V(),
+        countSetFact = $V(),
         workingSize,
         thisLevel,
         multiplier,

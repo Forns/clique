@@ -573,7 +573,8 @@ var apiItems = {
     
     sort: {
       title: "sort()",
-      use: "Sorts the numbers in a matrix's columns in ascending order.<br/>[!] Cannot sort Complex entities.",
+      use: "Returns a copy of the caller with the numbers in its columns sorted in ascending order.<br/><br/>" +
+        "[!] Cannot sort Complex entities due to their incomparable quality.",
       example: ""
     },
     
@@ -673,7 +674,8 @@ var apiItems = {
   "vector": {
     append: {
       title: "append(n)",
-      use: "Appends a single value, n, to the end of the Vector.",
+      use: "If n is a vector, concatonates n to the end of the caller. Otherwise, adds the single " +
+        "value n to the end of the caller.",
       example: ""
     },
     

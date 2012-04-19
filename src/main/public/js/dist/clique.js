@@ -562,7 +562,7 @@ Vector.prototype = {
 
   // Set vector's elements from an array
   setElements: function(els) {
-    this.elements = (els.elements || els).slice();
+    this.elements = (typeof(els) === "undefined") ? [] : (els.elements || els).slice();
     return this;
   }
 };
@@ -975,8 +975,13 @@ Matrix.prototype = {
   // Set the matrix's elements from an array. If the argument passed
   // is a vector, the resulting matrix will be a single column.
   setElements: function(els) {
+    // Handle the case for an empty matrix
+    if (typeof(els) === "undefined" || els.length === 0) {
+      this.elements = [];
+      return this;
+    }
     var i, elements = els.elements || els;
-    if (typeof(elements[0][0]) != 'undefined') {
+    if (typeof(elements[0][0]) !== 'undefined') {
       var ni = elements.length, ki = ni, nj, kj, j;
       this.elements = [];
       do { i = ki - ni;
@@ -1313,7 +1318,9 @@ var $S = Sparse.create;
   
   // Used to append a new element to the end of a vector
   Vector.prototype.append = function (n) {
-    if (!(typeof(n) === "undefined")) {
+    if (n instanceof Vector) {
+      this.elements = this.elements.concat(n.elements);
+    } else if (!(typeof(n) === "undefined")) {
       this.elements.push(n);
     }
     return this;
@@ -1327,7 +1334,11 @@ var $S = Sparse.create;
   
   // Mutator that sets the vector's element at i to x
   Vector.prototype.setElement = function (i, x) {
-    this.elements.splice(i - 1, 1, x);
+    if (!this.elements.length) {
+      this.elements[i - 1] = x;
+    } else {
+      this.elements.splice(i - 1, 1, x);
+    }
     return this;
   };
   
@@ -1355,7 +1366,11 @@ var $S = Sparse.create;
   // Inserts a new vector representing the element e inserted into v at index i
   Vector.insert = function (v, i, e) {
     var elements = v.elements;
-    elements.splice(i - 1, 0, e);
+    if (elements.length){
+      elements.splice(i - 1, 0, e);
+    } else {
+      elements[i] = e;
+    }
     return $V(elements);
   };
   
@@ -1402,8 +1417,8 @@ var $S = Sparse.create;
     var index = 1,
         setSize = setArray.dimensions(),
         highestLevel = setArray.e(1), // Seed with first element for comparing purposes
-        countSet = $V([0]),
-        countSetFact = $V([0]),
+        countSet = $V(),
+        countSetFact = $V(),
         workingSize,
         thisLevel,
         multiplier,
@@ -1520,7 +1535,7 @@ var $S = Sparse.create;
   
   // Sets the given row of matrix to the given vector
   Matrix.prototype.setRow = function (i, vector) {
-    if (vector.dimensions() !== this.elements[i - 1].length) {
+    if (this.elements.length && vector.dimensions() !== this.elements[i - 1].length) {
       return null;
     }
     var vectorElements = [];
@@ -1533,7 +1548,7 @@ var $S = Sparse.create;
   
   // Sets the given column of matrix to the given vector
   Matrix.prototype.setCol = function (i, vector) {
-    if (vector.dimensions() !== this.rows()) {
+    if (this.elements.length && vector.dimensions() !== this.rows()) {
       return null;
     }
     var vectorElements = [];
@@ -1541,6 +1556,9 @@ var $S = Sparse.create;
       vectorElements[k - 1] = x;
     });
     for (var j = 0; j < vectorElements.length; j++) {
+      if (!this.elements[j]) {
+        this.elements[j] = [];
+      }
       this.elements[j][i - 1] = vectorElements[j];
     }
     return this;
@@ -1803,8 +1821,8 @@ var $S = Sparse.create;
   Matrix.lanczos = function (A, f, epsilon) {
     var orthogonalResult = f.multiply(1 / f.norm()),
         tridiagonalResult = $S(), // Sparse matrix for collecting parallel computed results
-        a = $M([0]), // Vector used in iteration
-        b = $M([0]), // Vector used in iteration
+        a = $M(), // Vector used in iteration
+        b = $M(), // Vector used in iteration
         ep = 0,
         check = 1,
         n = 1,
@@ -1945,10 +1963,22 @@ var $S = Sparse.create;
   Matrix.gatherProjections = function (L, P) {
     var holderP = P,
         holderL = L,
-        resultP = $M([0]),
-        resultL = $M([0]),
-        projectionLengths = $M([0]);
+        resultP = $M(),
+        resultL = $M(),
+        projectionLengths = $V(),
+        check = 0,                    // Tracks when we've finished comparing
+        count = 1,                    // Tracks the beginning of our comparing
+        coord = $M();                 // Gathering point for our collected info
         
+    // Remove the lengths of the projections
+    holderL.removeRow(1);
+    // Then ensure we're dealing with integers
+    holderL = holderL.round();
+    
+    // Sort the columns of L
+    if (holderL.rows() > 1) {
+      holderL = holderL.sort();
+    }
   };
   
 })();

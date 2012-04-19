@@ -17,7 +17,7 @@
   
   // Sets the given row of matrix to the given vector
   Matrix.prototype.setRow = function (i, vector) {
-    if (vector.dimensions() !== this.elements[i - 1].length) {
+    if (this.elements.length && vector.dimensions() !== this.elements[i - 1].length) {
       return null;
     }
     var vectorElements = [];
@@ -30,7 +30,7 @@
   
   // Sets the given column of matrix to the given vector
   Matrix.prototype.setCol = function (i, vector) {
-    if (vector.dimensions() !== this.rows()) {
+    if (this.elements.length && vector.dimensions() !== this.rows()) {
       return null;
     }
     var vectorElements = [];
@@ -38,6 +38,9 @@
       vectorElements[k - 1] = x;
     });
     for (var j = 0; j < vectorElements.length; j++) {
+      if (!this.elements[j]) {
+        this.elements[j] = [];
+      }
       this.elements[j][i - 1] = vectorElements[j];
     }
     return this;
@@ -300,8 +303,8 @@
   Matrix.lanczos = function (A, f, epsilon) {
     var orthogonalResult = f.multiply(1 / f.norm()),
         tridiagonalResult = $S(), // Sparse matrix for collecting parallel computed results
-        a = $M([0]), // Vector used in iteration
-        b = $M([0]), // Vector used in iteration
+        a = $M(), // Vector used in iteration
+        b = $M(), // Vector used in iteration
         ep = 0,
         check = 1,
         n = 1,
@@ -442,10 +445,22 @@
   Matrix.gatherProjections = function (L, P) {
     var holderP = P,
         holderL = L,
-        resultP = $M([0]),
-        resultL = $M([0]),
-        projectionLengths = $M([0]);
+        resultP = $M(),
+        resultL = $M(),
+        projectionLengths = $V(),
+        check = 0,                    // Tracks when we've finished comparing
+        count = 1,                    // Tracks the beginning of our comparing
+        coord = $M();                 // Gathering point for our collected info
         
+    // Remove the lengths of the projections
+    holderL.removeRow(1);
+    // Then ensure we're dealing with integers
+    holderL = holderL.round();
+    
+    // Sort the columns of L
+    if (holderL.rows() > 1) {
+      holderL = holderL.sort();
+    }
   };
   
 })();

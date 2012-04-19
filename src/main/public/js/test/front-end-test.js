@@ -232,6 +232,7 @@ $(function () {
   module("Sylvester Customs");
   
   test("Vector: Complex Elements", function () {
+    ok($V([]));
     equal($V([$C(0, 1)]).inspect(), "[i]");
     equal($V([$C(2, -1)]).inspect(), "[2-i]");
     equal($V([$C(2, -1), $C(2, 0)]).inspect(), "[2-i, 2]");
@@ -242,6 +243,8 @@ $(function () {
     ok($V([1]).append().equal($V([1])));
     ok($V([1]).append(2).equal($V([1, 2])));
     ok($V([0, 0, 0]).append(0).equal($V([0, 0, 0, 0])));
+    ok($V([0]).append($V([1])).equal($V([0, 1])));
+    ok($V([$C(1, 1), 0, 1, 2]).append($V([3, 4, 5])).equal($V([$C(1, 1), 0, 1, 2, 3, 4, 5])));
   });
   
   test("Vector: sort", function () {
@@ -259,6 +262,7 @@ $(function () {
   });
   
   test("Vector: insert", function () {
+    ok(Vector.insert($V([]), 1, 1), $V([1]));
     ok(Vector.insert($V([1]), 1, 2).equal($V([2, 1])));
     ok(Vector.insert($V([1, 2, 3]), 1, 0).equal($V([0, 1, 2, 3])));
     ok(Vector.insert($V([1, 2, 3]), 2, 0).equal($V([1, 0, 2, 3])));
@@ -278,6 +282,8 @@ $(function () {
   });
   
   test("Vector: setElement", function () {
+    console.log($V().setElement(1, 2));
+    ok($V().setElement(1, 2).equal($V([2])));
     ok($V([1]).setElement(1, 2).equal($V([2])));
     ok($V([1, 2, 3]).setElement(2, 0).equal($V([1, 0, 3])));
     ok($V([2, 0, 3]).setElement(3, $C(1, 1)).equal($V([2, 0, $C(1, 1)])));
@@ -333,6 +339,12 @@ $(function () {
   });
   
   test("Matrix: setElement", function () {
+    ok($M().setElement(1, 1, 5)
+      .equal($M([
+        [5]
+      ]))
+    );
+    
     ok(
       $M([
         [0, 1, 1],
@@ -369,6 +381,13 @@ $(function () {
   
   test("Matrix: setRow", function () {
     ok(
+      $M().setRow(1, $V([2, 2]))
+      .equal($M([
+        [2, 2]
+      ]))
+    );
+    
+    ok(
       $M([
         [0, 1, 0]
       ]).setRow(1, $V([1, 1, 1]))
@@ -390,6 +409,14 @@ $(function () {
   });
   
   test("Matrix: setCol", function () {
+    ok(
+      $M().setCol(1, $V([1, 2, 3]))
+      .equal($M([
+        [1],
+        [2],
+        [3]
+      ]))
+    );
     ok(
       $M([
         [0, 1, 1]
