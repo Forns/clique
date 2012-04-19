@@ -475,8 +475,8 @@ var apiItems = {
       example: ""
     },
     
-    removeColumn: {
-      title: "removeColumn(col)",
+    removeCol: {
+      title: "removeCol(col)",
       use: "Mutates the caller's elements to remove the given column.",
       example: ""
     },
@@ -672,6 +672,13 @@ var apiItems = {
   
   // Contains API elements for the vector module / Sylvester lib
   "vector": {
+    add: {
+      title: "add(v)",
+      use: "Returns a copy of the elements of v added to the caller's elements in sequence." +
+        "<br/><br/>[!] Caller and argument must have same dimensions.",
+      example: ""
+    },
+    
     append: {
       title: "append(n)",
       use: "If n is a vector, concatonates n to the end of the caller. Otherwise, adds the single " +

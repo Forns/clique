@@ -124,7 +124,7 @@
   };
   
   // Removes the given column from the matrix
-  Matrix.prototype.removeColumn = function (col) {
+  Matrix.prototype.removeCol = function (col) {
     col--;
     if (col < this.cols() && col >= 0) {
       for (var i = 0; i < this.elements.length; i++) {
@@ -450,7 +450,11 @@
         projectionLengths = $V(),
         check = 0,                    // Tracks when we've finished comparing
         count = 1,                    // Tracks the beginning of our comparing
-        coord = $M();                 // Gathering point for our collected info
+        coord = $V(),                 // Gathering point for our collected info
+        currentShape,                 // The comparing shape per iteration
+        currentMatrix,
+        summedProj,
+        columnsToAdd;
         
     // Remove the lengths of the projections
     holderL.removeRow(1);
@@ -461,6 +465,49 @@
     if (holderL.rows() > 1) {
       holderL = holderL.sort();
     }
+    
+    while (check === 0) {
+      coord = $M();
+      
+      if (count > holderL.cols()) {
+        check = 1;
+      } else if (count === holderL.cols()) {
+        projectionLengths.append(holderP.col(count).modulus());
+      } else {
+        currentShape = holderL.col(count);                    // Current comparing shape
+        for (var i = count + 1; i <= holderL.cols(); i++) {
+          if (currentShape.equal(holderL.col(i))) {           // Find coordinates of those...
+            coord.append(i);                                  // Tracks projections with same shape
+          }
+        }
+        
+        // currentMatrix holds the columns of holderP defined by index in columnsToAdd
+        columnsToAdd = $V(count).append(coord);               // Vector with the column numbers to be added to
+        currentMatrix = $M();                                 // currentMatrix for calculation
+        for (var j = 1; j < columnsToAdd.dimensions(); j++) {
+          currentMatrix.setCol(j, holderP.col(columnsToAdd.e(j)));
+        }
+        
+        summedProj = Vector.zero(currentMatrix.rows());
+        for (k = 1; k < currentMatrix.cols(); k++) {
+          summedProj = summedProj.add(currentMatrix.col(i));
+        }
+        
+        // We gather the info calculated on this iteration back into the holders
+        holderP.setCol(count, summedProj);
+        holderL.setCol(count, currentShape);
+        
+        projectionLengths.append(summedProj.modulus());
+        
+        // Purge the superfluous data gathered on this iteration
+        for (var m = 1; m < coord.dimensions(); m++) {
+          holderP.removeCol(coord.e(m));
+          holderL.removeCol(coord.e(m));
+        }
+        count++;
+      }
+    }
+    // TODO: Add proper returns... lol
   };
   
 })();

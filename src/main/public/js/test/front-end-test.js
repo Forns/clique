@@ -240,6 +240,8 @@ $(function () {
   });
   
   test("Vector: append", function () {
+    ok($V().append(1).equal($V([1])));
+    ok($V().append($V([1, 2, 3])).equal($V([1, 2, 3])));
     ok($V([1]).append().equal($V([1])));
     ok($V([1]).append(2).equal($V([1, 2])));
     ok($V([0, 0, 0]).append(0).equal($V([0, 0, 0, 0])));
@@ -282,7 +284,6 @@ $(function () {
   });
   
   test("Vector: setElement", function () {
-    console.log($V().setElement(1, 2));
     ok($V().setElement(1, 2).equal($V([2])));
     ok($V([1]).setElement(1, 2).equal($V([2])));
     ok($V([1, 2, 3]).setElement(2, 0).equal($V([1, 0, 3])));
@@ -487,7 +488,7 @@ $(function () {
       $M([
         [0],
         [0]
-      ]).removeColumn(2).equal($M([
+      ]).removeCol(2).equal($M([
         [0],
         [0]
       ]))
@@ -497,7 +498,7 @@ $(function () {
       $M([
         [0, 1, 2],
         [0, $C(3), $C(0, 1)]
-      ]).removeColumn(1).equal($M([
+      ]).removeCol(1).equal($M([
         [1, 2],
         [$C(3), $C(0, 1)]
       ]))
@@ -509,7 +510,7 @@ $(function () {
         [0, $C(3), $C(0, 1)],
         [0, 0, 0],
         [3, 2, 1]
-      ]).removeColumn(2).equal($M([
+      ]).removeCol(2).equal($M([
         [0, 2],
         [0, $C(0, 1)],
         [0, 0],
