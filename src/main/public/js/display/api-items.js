@@ -469,6 +469,18 @@ var apiItems = {
       example: ""
     },
     
+    removeRow: {
+      title: "removeRow(row)",
+      use: "Mutates the caller's elements to remove the given row.",
+      example: ""
+    },
+    
+    removeColumn: {
+      title: "removeColumn(col)",
+      use: "Mutates the caller's elements to remove the given column.",
+      example: ""
+    },
+    
     rk: {
       title: "rk()",
       use: "Alias for rank.",

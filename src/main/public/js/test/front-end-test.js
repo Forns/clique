@@ -412,6 +412,85 @@ $(function () {
     );
   });
   
+  test("Matrix: removeRow", function () {
+    ok(
+      $M([
+        [0],
+        [0]
+      ]).removeRow(3).equal($M([
+        [0],
+        [0]
+      ]))
+    );
+    
+    ok(
+      $M([
+        [0],
+        [0]
+      ]).removeRow(1).equal($M([
+        [0]
+      ]))
+    );
+    
+    ok(
+      $M([
+        [0, 1, 2],
+        [0, $C(3), $C(0, 1)]
+      ]).removeRow(1).equal($M([
+        [0, $C(3), $C(0, 1)]
+      ]))
+    );
+    
+    ok(
+      $M([
+        [0, 1, 2],
+        [0, $C(3), $C(0, 1)],
+        [0, 0, 0],
+        [3, 2, 1]
+      ]).removeRow(2).equal($M([
+        [0, 1, 2],
+        [0, 0, 0],
+        [3, 2, 1]
+      ]))
+    );
+  });
+  
+  test("Matrix: deleteColumn", function () {
+    ok(
+      $M([
+        [0],
+        [0]
+      ]).removeColumn(2).equal($M([
+        [0],
+        [0]
+      ]))
+    );
+    
+    ok(
+      $M([
+        [0, 1, 2],
+        [0, $C(3), $C(0, 1)]
+      ]).removeColumn(1).equal($M([
+        [1, 2],
+        [$C(3), $C(0, 1)]
+      ]))
+    );
+    
+    ok(
+      $M([
+        [0, 1, 2],
+        [0, $C(3), $C(0, 1)],
+        [0, 0, 0],
+        [3, 2, 1]
+      ]).removeColumn(2).equal($M([
+        [0, 2],
+        [0, $C(0, 1)],
+        [0, 0],
+        [3, 1]
+      ]))
+    );
+  });
+  
   test("Matrix: setRange", function () {
     var s1 = $S(3, 3),
         s3 = $S(2, 4, [2, 2, 2], [2, 3, -1]),

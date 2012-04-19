@@ -111,6 +111,26 @@
     return Complex.sqrt(this.sum(2));
   };
   
+  // Removes the given row from the matrix
+  Matrix.prototype.removeRow = function (row) {
+    row--;
+    if (row < this.rows() && row >= 0) {
+      this.elements.splice(row, 1);
+    }
+    return this;
+  };
+  
+  // Removes the given column from the matrix
+  Matrix.prototype.removeColumn = function (col) {
+    col--;
+    if (col < this.cols() && col >= 0) {
+      for (var i = 0; i < this.elements.length; i++) {
+        this.elements[i].splice(col, 1);
+      }
+    }
+    return this;
+  }
+  
   // Creates a matrix of all ones with specified dimensions
   Matrix.ones = function (rows, columns) {
     var result = [],
@@ -413,6 +433,19 @@
       result.setRange(1, 1 + (i - 2) * d, d, (i - 1) * d, Matrix.jucysMurphyElement(M, i));
     }
     return result;
+  };
+  
+  // Uses the data in L to rearrange and gather those projections in P that are in
+  // the same isotypic subspace under the restriction of the permutation representation
+  // in question to the subgroup S_m where m < n
+  // [!] Returns an array result consisting of the new representations of L and P
+  Matrix.gatherProjections = function (L, P) {
+    var holderP = P,
+        holderL = L,
+        resultP = $M([0]),
+        resultL = $M([0]),
+        projectionLengths = $M([0]);
+        
   };
   
 })();
