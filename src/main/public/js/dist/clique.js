@@ -361,6 +361,7 @@ Vector.prototype = {
     var n = this.elements.length;
     var V = vector.elements || vector;
     if (n != V.length) { return false; }
+    else if (n === 0) {return true;}
     do {
       if (Complex.magnitude(Complex.sub(this.elements[n-1], V[n-1])) > Sylvester.precision) { return false; }
     } while (--n);
@@ -557,6 +558,9 @@ Vector.prototype = {
 
   // Returns a string representation of the vector
   inspect: function() {
+    if (!this.elements.length) {
+      return "[]";
+    }
     return '[' + this.elements.join(', ') + ']';
   },
 
@@ -633,7 +637,7 @@ Matrix.prototype = {
   
   // Returns the number of columns in the matrix
   cols: function() {
-    return this.elements[0].length;
+    return (this.elements[0]) ? this.elements[0].length : 0;
   },
 
   // Returns true iff the matrix is equal to the argument. You can supply
@@ -645,7 +649,8 @@ Matrix.prototype = {
       return matrix.equal(this);
     } else {
       var M = matrix.elements || matrix;
-      if (typeof(M[0][0]) == 'undefined') { M = Matrix.create(M).elements; }
+      if (!this.elements.length) {return matrix.elements.length === 0;}
+      if (typeof(M[0][0]) === 'undefined') { M = Matrix.create(M).elements; }
       if (this.elements.length != M.length ||
           this.elements[0].length != M[0].length) { return false; }
       var ni = this.elements.length, ki = ni, i, nj, kj = this.elements[0].length, j;
@@ -965,10 +970,13 @@ Matrix.prototype = {
   // Returns a string representation of the matrix
   inspect: function() {
     var matrix_rows = [];
-    var n = this.elements.length, k = n, i;
-    do { i = k - n;
+    var n = this.elements.length, k = n;
+    if (!this.elements.length) {
+      return "[]";
+    }
+    for (var i = 0; i < n; i++) {
       matrix_rows.push(Vector.create(this.elements[i]).inspect());
-    } while (--n);
+    }
     return matrix_rows.join('\n');
   },
   
@@ -1605,6 +1613,9 @@ var $S = Sparse.create;
   
   // Swaps rows in the given matrix
   Matrix.prototype.swapRows = function (i, j) {
+    if (!this.elements.length) {
+      return this;
+    }
     var swapped = this.elements[i - 1];
     this.elements[i - 1] = this.elements[j - 1];
     this.elements[j - 1] = swapped;
@@ -1972,7 +1983,9 @@ var $S = Sparse.create;
         currentShape,                 // The comparing shape per iteration
         currentMatrix,
         summedProj,
-        columnsToAdd;
+        columnsToAdd,
+        resultBound,
+        result = [];
         
     // Remove the lengths of the projections
     holderL.removeRow(1);
@@ -2025,7 +2038,11 @@ var $S = Sparse.create;
         count++;
       }
     }
-    
+    result[0] = $M()
+      .setRange(1, 1, projectionLengths.rows(), projectionLengths.cols(), projectionLengths)
+      .setRange(projectionLengths.rows() + 1, 1, holderL.rows(), holderL.cols, holderL);
+    result[1] = holderP;
+    return result;
   };
   
 })();

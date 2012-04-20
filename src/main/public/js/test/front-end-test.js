@@ -232,7 +232,7 @@ $(function () {
   module("Sylvester Customs");
   
   test("Vector: Complex Elements", function () {
-    ok($V([]));
+    ok($V());
     equal($V([$C(0, 1)]).inspect(), "[i]");
     equal($V([$C(2, -1)]).inspect(), "[2-i]");
     equal($V([$C(2, -1), $C(2, 0)]).inspect(), "[2-i, 2]");
@@ -250,6 +250,7 @@ $(function () {
   });
   
   test("Vector: sort", function () {
+    ok(Vector.sort($V()).equal($V()));
     ok(Vector.sort($V([1])).equal($V([1])));
     ok(Vector.sort($V([0, 0, 0])).equal($V([0, 0, 0])));
     ok(Vector.sort($V([-1, 0, 1])).equal($V([-1, 0, 1])));
@@ -257,6 +258,7 @@ $(function () {
   });
   
   test("Vector: sum", function () {
+    equal(Vector.sum($V()), 0);
     equal(Vector.sum($V([1])), 1);
     equal(Vector.sum($V([1, -1])), 0);
     equal(Vector.sum($V([1, 2, -4, 8])), 7);
@@ -264,7 +266,7 @@ $(function () {
   });
   
   test("Vector: insert", function () {
-    ok(Vector.insert($V([]), 1, 1), $V([1]));
+    ok(Vector.insert($V(), 1, 1), $V([1]));
     ok(Vector.insert($V([1]), 1, 2).equal($V([2, 1])));
     ok(Vector.insert($V([1, 2, 3]), 1, 0).equal($V([0, 1, 2, 3])));
     ok(Vector.insert($V([1, 2, 3]), 2, 0).equal($V([1, 0, 2, 3])));
@@ -272,6 +274,7 @@ $(function () {
   });
   
   test("Vector: remove", function () {
+    ok($V().remove(1, 1).equal($V()));
     ok($V([1, 2]).remove(1, 1).equal($V([2])));
     ok($V([1, 2, 3, 4]).remove(4, 1).equal($V([1, 2, 3])));
     ok($V([1, 2, 3, 4]).remove(4, 0).equal($V([1, 2, 3, 4])));
@@ -279,6 +282,7 @@ $(function () {
   });
   
   test("Vector: ones", function () {
+    ok(Vector.ones(0).equal($V()));
     ok(Vector.ones(1).equal($V([1])));
     ok(Vector.ones(4).equal($V([1, 1, 1, 1])));
   });
@@ -291,6 +295,7 @@ $(function () {
   });
   
   test("Vector: histoCount", function () {
+    equal(Vector.histoCount($V(), 1), 0);
     equal(Vector.histoCount($V([1]), 1), 1);
     equal(Vector.histoCount($V([1]), 1), 1);
     equal(Vector.histoCount($V([$C(1)]), 1), 1);
@@ -322,6 +327,7 @@ $(function () {
   });
   
   test("Vector: multiplier", function () {
+    equal(Vector.multiplier($V(), 1, 1), 1);
     equal(Vector.multiplier($V([1]), 1, 1), 1);
     equal(Vector.multiplier($V([1, 2]), 3, 1), 1);
     equal(Vector.multiplier($V([1, 2, 3]), 3, 1), 0.16666666666666666);
@@ -329,6 +335,7 @@ $(function () {
   });
   
   test("Matrix: Complex Elements", function () {
+    equal($M().inspect(), "[]");
     equal($M([$C(0, 1)]).inspect(), "[i]");
     equal($M([$C(2, -1)]).inspect(), "[2-i]");
     equal($M([[$C(2, -1), $C(2, 0)]]).inspect(), "[2-i, 2]");
@@ -441,6 +448,8 @@ $(function () {
   });
   
   test("Matrix: removeRow", function () {
+    ok($M().removeRow(2).equal($M()));
+    
     ok(
       $M([
         [0],
@@ -483,7 +492,9 @@ $(function () {
     );
   });
   
-  test("Matrix: deleteColumn", function () {
+  test("Matrix: removeColumn", function () {
+    ok($M().removeCol(2).equal($M()));
+    
     ok(
       $M([
         [0],
@@ -539,6 +550,7 @@ $(function () {
           [2, 2],
           [3, 3]
         ]),
+        m5 = $M(),
         
         // Correct answers
         a1 = $S(3, 3, [1, 1, 1], [1, 2, 1], [2, 1, 1], [2, 2, 2]),
@@ -555,11 +567,16 @@ $(function () {
         
     ok(s1.setRange(1, 1, 2, 2, m1, 2, 2, 3, 3).equal(a1));
     ok(m2.setRange(2, 2, 4, 4, m1, 1, 1, 2, 2).equal(a2));
+    ok(m5.setRange(1, 1, m4.rows(), m4.cols(), m4).equal(m4));
     ok($S(2, 4).setRange(2, 2, 2, 3, s3, 2, 2, 2, 4).equal(a3));
     ok(m4.setRange(1, 1, 3, 3, s4).equal(a4));
   });
   
   test("Matrix: sums", function () {
+    equal(
+      $M().sum(), 0
+    );
+    
     equal(
       $M(
         [0]
@@ -608,6 +625,10 @@ $(function () {
   
   test("Matrix: ones", function () {
     ok(
+      Matrix.ones(0, 0).equal($M())
+    );
+    
+    ok(
       Matrix.ones(1, 1)
       .equal($M([
         [1]
@@ -633,6 +654,8 @@ $(function () {
   });
   
   test("Matrix: norm", function () {
+    equal($M().norm(), 0);
+    
     equal(
       $M([
         [0]
@@ -661,6 +684,10 @@ $(function () {
   });
   
   test("Matrix: sort", function () {
+    ok(
+      Matrix.sort($M()).equal($M())
+    );
+    
     ok(
       Matrix.sort(
         $M([1])
@@ -706,6 +733,11 @@ $(function () {
   
   test("Matrix: firstNonZero", function () {
     deepEqual(
+      Matrix.firstNonZero($M()),
+      [0, 0, 0]
+    );
+    
+    deepEqual(
       Matrix.firstNonZero($M([
         [0]
       ])), [0, 0, 0]
@@ -733,6 +765,8 @@ $(function () {
   });
   
   test("Matrix: swapRows", function () {
+    ok($M().swapRows(2, 3).equal($M()));
+    
     ok(
       $M([
         [0, 1, 0],
@@ -897,6 +931,8 @@ $(function () {
         s4 = $S(2, 3),
         s5 = $S(2, 3),
         s6 = $S(2, 2),
+        
+        m0 = $M(),
         m1 = $M([
           [0]
         ]),
@@ -926,6 +962,7 @@ $(function () {
     ok(!s2.equal(m3));
     ok(!s0.equal(s1));
     ok(!s3.equal(s5));
+    ok(s0.equal(m0));
     ok(s1.equal(m1));
     ok(s2.equal(m2));
     ok(s3.equal(m3));

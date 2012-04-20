@@ -87,6 +87,9 @@
   
   // Swaps rows in the given matrix
   Matrix.prototype.swapRows = function (i, j) {
+    if (!this.elements.length) {
+      return this;
+    }
     var swapped = this.elements[i - 1];
     this.elements[i - 1] = this.elements[j - 1];
     this.elements[j - 1] = swapped;
@@ -454,7 +457,9 @@
         currentShape,                 // The comparing shape per iteration
         currentMatrix,
         summedProj,
-        columnsToAdd;
+        columnsToAdd,
+        resultBound,
+        result = [];
         
     // Remove the lengths of the projections
     holderL.removeRow(1);
@@ -507,7 +512,11 @@
         count++;
       }
     }
-    // TODO: Add proper returns... lol
+    result[0] = $M()
+      .setRange(1, 1, projectionLengths.rows(), projectionLengths.cols(), projectionLengths)
+      .setRange(projectionLengths.rows() + 1, 1, holderL.rows(), holderL.cols, holderL);
+    result[1] = holderP;
+    return result;
   };
   
 })();

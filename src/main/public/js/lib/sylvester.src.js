@@ -50,6 +50,7 @@ Vector.prototype = {
     var n = this.elements.length;
     var V = vector.elements || vector;
     if (n != V.length) { return false; }
+    else if (n === 0) {return true;}
     do {
       if (Complex.magnitude(Complex.sub(this.elements[n-1], V[n-1])) > Sylvester.precision) { return false; }
     } while (--n);
@@ -246,6 +247,9 @@ Vector.prototype = {
 
   // Returns a string representation of the vector
   inspect: function() {
+    if (!this.elements.length) {
+      return "[]";
+    }
     return '[' + this.elements.join(', ') + ']';
   },
 
@@ -322,7 +326,7 @@ Matrix.prototype = {
   
   // Returns the number of columns in the matrix
   cols: function() {
-    return this.elements[0].length;
+    return (this.elements[0]) ? this.elements[0].length : 0;
   },
 
   // Returns true iff the matrix is equal to the argument. You can supply
@@ -334,7 +338,8 @@ Matrix.prototype = {
       return matrix.equal(this);
     } else {
       var M = matrix.elements || matrix;
-      if (typeof(M[0][0]) == 'undefined') { M = Matrix.create(M).elements; }
+      if (!this.elements.length) {return matrix.elements.length === 0;}
+      if (typeof(M[0][0]) === 'undefined') { M = Matrix.create(M).elements; }
       if (this.elements.length != M.length ||
           this.elements[0].length != M[0].length) { return false; }
       var ni = this.elements.length, ki = ni, i, nj, kj = this.elements[0].length, j;
@@ -654,10 +659,13 @@ Matrix.prototype = {
   // Returns a string representation of the matrix
   inspect: function() {
     var matrix_rows = [];
-    var n = this.elements.length, k = n, i;
-    do { i = k - n;
+    var n = this.elements.length, k = n;
+    if (!this.elements.length) {
+      return "[]";
+    }
+    for (var i = 0; i < n; i++) {
       matrix_rows.push(Vector.create(this.elements[i]).inspect());
-    } while (--n);
+    }
     return matrix_rows.join('\n');
   },
   
