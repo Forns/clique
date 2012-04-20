@@ -519,6 +519,58 @@
     return result;
   };
   
+  // Computes the eigenvalues of the given matrix
+  Matrix.eigenvalues = function (matrix) {
+    // throw new UnsupportedOperationException("lol");
+    return matrix;
+  };
+  
+  // [L, P] = eigenspaceProjections(A, X);
+  //
+  // Uses the "Lanczos Iteration with re-orthogonalization" to compute 
+  // the projections P of the column vectors of X onto the eigenspaces 
+  // of the symmetric matrix A.  It also computes the lengths of each of 
+  // these projections and returns a two-rowed matrix L with the length 
+  // and the corresponding eigenvalue making up one column.
+  //
+  // [L, P] = eigenspaceProjections(A, X, Y);
+  //
+  // Also does the above, but keeps track of previous computations of
+  // eigenvalues (in Y) for iteration
+  //
+  // [!] Returns result as array with [L, P] as elements
+  Matrix.eigenspaceProjections = function (A, X, Y) {
+    var Q = $M(),             // Represent the QR decomposition for use with lanczos
+        R = $M(),
+        projections = $M(),   // Holds the projections
+        lengths = $M(),
+        U = $M(),             // Represent the eigenvalues / -vectors of R
+        D = $M(),
+        nrm = 0,              // Reminds us of the size of X
+        lanczosResult = [],
+        eigResult = [];
+    
+    if (typeof(Y) === "undefined") {
+      for (var i = 1; i < X.cols(); i++) {
+        lanczosResult = Matrix.lanczos(A, X.col(i));
+        Q = lanczosResult[0];
+        R = lanczosResult[1];
+        R = Matrix.full(R);   // Possibly unnecessary
+        
+        eigResult = Matrix.eigenvalues(R);
+        U = eigResult[0];
+        D = eigResult[1];
+        nrm = X.col(i).modulus();
+        
+        // No, I'm not going to simplify this line
+        P.append(Q.multiply(U.multiply(U.row(1).multiply(nrm).toDiagonalMatrix())));
+        // TODO: Left off here
+      }
+    } else {
+      
+    }
+  };
+  
 })();
 
 
