@@ -2070,8 +2070,8 @@ var $S = Sparse.create;
   
   // Helper method for eig to extend signNumber's sign onto n
   var copySign = function (n, signNumber) {
-    n = Complex.magnitude(n);
-    return (signNumber > 0) ? n : Complex.mult(n, -1);
+    var result = Complex.magnitude(n);
+    return (signNumber > 0) ? result : Complex.mult(n, -1);
   };
   
   // QL algorithm with implicit shifts to determine the eigenvalues and eigenvectors of a real,
@@ -2085,10 +2085,15 @@ var $S = Sparse.create;
     // Begin by extracting the necessary components from the input
     var diagonal = tridiagonalMatrix.diagonal(),          // Vector containing the argument's diagonal
         subDiagonal = tridiagonalMatrix.subDiagonal(),    // Vector containing the argument's subdiagonal
-        n = subDiagonal.dimensions(),
+        n = subDiagonal.dimensions() + 1,
+        
+        // Ugly iterators
+        m = 1,
+        i = 1,
+        j = 1,
+        k = 1,
         
         // Ugly intermediary variables used for math stuffs
-        m = 1,
         g = 0,
         r = 0,
         s = 0,
@@ -2098,19 +2103,20 @@ var $S = Sparse.create;
         b = 0,
         subDiagElement = 0,
         count = 0,
-        eigenvectors = tridiagonalMatrix;
-        
+        eigenvectors = Matrix.I(n);
+    
+    // POSSIBLE BUG: Do we need this part? How big should the subDiagonal vector be?
     // Renumber the elements of the subdiagonal for convenience
-    for (var i = 2; i <= n; i++) {
+    for (i = 2; i <= n; i++) {
       subDiagonal.setElement(i - 1, subDiagonal.e(i));
     }
     subDiagonal.setElement(n, 0);
     
-    for (var j = 1; j <= n; j++) {
+    for (j = 1; j <= n; j++) {
       count = 0;
       do {
         // Look for a single small subdiagonal element to split the matrix
-        for (m = 1; m <= n - 1; m++) {
+        for (m = j; m <= n - 1; m++) {
           subDiagElement = Complex.magnitude(diagonal.e(m)) + Complex.magnitude(diagonal.e(m + 1));
           if (
             Complex.sub(Complex.magnitude(Complex.add(subDiagonal.e(m), subDiagElement)), subDiagElement) < Clique.precision
@@ -2119,18 +2125,18 @@ var $S = Sparse.create;
           }
         }
         
-        if (m !== 1) {
+        if (m !== j) {
           // Inform the user if the iteration count is getting out of control
           if (count++ >= 30) {
             console.warn("[!] Matrix.eig: too many iterations... " + count);
           }
           g = Complex.divide(Complex.sub(diagonal.e(j + 1), diagonal.e(j)), Complex.mult(subDiagonal.e(j), 2)); // Form shift
           r = Complex.pythag(g, 1);
-          g = Complex.divide(Complex.add(Complex.sub(diagonal.e(m), diagonal.e(j)), subDiagonal.e(m)), Complex.add(g, copySign(r, g)));
+          g = Complex.add(Complex.sub(diagonal.e(m), diagonal.e(j)), Complex.divide(subDiagonal.e(j), Complex.add(g, copySign(r, g))));
           s = c = 1;
           p = 0;
           
-          for (i = m - 1; i >= 1; i--) {
+          for (i = m - 1; i >= j; i--) {
             f = Complex.mult(s, subDiagonal.e(i));
             b = Complex.mult(c, subDiagonal.e(i));
             r = Complex.pythag(f, g);
@@ -2145,27 +2151,29 @@ var $S = Sparse.create;
           s = Complex.divide(f, r);
           c = Complex.divide(g, r);
           g = Complex.sub(diagonal.e(i + 1), p);
-          // r = (diagonal[i]-g) * s + 2 * c * b
+          // r = (diagonal[i]-g) * s + 2 * c * b // for ease of reading
           r = Complex.add(Complex.mult(Complex.sub(diagonal.e(i), g), s), Complex.mult(Complex.mult(c, 2), b));
           p = Complex.mult(s, r);
           diagonal.setElement(i + 1, Complex.add(g, p));
           g = Complex.sub(Complex.mult(c, r), b);
           
           // This loop is superfluous if eigenvectors not wanted... just sayin'
-          for (var k = 1; k <= n; k++) { // Form eigenvectors
+          for (k = 1; k <= n; k++) { // Form eigenvectors
             f = eigenvectors.e(k, i + 1);
+            // POSSIBLE BUG: I think the values for i here are causing an index assignment of -1 in eigenvectors matrix
             eigenvectors.setElement(k, i + 1, Complex.add(Complex.mult(s, eigenvectors.e(k, i)), Complex.mult(c, f)));
             eigenvectors.setElement(k, i, Complex.sub(Complex.mult(c, eigenvectors.e(k, i)), Complex.mult(s, f)));
           }
         }
         
-        if (Complex.equal(r, 0) && i >= 1) {
+        if (Complex.equal(r, 0) && i >= j) {
           continue;
         }
         diagonal.setElement(j, Complex.sub(diagonal.e(j), p));
         subDiagonal.setElement(j, g);
         subDiagonal.setElement(m, 0);
-      } while (m !== 1);
+        console.log(m);
+      } while (m !== j);
     }
         
     return [diagonal, eigenvectors];
