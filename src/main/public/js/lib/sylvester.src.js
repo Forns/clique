@@ -468,7 +468,7 @@ Matrix.prototype = {
 
   // Returns true iff the matrix is square
   isSquare: function() {
-    return (this.elements.length == this.elements[0].length);
+    return (this.rows() === this.cols());
   },
 
   // Returns the (absolute) largest element of the matrix

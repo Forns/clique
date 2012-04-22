@@ -212,6 +212,20 @@
     return result;
   };
   
+  // Returns the subdiagonal elements (of the calling square matrix) as a vector
+  Matrix.prototype.subDiagonal = function () {
+    var size = this.rows(),
+        result = [];
+    // Begin by ensuring this is a square matrix and large enough to have a sub-diag
+    if (!this.isSquare() || size <= 1) {
+      return null;
+    }
+    for (var i = 2; i <= size; i++) {
+      result[i - 2] = this.e(i, i - 1);
+    }
+    return $V(result);
+  };
+  
 
   /** Experimental Section **/
 
@@ -519,10 +533,107 @@
     return result;
   };
   
-  // Computes the eigenvalues of the given matrix
-  Matrix.eigenvalues = function (matrix) {
-    // throw new UnsupportedOperationException("lol");
-    return matrix;
+  // Helper method for eig to extend signNumber's sign onto n
+  var copySign = function (n, signNumber) {
+    n = Complex.magnitude(n);
+    return (signNumber > 0) ? n : Complex.mult(n, -1);
+  };
+  
+  // QL algorithm with implicit shifts to determine the eigenvalues and eigenvectors of a real,
+  // symmetric, tridiagonal matrix.
+  //
+  // [!] Returns a 2 element array, [eigenvalues, eigenvectors], the latter of which has columns
+  // representing the result's eigenvectors
+  //
+  // Algorithm credit (although modified substantively) to Saul Teukolsky, William Vetterling, and Brian Flannery
+  Matrix.eig = function (tridiagonalMatrix) {
+    // Begin by extracting the necessary components from the input
+    var diagonal = tridiagonalMatrix.diagonal(),          // Vector containing the argument's diagonal
+        subDiagonal = tridiagonalMatrix.subDiagonal(),    // Vector containing the argument's subdiagonal
+        n = subDiagonal.dimensions(),
+        
+        // Ugly intermediary variables used for math stuffs
+        m = 1,
+        g = 0,
+        r = 0,
+        s = 0,
+        c = 0,
+        p = 0,
+        f = 0,
+        b = 0,
+        subDiagElement = 0,
+        count = 0,
+        eigenvectors = tridiagonalMatrix;
+        
+    // Renumber the elements of the subdiagonal for convenience
+    for (var i = 2; i <= n; i++) {
+      subDiagonal.setElement(i - 1, subDiagonal.e(i));
+    }
+    subDiagonal.setElement(n, 0);
+    
+    for (var j = 1; j <= n; j++) {
+      count = 0;
+      do {
+        // Look for a single small subdiagonal element to split the matrix
+        for (m = 1; m <= n - 1; m++) {
+          subDiagElement = Complex.magnitude(diagonal.e(m)) + Complex.magnitude(diagonal.e(m + 1));
+          if (
+            Complex.sub(Complex.magnitude(Complex.add(subDiagonal.e(m), subDiagElement)), subDiagElement) < Clique.precision
+          ) {
+            break;
+          }
+        }
+        
+        if (m !== 1) {
+          // Inform the user if the iteration count is getting out of control
+          if (count++ >= 30) {
+            console.warn("[!] Matrix.eig: too many iterations... " + count);
+          }
+          g = Complex.divide(Complex.sub(diagonal.e(j + 1), diagonal.e(j)), Complex.mult(subDiagonal.e(j), 2)); // Form shift
+          r = Complex.pythag(g, 1);
+          g = Complex.divide(Complex.add(Complex.sub(diagonal.e(m), diagonal.e(j)), subDiagonal.e(m)), Complex.add(g, copySign(r, g)));
+          s = c = 1;
+          p = 0;
+          
+          for (i = m - 1; i >= 1; i--) {
+            f = Complex.mult(s, subDiagonal.e(i));
+            b = Complex.mult(c, subDiagonal.e(i));
+            r = Complex.pythag(f, g);
+            subDiagonal.setElement(i + 1, r);
+            if (Complex.equal(r, 0)) { // Recover from underflow
+              diagonal.setElement(i + 1, Complex.sub(diagonal.e(i + 1), p));
+              subDiagonal.setElement(m, 0);
+              break;
+            }
+          }
+          
+          s = Complex.divide(f, r);
+          c = Complex.divide(g, r);
+          g = Complex.sub(diagonal.e(i + 1), p);
+          // r = (diagonal[i]-g) * s + 2 * c * b
+          r = Complex.add(Complex.mult(Complex.sub(diagonal.e(i), g), s), Complex.mult(Complex.mult(c, 2), b));
+          p = Complex.mult(s, r);
+          diagonal.setElement(i + 1, Complex.add(g, p));
+          g = Complex.sub(Complex.mult(c, r), b);
+          
+          // This loop is superfluous if eigenvectors not wanted... just sayin'
+          for (var k = 1; k <= n; k++) { // Form eigenvectors
+            f = eigenvectors.e(k, i + 1);
+            eigenvectors.setElement(k, i + 1, Complex.add(Complex.mult(s, eigenvectors.e(k, i)), Complex.mult(c, f)));
+            eigenvectors.setElement(k, i, Complex.sub(Complex.mult(c, eigenvectors.e(k, i)), Complex.mult(s, f)));
+          }
+        }
+        
+        if (Complex.equal(r, 0) && i >= 1) {
+          continue;
+        }
+        diagonal.setElement(j, Complex.sub(diagonal.e(j), p));
+        subDiagonal.setElement(j, g);
+        subDiagonal.setElement(m, 0);
+      } while (m !== 1);
+    }
+        
+    return [diagonal, eigenvectors];
   };
   
   // [L, P] = eigenspaceProjections(A, X);

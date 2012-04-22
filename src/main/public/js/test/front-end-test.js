@@ -195,6 +195,15 @@ $(function () {
     ok(Complex.sqrt($C(0.5, -0.5)).equal($C(0.7768869870150187, -0.32179712645279135)));
   });
   
+  test("pythag", function () {
+    equal(Complex.pythag(), 0);
+    equal(Complex.pythag(1), 1);
+    equal(Complex.pythag(0, 1, 2), Math.sqrt(5));
+    ok(Complex.pythag($C(1)).equal($C(1)));
+    ok(Complex.pythag($C(1), $C(1), $C(1), $C(1)).equal(2));
+    ok(Complex.pythag($C(0, 1)).equal($C(0, 1)));
+  });
+  
   test("toString", function () {
     equal($C(0, 0).toString(), "0");
     equal($C(0, 1).toString(), "i");
@@ -853,6 +862,21 @@ $(function () {
     );
   });
   
+  test("Matrix: subDiagonal", function () {
+    equal($M().subDiagonal(), null);
+    equal($M([1]).subDiagonal(), null);
+    equal($M([[1, 2, 3], [4, 5, 6]]).subDiagonal(), null);
+    ok($M([
+      [1, 2],
+      [2, 1]
+    ]).subDiagonal().equal($V([2])));
+    ok($M([
+      [1, 2, 0],
+      [2, 1, 3],
+      [0, 3, 1]
+    ]).subDiagonal().equal($V([2, 3])));
+  });
+  
   test("Sparse: create", function () {
     var s1 = Sparse.create(),
         s2 = $S(),
@@ -1198,6 +1222,16 @@ $(function () {
     // Could be room for more tests, but manual entry of larger sets
     // would be grueling. Visual inspection of more complex results agree
     // with Matlab's outputs
+  });
+  
+  test("eig", function () {
+    console.log(Matrix.eig($M([
+      [1, 2, 0, 0],
+      [2, 3, 4, 0],
+      [0, 4, 5, 7],
+      [0, 0, 7, 1]
+    ])));
+    ok(true);
   });
   
 

@@ -105,6 +105,12 @@ var apiItems = {
       example: ""
     },
     
+    pythag: {
+      title: "Complex.pythag(arguments...)",
+      use: "Returns the square root of the sum of each argument squared.",
+      example: "Complex.pythag(3, 4); // 5"
+    },
+    
     round: {
       title: "Complex.round(n, k)",
       use: "Returns a new Complex with the real and imaginary components rounded to the nearest integer.",
@@ -576,6 +582,22 @@ var apiItems = {
       use: "Returns a copy of the caller with the numbers in its columns sorted in ascending order.<br/><br/>" +
         "[!] Cannot sort Complex entities due to their incomparable quality.",
       example: ""
+    },
+    
+    subDiagonal: {
+      title: "subDiagonal()",
+      use: "Returns the sub-diagonal elements of the calling <strong>square</strong> matrix--null, otherwise.",
+      example: "var m1 = $M([<br/>" +
+        "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp[1, 2, 3],<br/>" +
+        "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp[4, 5, 6]<br/>" +
+      "&nbsp&nbsp&nbsp&nbsp]),<br/>" +
+      "&nbsp&nbsp&nbsp&nbspm2 = $M([<br/>" +
+        "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp[1, 2, 0],<br/>" +
+        "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp[2, 1, 4],<br/>" +
+        "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp[0, 4, 1]<br/>" +
+      "&nbsp&nbsp&nbsp&nbsp]);<br/><br/>" +
+      "m1.subDiagonal(); // null<br/>" +
+      "m2.subDiagonal(); // Returns $V([2, 4]);"
     },
     
     subtract: {

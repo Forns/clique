@@ -288,5 +288,14 @@ var Complex = $C = function () {};
     return $C(x, y);
   };
   
+  // Returns the pythagorean calculation for an arbitrary number of arguments
+  Complex.pythag = function () {
+    var result = 0;
+    for (var n in arguments) {
+      result = Complex.add(result, Complex.pow(arguments[n], 2));
+    }
+    return Complex.sqrt(result);
+  };
+  
 })();
 
