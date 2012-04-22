@@ -536,7 +536,7 @@
   // Helper method for eig to extend signNumber's sign onto n
   var copySign = function (n, signNumber) {
     var result = Complex.magnitude(n);
-    return (signNumber > 0) ? result : Complex.mult(n, -1);
+    return (signNumber < 0) ? Complex.mult(result, -1) : result;
   };
   
   // QL algorithm with implicit shifts to determine the eigenvalues and eigenvectors of a real,
