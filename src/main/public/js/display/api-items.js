@@ -9,13 +9,13 @@ var apiItems = {
   // Contains API elements for the complex lib
   "complex": {
     add: {
-      title: "Complex.add(a, b)",
+      title: "Complex.add(a, b) || z.add(b)",
       use: "Adds the two numbers a and b, returning a new Complex if either a or b are Complex.",
       example: ""
     },
     
     angleOf: {
-      title: "Complex.angleOf(z)",
+      title: "Complex.angleOf(z) || z.angle()",
       use: "Returns the <strong>principle argument (Arg)</strong> of the given complex number z.",
       example: "var z = $C(1, 1);<br/>Complex.angleOf(z); // (pi / 4) + (pi / 4) * i"
     },
@@ -25,6 +25,12 @@ var apiItems = {
       use: "Returns a boolean denoting whether all of a given list of / single number(s) " +
         "are complex; a single non-Complex number will return false.",
       example: "Complex.areComplex([$C(1), 2, 3]); // False"
+    },
+    
+    conjugate: {
+      title: "conjugate()",
+      use: "Returns the complex conjugate of the calling Complex number.",
+      example: "$C(1, 1).conjugate(); // Returns $C(1, -1);"
     },
     
     create: {
@@ -48,8 +54,8 @@ var apiItems = {
     equal: {
       title: "Complex.equal(a, b[, strict]) || c.equal(b[, strict])",
       use: "Compares two numbers, a and b, and returns a boolean denoting if they're, surprise, equal.<br/><br/> " +
-        "[!] Compares a and b to a level of precision defined by Clique.precision." +
-        "[!] If strict is a truthy value, then the comparison will require perfect equivalence rather than Clique.precision." +
+        "[!] Compares a and b to a level of precision defined by Clique.precision.<br/>" +
+        "[!] If strict is a truthy value, then the comparison will require perfect equivalence rather than Clique.precision.<br/>" +
         "[!] Required for comparisons against complex numbers.<br/>",
       example: "Complex.equal(2, $C(2)); // True<br/>" +
         "Complex.equal($C(2, 1), $C(2, 1)); // True<br/>" +
@@ -76,7 +82,7 @@ var apiItems = {
     },
     
     log: {
-      title: "Complex.log(n, k)",
+      title: "Complex.log(n, k) || z.log(k)",
       use: "Returns the log base k of the given number n.<br/>[!] If k unspecified, defaults to base e.",
       example: ""
     },
@@ -88,13 +94,13 @@ var apiItems = {
     },
     
     mult: {
-      title: "Complex.mult(a, b)",
+      title: "Complex.mult(a, b) || z.mult(b)",
       use: "Multiplies a by b, returning a new Complex if either a or b are Complex.",
       example: "// a x b = $C(aReal * bReal - aIm * bIm, aReal * bIm + bReal * aIm);"
     },
     
     negate: {
-      title: "Complex.negate(z)",
+      title: "Complex.negate(z) || z.negate()",
       use: "With z = x + i * y, Complex.negate(z) returns a new Complex z = -x - i * y<br/>" +
         "[!] Not a mutator",
       example: ""
@@ -119,7 +125,7 @@ var apiItems = {
     },
     
     sub: {
-      title: "Complex.sub(a, b)",
+      title: "Complex.sub(a, b) || z.sub(b)",
       use: "Subtracts b from a (a - b), returning a new Complex if either a or b are Complex.",
       example: ""
     },
