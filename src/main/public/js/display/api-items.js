@@ -46,10 +46,11 @@ var apiItems = {
     },
     
     equal: {
-      title: "Complex.equal(a, b) || c.equal(b)",
-      use: "Compares two numbers, a and b, and returns a boolean denoting if they're, surprise, equal.<br/> " +
-        "[!] Required for comparisons against complex numbers.<br/>" +
-        "[!] Compares a and b to a level of precision defined by Complex.sensitivity",
+      title: "Complex.equal(a, b[, strict]) || c.equal(b[, strict])",
+      use: "Compares two numbers, a and b, and returns a boolean denoting if they're, surprise, equal.<br/><br/> " +
+        "[!] Compares a and b to a level of precision defined by Clique.precision." +
+        "[!] If strict is a truthy value, then the comparison will require perfect equivalence rather than Clique.precision." +
+        "[!] Required for comparisons against complex numbers.<br/>",
       example: "Complex.equal(2, $C(2)); // True<br/>" +
         "Complex.equal($C(2, 1), $C(2, 1)); // True<br/>" +
         "Complex.equal($C(5, 1), 5); // False"
@@ -217,6 +218,35 @@ var apiItems = {
       use: "A.e(i,j) returns the element Aij of matrix A, that is the element in the ith row and jth column. " + 
         "Indexes begin at 1, in agreement with mathematical notation.",
       example: ""
+    },
+    
+    eig: {
+      title: "Matrix.eig(tridiagonalMatrix)",
+      use: "QL algorithm with implicit shifts to determine the eigenvalues and eigenvectors of a real, " +
+        "symmetric, tridiagonal matrix.<br/><br/>" +
+        "[!] Returns a 2 element array, [eigenvalues, eigenvectors], the latter of which has columns " +
+        "representing the result's eigenvectors.",
+      example: "var result = Matrix.eig($M([<br/>" +
+          "&nbsp&nbsp[1, 2, 0, 0],<br/>" +
+          "&nbsp&nbsp[2, 3, 4, 0],<br/>" +
+          "&nbsp&nbsp[0, 4, 5, 7],<br/>" +
+          "&nbsp&nbsp[0, 0, 7, 1]<br/>" +
+        "]));<br/><br/>" +
+        "// Returns the following:<br/>" +
+        "// result[0], the eigenvalues rounded to 4 sig-figs:<br/>" +
+        "// $V([<br/>" +
+          "// &nbsp&nbsp-5.1312,<br/>" +
+          "// &nbsp&nbsp-0.1281,<br/>" +
+          "// &nbsp&nbsp&nbsp3.6780,<br/>" +
+          "// &nbsp&nbsp&nbsp11.5812<br/>" +
+        "// ]));<br/><br/>" +
+        "// result[1], the eigenvectors rounded to 4 sig-figs: <br/>" +
+        "// $M([<br/>" +
+          "// &nbsp&nbsp[ 0.1077, -0.8289, -0.5441, &nbsp0.0710],<br/>" +
+          "// &nbsp&nbsp[-0.3304, &nbsp0.4675, -0.7286, &nbsp0.3757],<br/>" +
+          "// &nbsp&nbsp[ 0.6178, &nbsp0.0488, &nbsp0.1485, &nbsp0.7706],<br/>" +
+          "// &nbsp&nbsp[-0.7053, -0.3029, &nbsp0.3883, &nbsp0.5098]<br/>" +
+        "// ]));"
     },
     
     equal: {

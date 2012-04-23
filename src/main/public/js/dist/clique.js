@@ -103,8 +103,8 @@ var Complex = $C = function () {};
     },
     
     // Returns true if the two complex numbers are equal
-    equal: function (z) {
-      return Complex.equal(this, z);
+    equal: function (z, strict) {
+      return Complex.equal(this, z, strict);
     },
     
     // Returns a string representation of the Complex number
@@ -142,17 +142,18 @@ var Complex = $C = function () {};
   };
   
   // Returns true if the argument is a complex number
-  Complex.equal = function (a, b) {
+  Complex.equal = function (a, b, strict) {
+    var precision = (typeof(strict) === "undefined") ? Complex.sensitivity : 0;
     if (Complex.areComplex(a)) {
       if (Complex.areComplex(b)) {
-        return a.real === b.real && a.im === b.im;
+        return (Math.abs(a.real - b.real) <= precision) && (Math.abs(a.im - b.im) <= precision);
       }
-      return Math.abs(a.real - b) <= Complex.sensitivity && !a.im;
+      return Math.abs(a.real - b) <= precision && !a.im;
     } else {
       if (Complex.areComplex(b)) {
-        return Math.abs(b.real - a) <= Complex.sensitivity && !b.im;
+        return Math.abs(b.real - a) <= precision && !b.im;
       }
-      return Math.abs(a - b) <= Complex.sensitivity;
+      return Math.abs(a - b) <= precision;
     }
   };
   
@@ -1374,10 +1375,11 @@ var $S = Sparse.create;
   // Returns a new vector of the elements of v with the given sorting function, or ascending
   // value by default
   Vector.sort = function (v, sortFunc) {
+    var copy = v.dup();
     if (!sortFunc) {
       sortFunc = sortAscending;
     }
-    return $V(v.elements.sort(sortFunc));
+    return $V(copy.elements.sort(sortFunc));
   };
   
   // Inserts a new vector representing the element e inserted into v at index i
@@ -2071,6 +2073,26 @@ var $S = Sparse.create;
   // Helper method for eig to extend signNumber's sign onto n
   var copySign = function (n, signNumber) {
     return (signNumber < 0) ? Complex.mult(Complex.magnitude(n), -1) : Complex.magnitude(n);
+  },
+      
+  // Helper method for eig to sort the values in ascending order and modify the vector matrix to match
+  // [!] eigenvector transposition done here so the columns are the actual vectors
+  eigSort = function (eigenvalues, eigenvectors) {
+    var sortedValues = Vector.sort(eigenvalues),
+        size = eigenvalues.dimensions(),
+        sortedVectors = Matrix.zero(size, size),
+        currentValue;
+     
+    for (var i = 1; i <= size; i++) {
+      currentValue = sortedValues.e(i);
+      for (var j = 1; j <= size; j++) {
+        if (Complex.equal(eigenvalues.e(j), currentValue, true)) {
+          sortedVectors.setCol(i, eigenvectors.col(j));
+          break;
+        }
+      }
+    }
+    return [sortedValues, sortedVectors];
   };
   
   // QL algorithm with implicit shifts to determine the eigenvalues and eigenvectors of a real,
@@ -2114,7 +2136,8 @@ var $S = Sparse.create;
         for (m = j; m <= n - 1; m++) {
           subDiagElement = Complex.magnitude(diagonal.e(m)) + Complex.magnitude(diagonal.e(m + 1));
           if (
-            Complex.sub(Complex.magnitude(Complex.add(subDiagonal.e(m), subDiagElement)), subDiagElement) < Clique.precision
+            // |subDiagonal[m] + subDiagElement| - subDiagElement === 0
+            Complex.equal(Complex.sub(Complex.magnitude(Complex.add(subDiagonal.e(m), subDiagElement)), subDiagElement), 0, true)
           ) {
             break;
           }
@@ -2170,8 +2193,9 @@ var $S = Sparse.create;
         }
       } while (m !== j);
     }
-        
-    return [diagonal, eigenvectors.transpose()];
+    
+    // Sort the values in ascending order and match with their vector column before returning    
+    return eigSort(diagonal, eigenvectors);
   };
   
   // [L, P] = eigenspaceProjections(A, X);

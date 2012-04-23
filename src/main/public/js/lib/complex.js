@@ -84,8 +84,8 @@ var Complex = $C = function () {};
     },
     
     // Returns true if the two complex numbers are equal
-    equal: function (z) {
-      return Complex.equal(this, z);
+    equal: function (z, strict) {
+      return Complex.equal(this, z, strict);
     },
     
     // Returns a string representation of the Complex number
@@ -123,17 +123,18 @@ var Complex = $C = function () {};
   };
   
   // Returns true if the argument is a complex number
-  Complex.equal = function (a, b) {
+  Complex.equal = function (a, b, strict) {
+    var precision = (typeof(strict) === "undefined") ? Complex.sensitivity : 0;
     if (Complex.areComplex(a)) {
       if (Complex.areComplex(b)) {
-        return a.real === b.real && a.im === b.im;
+        return (Math.abs(a.real - b.real) <= precision) && (Math.abs(a.im - b.im) <= precision);
       }
-      return Math.abs(a.real - b) <= Complex.sensitivity && !a.im;
+      return Math.abs(a.real - b) <= precision && !a.im;
     } else {
       if (Complex.areComplex(b)) {
-        return Math.abs(b.real - a) <= Complex.sensitivity && !b.im;
+        return Math.abs(b.real - a) <= precision && !b.im;
       }
-      return Math.abs(a - b) <= Complex.sensitivity;
+      return Math.abs(a - b) <= precision;
     }
   };
   

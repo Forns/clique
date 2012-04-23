@@ -60,10 +60,11 @@
   // Returns a new vector of the elements of v with the given sorting function, or ascending
   // value by default
   Vector.sort = function (v, sortFunc) {
+    var copy = v.dup();
     if (!sortFunc) {
       sortFunc = sortAscending;
     }
-    return $V(v.elements.sort(sortFunc));
+    return $V(copy.elements.sort(sortFunc));
   };
   
   // Inserts a new vector representing the element e inserted into v at index i

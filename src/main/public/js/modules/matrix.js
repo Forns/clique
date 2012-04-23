@@ -536,6 +536,26 @@
   // Helper method for eig to extend signNumber's sign onto n
   var copySign = function (n, signNumber) {
     return (signNumber < 0) ? Complex.mult(Complex.magnitude(n), -1) : Complex.magnitude(n);
+  },
+      
+  // Helper method for eig to sort the values in ascending order and modify the vector matrix to match
+  // [!] eigenvector transposition done here so the columns are the actual vectors
+  eigSort = function (eigenvalues, eigenvectors) {
+    var sortedValues = Vector.sort(eigenvalues),
+        size = eigenvalues.dimensions(),
+        sortedVectors = Matrix.zero(size, size),
+        currentValue;
+     
+    for (var i = 1; i <= size; i++) {
+      currentValue = sortedValues.e(i);
+      for (var j = 1; j <= size; j++) {
+        if (Complex.equal(eigenvalues.e(j), currentValue, true)) {
+          sortedVectors.setCol(i, eigenvectors.col(j));
+          break;
+        }
+      }
+    }
+    return [sortedValues, sortedVectors];
   };
   
   // QL algorithm with implicit shifts to determine the eigenvalues and eigenvectors of a real,
@@ -579,7 +599,8 @@
         for (m = j; m <= n - 1; m++) {
           subDiagElement = Complex.magnitude(diagonal.e(m)) + Complex.magnitude(diagonal.e(m + 1));
           if (
-            Complex.sub(Complex.magnitude(Complex.add(subDiagonal.e(m), subDiagElement)), subDiagElement) < Clique.precision
+            // |subDiagonal[m] + subDiagElement| - subDiagElement === 0
+            Complex.equal(Complex.sub(Complex.magnitude(Complex.add(subDiagonal.e(m), subDiagElement)), subDiagElement), 0, true)
           ) {
             break;
           }
@@ -635,8 +656,9 @@
         }
       } while (m !== j);
     }
-        
-    return [diagonal, eigenvectors.transpose()];
+    
+    // Sort the values in ascending order and match with their vector column before returning    
+    return eigSort(diagonal, eigenvectors);
   };
   
   // [L, P] = eigenspaceProjections(A, X);
