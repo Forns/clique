@@ -535,8 +535,7 @@
   
   // Helper method for eig to extend signNumber's sign onto n
   var copySign = function (n, signNumber) {
-    var result = Complex.magnitude(n);
-    return (signNumber < 0) ? Complex.mult(result, -1) : result;
+    return (signNumber < 0) ? Complex.mult(Complex.magnitude(n), -1) : Complex.magnitude(n);
   };
   
   // QL algorithm with implicit shifts to determine the eigenvalues and eigenvectors of a real,
@@ -550,7 +549,7 @@
     // Begin by extracting the necessary components from the input
     var diagonal = tridiagonalMatrix.diagonal(),          // Vector containing the argument's diagonal
         subDiagonal = tridiagonalMatrix.subDiagonal(),    // Vector containing the argument's subdiagonal
-        n = subDiagonal.dimensions() + 1,
+        n = diagonal.dimensions(),
         
         // Ugly iterators
         m = 1,
@@ -570,11 +569,7 @@
         count = 0,
         eigenvectors = Matrix.I(n);
     
-    // POSSIBLE BUG: Do we need this part? How big should the subDiagonal vector be?
-    // Renumber the elements of the subdiagonal for convenience
-    for (i = 2; i <= n; i++) {
-      subDiagonal.setElement(i - 1, subDiagonal.e(i));
-    }
+    // Renumber the last element of the subdiagonal for correct dimensions
     subDiagonal.setElement(n, 0);
     
     for (j = 1; j <= n; j++) {
@@ -595,8 +590,10 @@
           if (count++ >= 30) {
             console.warn("[!] Matrix.eig: too many iterations... " + count);
           }
+          // g = (diagonal[j + 1] - diagonal[j]) / (2 * subDiagonal[j]); // for ease of reading
           g = Complex.divide(Complex.sub(diagonal.e(j + 1), diagonal.e(j)), Complex.mult(subDiagonal.e(j), 2)); // Form shift
           r = Complex.pythag(g, 1);
+          // g = diagonal[m] - diagonal[j] + subDiagonal[j] / (g + copySign(r, g)); // for ease of reading
           g = Complex.add(Complex.sub(diagonal.e(m), diagonal.e(j)), Complex.divide(subDiagonal.e(j), Complex.add(g, copySign(r, g))));
           s = c = 1;
           p = 0;
@@ -611,37 +608,35 @@
               subDiagonal.setElement(m, 0);
               break;
             }
-          }
           
-          s = Complex.divide(f, r);
-          c = Complex.divide(g, r);
-          g = Complex.sub(diagonal.e(i + 1), p);
-          // r = (diagonal[i]-g) * s + 2 * c * b // for ease of reading
-          r = Complex.add(Complex.mult(Complex.sub(diagonal.e(i), g), s), Complex.mult(Complex.mult(c, 2), b));
-          p = Complex.mult(s, r);
-          diagonal.setElement(i + 1, Complex.add(g, p));
-          g = Complex.sub(Complex.mult(c, r), b);
-          
-          // This loop is superfluous if eigenvectors not wanted... just sayin'
-          for (k = 1; k <= n; k++) { // Form eigenvectors
-            f = eigenvectors.e(k, i + 1);
-            // POSSIBLE BUG: I think the values for i here are causing an index assignment of -1 in eigenvectors matrix
-            eigenvectors.setElement(k, i + 1, Complex.add(Complex.mult(s, eigenvectors.e(k, i)), Complex.mult(c, f)));
-            eigenvectors.setElement(k, i, Complex.sub(Complex.mult(c, eigenvectors.e(k, i)), Complex.mult(s, f)));
+            s = Complex.divide(f, r);
+            c = Complex.divide(g, r);
+            g = Complex.sub(diagonal.e(i + 1), p);
+            // r = (diagonal[i]-g) * s + 2 * c * b // for ease of reading
+            r = Complex.add(Complex.mult(Complex.sub(diagonal.e(i), g), s), Complex.mult(Complex.mult(c, 2), b));
+            p = Complex.mult(s, r);
+            diagonal.setElement(i + 1, Complex.add(g, p));
+            g = Complex.sub(Complex.mult(c, r), b);
+            
+            // This loop is superfluous if eigenvectors not wanted... just sayin'
+            for (k = 1; k <= n; k++) { // Form eigenvectors
+              f = eigenvectors.e(k, i + 1);
+              eigenvectors.setElement(k, i + 1, Complex.add(Complex.mult(s, eigenvectors.e(k, i)), Complex.mult(c, f)));
+              eigenvectors.setElement(k, i, Complex.sub(Complex.mult(c, eigenvectors.e(k, i)), Complex.mult(s, f)));
+            }
           }
-        }
         
-        if (Complex.equal(r, 0) && i >= j) {
-          continue;
+          if (Complex.equal(r, 0) && i >= j) {
+            continue;
+          }
+          diagonal.setElement(j, Complex.sub(diagonal.e(j), p));
+          subDiagonal.setElement(j, g);
+          subDiagonal.setElement(m, 0);
         }
-        diagonal.setElement(j, Complex.sub(diagonal.e(j), p));
-        subDiagonal.setElement(j, g);
-        subDiagonal.setElement(m, 0);
-        console.log(m);
       } while (m !== j);
     }
         
-    return [diagonal, eigenvectors];
+    return [diagonal, eigenvectors.transpose()];
   };
   
   // [L, P] = eigenspaceProjections(A, X);
