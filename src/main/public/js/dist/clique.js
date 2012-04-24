@@ -2243,6 +2243,7 @@ var $S = Sparse.create;
         // Private helper method to prepare the values of the various intermediary matrices
         // in order to facilitate the projections per condition
         projPrep = function (iter) {
+          // TODO: sparse col
           lanczosResult = Matrix.lanczos(A, X.col(iter));
           Q = lanczosResult[0];
           R = lanczosResult[1];
