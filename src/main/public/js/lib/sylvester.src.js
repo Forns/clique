@@ -31,7 +31,11 @@ function Vector() {}
 Vector.prototype = {
 
   // Returns element i of the vector
-  e: function(i) {
+  e: function(i, c) {
+    // In case the vector is being treated as a matrix
+    if (typeof(c) !== "undefined" && Complex.equal(i, 1, true)) {
+      i = c;
+    }
     return (i < 1 || i > this.elements.length) ? null : this.elements[i-1];
   },
 

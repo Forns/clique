@@ -560,6 +560,11 @@ $(function () {
           [3, 3]
         ]),
         m5 = $M(),
+        m6 = $M([
+          [1, 2, 3]
+        ]),
+        
+        v6 = $V([4, 5, 6]),
         
         // Correct answers
         a1 = $S(3, 3, [1, 1, 1], [1, 2, 1], [2, 1, 1], [2, 2, 2]),
@@ -572,6 +577,10 @@ $(function () {
           [1, 0],
           [1, 0],
           [3, 3]
+        ]),
+        a6 = $M([
+          [1, 2, 3],
+          [4, 5, 6]
         ]);
         
     ok(s1.setRange(1, 1, 2, 2, m1, 2, 2, 3, 3).equal(a1));
@@ -579,6 +588,7 @@ $(function () {
     ok(m5.setRange(1, 1, m4.rows(), m4.cols(), m4).equal(m4));
     ok($S(2, 4).setRange(2, 2, 2, 3, s3, 2, 2, 2, 4).equal(a3));
     ok(m4.setRange(1, 1, 3, 3, s4).equal(a4));
+    ok(m6.setRange(2, 1, 2, 3, v6).equal(a6));
   });
   
   test("Matrix: sums", function () {
@@ -801,6 +811,48 @@ $(function () {
         [6, 7, 8]
       ]))
     );
+  });
+  
+  test("Matrix: append", function () {
+    var m1 = $M(),
+        m2 = $M([
+          [1, 2, 3]
+        ]),
+        m3 = $M([
+          [1, 2, $C(0, 1)],
+          [3, 4, -5]
+        ]),
+        
+        v1 = $V(),
+        v2 = $V([7, -9, 10]),
+        
+        s1 = $S(),
+        s2 = $S(2, 2, [1, 1, 1], [2, 2, 3]);
+        
+    ok(m1.append(v1).equal(m1));
+    ok(m1.append(s1).equal(m1));
+    ok(m2.append(m1).equal(m2));
+    ok(m1.append(v2).equal($M([
+      [7, -9, 10]
+    ])));
+    ok(m1.append(v1).equal($M([
+      [7, -9, 10]
+    ])));
+    m1 = $M(); // Reset m1
+    ok(m1.append(m2).equal(m2));
+    ok(m2.append(m2).equal($M([
+      [1, 2, 3],
+      [1, 2, 3]
+    ])));
+    m1 = $M(); // Reset m1
+    ok(m3.append(m2).equal($M([
+      [1, 2, $C(0, 1)],
+      [3, 4, -5],
+      [1, 2, 3],
+      [1, 2, 3]
+    ])));
+    
+    equal(m2.append(s2), null);
   });
   
   test("Matrix: full", function () {

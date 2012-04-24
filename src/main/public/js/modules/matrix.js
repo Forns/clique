@@ -61,8 +61,8 @@
     // [!] Users may optionally omit the otherMatrix bounds, which will default to the matrix's size
     startRow2 = (typeof(startRow2) === "undefined") ? 1 : startRow2;
     startColumn2 = (typeof(startColumn2) === "undefined") ? 1 : startColumn2;
-    endRow2 = (typeof(endRow2) === "undefined") ? otherMatrix.rows() : endRow2;
-    endColumn2 = (typeof(endColumn2) === "undefined") ? otherMatrix.cols() : endColumn2;
+    endRow2 = (typeof(endRow2) === "undefined") ? ((otherMatrix.rows) ? otherMatrix.rows() : 1) : endRow2;
+    endColumn2 = (typeof(endColumn2) === "undefined") ? ((otherMatrix.cols) ? otherMatrix.cols() : otherMatrix.dimensions()) : endColumn2;
         
     // Normalize the ranges, making sure that they do not differ; if they do,
     // take the shortest and use that instead, trimming from right / bottom bounds as applicable
@@ -224,6 +224,19 @@
       result[i - 2] = this.e(i, i - 1);
     }
     return $V(result);
+  };
+  
+  // Appends the given segment, either a matrix or vector, to the caller's bottom-most
+  // row and down
+  //
+  // [!] Returns null if the caller and segment differ in number of columns
+  Matrix.prototype.append = function (segment) {
+    var segCols = (segment.cols) ? segment.cols() : segment.dimensions();
+    if ((this.cols() && segCols) && this.cols() !== segCols) {
+      return null;
+    }
+    this.setRange(this.rows() + 1, 1, this.rows() + ((segment.rows) ? segment.rows() : 1), segCols, segment);
+    return this;
   };
   
 
@@ -676,35 +689,82 @@
   //
   // [!] Returns result as array with [L, P] as elements
   Matrix.eigenspaceProjections = function (A, X, Y) {
-    var Q = $M(),             // Represent the QR decomposition for use with lanczos
+    var Q = $M(),                 // Represent the QR decomposition for use with lanczos
         R = $M(),
-        projections = $M(),   // Holds the projections
+        projections = $M(),       // Holds the projections
         lengths = $M(),
-        U = $M(),             // Represent the eigenvalues / -vectors of R
+        U = $M(),                 // Represent the eigenvalues / -vectors of R
         D = $M(),
-        nrm = 0,              // Reminds us of the size of X
+        nrm = 0,                  // Reminds us of the size of X
         lanczosResult = [],
-        eigResult = [];
+        eigResult = [],
+        
+        // Private helper method to prepare the values of the various intermediary matrices
+        // in order to facilitate the projections per condition
+        projPrep = function (iter) {
+          lanczosResult = Matrix.lanczos(A, X.col(iter));
+          Q = lanczosResult[0];
+          R = lanczosResult[1];
+          R = Matrix.full(R);   // Possibly unnecessary
+          
+          eigResult = Matrix.eig(R);
+          U = eigResult[0].toDiagonalMatrix();
+          D = eigResult[1];
+          nrm = X.col(iter).modulus();
+          
+          // No, I'm not going to simplify this line
+          P.append(Q.multiply(U.multiply(U.row(1).multiply(nrm).toDiagonalMatrix())));
+          lengths
+          .append($M([
+            U.row(1).map(function (x) {
+              return Complex.mult(x.magnitude(), nrm);
+            })
+          ]));
+        };
     
     if (typeof(Y) === "undefined") {
       for (var i = 1; i < X.cols(); i++) {
-        lanczosResult = Matrix.lanczos(A, X.col(i));
-        Q = lanczosResult[0];
-        R = lanczosResult[1];
-        R = Matrix.full(R);   // Possibly unnecessary
-        
-        eigResult = Matrix.eigenvalues(R);
-        U = eigResult[0];
-        D = eigResult[1];
-        nrm = X.col(i).modulus();
-        
-        // No, I'm not going to simplify this line
-        P.append(Q.multiply(U.multiply(U.row(1).multiply(nrm).toDiagonalMatrix())));
-        // TODO: Left off here
+        projPrep(i); // See above for the prepwork this function performs
+        lengths.append(Matrix.ones(1, D.rows()).mult(D));
       }
-    } else {
       
+    // Recall that the first row of U contains the lengths of the projections X / ||X||
+    // onto the eigenvectors of R in the basis Q. We also take advantage of the face that
+    // the eigenvectors in U have length 1 to compute the lengths in L by using absolute
+    // value
+    } else {
+      Y.deleteRow(1);
+      for (var i = 1; i <= X.cols(); i++) {
+        projPrep(i); // See above for the prepwork this function performs
+        lengths
+          .append(Matrix.ones(1, D.rows()).mult($M(Y.col(i))))
+          .append(Matrix.ones(1, D.rows()).mult(D));
+      }
     }
+    
+    return [lengths, projections];
+  };
+  
+  // TODO: Comment here; renaming also required
+  Matrix.emmyrk = function (lambda, v, Rs) {
+    if (typeof(Rs) === "undeinfed") {
+      Rs = Matrix.jucysMurphyAll(Matrix.tabloids(lambda));
+    }
+    var d = Rs.rows(),
+        n = Rs.cols() / d + 1,
+        A = Rs.minor(1, 1, d, d), // TODO: Check that this is operating as intended
+        lengths,
+        projections,
+        resultHolder;
+        
+    // Computes the projections of v onto the eigenspaces of R_2
+    resultHolder = Matrix.eigenspaceProjections(A, v);
+    lengths = resultHolder[0];
+    projections = resultHolder[1];
+    
+    resultHolder = Matrix.gatherProjections(lengths, projections);
+    lengths = resultHolder[0];
+    projections = resultHolder[1];
   };
   
 })();

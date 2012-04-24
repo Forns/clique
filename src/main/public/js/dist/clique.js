@@ -352,7 +352,11 @@ function Vector() {}
 Vector.prototype = {
 
   // Returns element i of the vector
-  e: function(i) {
+  e: function(i, c) {
+    // In case the vector is being treated as a matrix
+    if (typeof(c) !== "undefined" && Complex.equal(i, 1, true)) {
+      i = c;
+    }
     return (i < 1 || i > this.elements.length) ? null : this.elements[i-1];
   },
 
@@ -1598,8 +1602,8 @@ var $S = Sparse.create;
     // [!] Users may optionally omit the otherMatrix bounds, which will default to the matrix's size
     startRow2 = (typeof(startRow2) === "undefined") ? 1 : startRow2;
     startColumn2 = (typeof(startColumn2) === "undefined") ? 1 : startColumn2;
-    endRow2 = (typeof(endRow2) === "undefined") ? otherMatrix.rows() : endRow2;
-    endColumn2 = (typeof(endColumn2) === "undefined") ? otherMatrix.cols() : endColumn2;
+    endRow2 = (typeof(endRow2) === "undefined") ? ((otherMatrix.rows) ? otherMatrix.rows() : 1) : endRow2;
+    endColumn2 = (typeof(endColumn2) === "undefined") ? ((otherMatrix.cols) ? otherMatrix.cols() : otherMatrix.dimensions()) : endColumn2;
         
     // Normalize the ranges, making sure that they do not differ; if they do,
     // take the shortest and use that instead, trimming from right / bottom bounds as applicable
@@ -1761,6 +1765,19 @@ var $S = Sparse.create;
       result[i - 2] = this.e(i, i - 1);
     }
     return $V(result);
+  };
+  
+  // Appends the given segment, either a matrix or vector, to the caller's bottom-most
+  // row and down
+  //
+  // [!] Returns null if the caller and segment differ in number of columns
+  Matrix.prototype.append = function (segment) {
+    var segCols = (segment.cols) ? segment.cols() : segment.dimensions();
+    if ((this.cols() && segCols) && this.cols() !== segCols) {
+      return null;
+    }
+    this.setRange(this.rows() + 1, 1, this.rows() + ((segment.rows) ? segment.rows() : 1), segCols, segment);
+    return this;
   };
   
 
@@ -2213,13 +2230,14 @@ var $S = Sparse.create;
   //
   // [!] Returns result as array with [L, P] as elements
   Matrix.eigenspaceProjections = function (A, X, Y) {
-    var Q = $M(),             // Represent the QR decomposition for use with lanczos
+    var Q = $M(),                 // Represent the QR decomposition for use with lanczos
         R = $M(),
-        projections = $M(),   // Holds the projections
+        projections = $M(),       // Holds the projections
+        lengthConstructor = $M(), // Intermediary matrix to handle the length matrix construction
         lengths = $M(),
-        U = $M(),             // Represent the eigenvalues / -vectors of R
+        U = $M(),                 // Represent the eigenvalues / -vectors of R
         D = $M(),
-        nrm = 0,              // Reminds us of the size of X
+        nrm = 0,                  // Reminds us of the size of X
         lanczosResult = [],
         eigResult = [];
     
@@ -2230,14 +2248,19 @@ var $S = Sparse.create;
         R = lanczosResult[1];
         R = Matrix.full(R);   // Possibly unnecessary
         
-        eigResult = Matrix.eigenvalues(R);
+        eigResult = Matrix.eig(R);
         U = eigResult[0];
         D = eigResult[1];
         nrm = X.col(i).modulus();
         
         // No, I'm not going to simplify this line
         P.append(Q.multiply(U.multiply(U.row(1).multiply(nrm).toDiagonalMatrix())));
-        // TODO: Left off here
+        lengthConstructor = $M([
+          U.row(1).map(function (x) {
+            return Complex.mult(x.magnitude(), nrm);
+          })
+        ]);
+        lengths.append(lengthConstructor);
       }
     } else {
       

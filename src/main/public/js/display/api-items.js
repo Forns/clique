@@ -146,6 +146,24 @@ var apiItems = {
       example: ""
     },
     
+    append: {
+      title: "append(segment)",
+      use: "Mutates the calling matrix's elements to append the given matrix segment (can be a matrix " +
+        "or vector) after its bottom-most / highest-value row.",
+      example: "var m3 = $M([<br/>" +
+          "&nbsp&nbsp[1, 2, 3],<br/>" +
+          "&nbsp&nbsp[4, 5, 6]<br/>" +
+        "]).append($M([<br/>" +
+          "&nbsp&nbsp[7, 8, 9],<br/>" +
+          "&nbsp&nbsp[0, 0, 0]<br/>" +
+        "]));<br/><br/>" +
+        "// m3 is now:<br/>" +
+        "// [1, 2, 3],<br/>" +
+        "// [4, 5, 6],<br/>" +
+        "// [7, 8, 9],<br/>" +
+        "// [0, 0, 0]"
+    },
+    
     augment: {
       title: "augment(matrix)",
       use: "Returns the result of augmenting the receiver with matrix, that is, appending matrix " + 
@@ -441,7 +459,7 @@ var apiItems = {
         "var A_sq = A.map(function(x) { return x * x; });<br/><br/>" +
         "// Determine whether a matrix is symmetric:<br/>" +
         "var is_sym = (A.map(<br/>" +
-          "function(x, i, j) { return (A.e(i,j) == A.e(j,i)) ? 1 : 0; }<br/>" +
+          "&nbsp&nbspfunction(x, i, j) { return (A.e(i,j) == A.e(j,i)) ? 1 : 0; }<br/>" +
         ").indexOf(0) === null);"
     },
     
