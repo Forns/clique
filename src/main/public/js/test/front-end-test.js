@@ -1315,6 +1315,33 @@ $(function () {
     ])));
   });
   
+  test("gatherProjections", function () {
+    var inputL1 = $M([
+          [ 0.1067,  0.0046],
+          [ 0.9619,  0.7749]
+        ]),
+        inputP1 = $S(0, 0,
+          [7, 1, 0.9448], [9, 1, 0.4909], [12, 1, 0.4893],
+          [20, 1, 0.9001], [27, 1, 0.3692], [40, 1, 0.7803],
+          [41, 1, 0.3897], [4, 2, 0.9027], [18,2, 0.3377],
+          [37, 2, 0.1112]
+        );
+    // console.log(Matrix.gatherProjections(inputL1, inputP1));
+    ok(true);
+  });
+  
+  test("eigenspaceProjections", function () {
+    var inputL1 = $S(0, 0,
+          [2, 1, 1], [1, 2, 1], [3, 3, 1], [4, 4, 1], [5, 5, 1],
+          [6, 6, 1], [7, 7, 1], [8, 8, 1], [9, 9, 1], [10, 10, 1]
+        ),
+        inputP1 = $S(0, 0,
+          [10, 1, 93]
+        );
+    console.log(Matrix.eigenspaceProjections(inputL1, inputP1));
+    ok(true);
+  });
+  
 
   /***** TESTING SECTION *****/
   // Used for testing functions in progress (if any)

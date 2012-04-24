@@ -499,7 +499,7 @@
     }
     
     while (check === 0) {
-      coord = $M();
+      coord = $V();
       
       if (count > holderL.cols()) {
         check = 1;
@@ -514,7 +514,7 @@
         }
         
         // currentMatrix holds the columns of holderP defined by index in columnsToAdd
-        columnsToAdd = $V(count).append(coord);               // Vector with the column numbers to be added to
+        columnsToAdd = $V([count]).append(coord);               // Vector with the column numbers to be added to
         currentMatrix = $M();                                 // currentMatrix for calculation
         for (var j = 1; j < columnsToAdd.dimensions(); j++) {
           currentMatrix.setCol(j, holderP.col(columnsToAdd.e(j)));
@@ -713,7 +713,7 @@
           nrm = X.col(iter).modulus();
           
           // No, I'm not going to simplify this line
-          P.append(Q.multiply(U.multiply(U.row(1).multiply(nrm).toDiagonalMatrix())));
+          projections.append(Q.multiply(U.multiply(U.row(1).multiply(nrm).toDiagonalMatrix())));
           lengths
           .append($M([
             U.row(1).map(function (x) {
@@ -723,7 +723,7 @@
         };
     
     if (typeof(Y) === "undefined") {
-      for (var i = 1; i < X.cols(); i++) {
+      for (var i = 1; i <= X.cols(); i++) {
         projPrep(i); // See above for the prepwork this function performs
         lengths.append(Matrix.ones(1, D.rows()).mult(D));
       }
