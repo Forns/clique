@@ -755,7 +755,12 @@
         A = Rs.minor(1, 1, d, d), // TODO: Check that this is operating as intended
         lengths,
         projections,
-        resultHolder;
+        resultHolder,
+        
+        // Ugly data placeholders
+        r,
+        c,
+        U;
         
     // Computes the projections of v onto the eigenspaces of R_2
     resultHolder = Matrix.eigenspaceProjections(A, v);
@@ -765,6 +770,32 @@
     resultHolder = Matrix.gatherProjections(lengths, projections);
     lengths = resultHolder[0];
     projections = resultHolder[1];
+    
+    // Computes the projections onto the eigenspaces of R_i
+    for (var i = 3; i <= n; i++) {
+      A = Rs.minor(1, 1 + (i - 2) * d, d, (i - 1) * d);
+      resultHolder = Matrix.eigenspaceProjections(A, projections, lengths);
+      lengths = resultHolder[0];
+      projections = resultHolder[1];
+      
+      resultHolder = Matrix.gatherProjections(lengths, projections);
+      lengths = resultHolder[0];
+      projections = resultHolder[1];
+    }
+    
+    r = lengths.rows();
+    c = lengths.cols();
+    U = $M();
+    
+    for (var j = 1; j <= c; j++) {
+      for (var k = 1; k <= c; k++) {
+        if (Complex.equal(lengths.e(r, k), n - i)) {
+          U.setCol(i, projections.col(f));
+        }
+      }
+    }
+    projections = U;
+    return [lengths, projections];
   };
   
 })();
