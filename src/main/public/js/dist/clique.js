@@ -369,6 +369,9 @@ Vector.prototype = {
   modulus: function() {
     return Complex.sqrt(this.dot(this));
   },
+  norm: function() {
+    return this.modulus()
+  },
 
   // Returns true iff the vector is equal to the argument
   equal: function(vector) {
@@ -1138,6 +1141,30 @@ Sparse.prototype = {
   
   cols: function () {
     return this.sCols;
+  },
+  
+  // Returns the row accessed by index as a Vector
+  row: function (index) {
+    if (index > this.rows() || index < 1) {
+      return null;
+    }
+    var result = [];
+    for (var i = 1; i <= this.cols(); i++) {
+      result.push(this.e(index, i));
+    }
+    return $V(result);
+  },
+  
+  // Returns the column accessed by index as a Vector
+  col: function (index) {
+    if (index > this.cols() || index < 1) {
+      return null;
+    }
+    var result = [];
+    for (var i = 1; i <= this.rows(); i++) {
+      result.push(this.e(i, index));
+    }
+    return $V(result);
   },
   
   // Returns the element at the given index if it exists,

@@ -41,6 +41,16 @@ Firstly, you must install node package manager (npm) as illustrated on step 4 of
 
 If you are familiar with git cloning and do not require the assistance of an IDE or GUI, you may skip this step!
 
+To clone the source using the terminal:
+
+1. Open up a new terminal.
+2. Navigate to a directory in which you would like to clone the source, for example: `cd ~/git`
+3. Assuming you have git installed, copy the following command, replacing "Username" with your git username: `git clone https://Username@github.com/Forns/clique.git`
+4. You may be prompted to enter your gitHub account's password.
+5. If the clone is successful, you'll find a new folder, "clique" inside your current directory!
+
+To clone the source using an IDE (specifically, Eclipse):
+
 1. If you're using eclipse as your IDE, you can install the eGit plugin via the Indigo package (Install new software -> Indigo packages -> Collaboration -> eGit).
 2. Right click anywhere in the project explorer, choose "import", then "project from git"
 3. Click "clone" then fill in the necessary fields, using the http method for the clone (Note: replace "Username" with your git username): "https://Username@github.com/Forns/clique.git"
@@ -57,12 +67,12 @@ Although the latest clone will always come with the latest distribution of the c
 
 ## Running the application
 
-1. To run the node server, navigate to "src/main" within clique, then type `node app.js` -- Successful server setup will display "Express server listening on port 5700 in development mode"
+1. To run the node server, (assuming you are still in the /git/clique directory) type `node server.js` -- Successful server setup will display "Express server listening on port 5700 in development mode"
 2. To view the running server, open a web browser (not IE lol) then navigate to localhost:5700 -- On other computers, you can get the ip of the host computer, then append :5700 to access the page
 
 ## Running tests
 
-Assuming setup has been successful in the previous steps, you can now run and modify the qUnit test suite be navigating to localhost:5700/test
+Assuming setup has been successful in the previous steps, you can now run the qUnit test suite be navigating to localhost:5700/test
 
 ## Pulling and Pushing
 

@@ -1057,6 +1057,28 @@ $(function () {
     ok($S(2, 1, [1, 2, 1], [3, 3, 1]).equal(m4));
   });
   
+  test("Sparse: row & col", function () {
+    var s0 = $S(),
+        s1 = $S(1, 1, [1, 1, 2]),
+        s2 = $S(0, 0, [2, 3, 3], [1, 2, 2]),
+        s3 = $S(3, 3, [2, 2, $C(0, 1)], [1, 1, 2]);
+        
+    equal(s0.row(1), null);
+    equal(s0.col(1), null);
+    equal(s3.col(0), null);
+    ok(s1.row(1).equal($V([2])));
+    ok(s1.col(1).equal($V([2])));
+    ok(s2.row(1).equal($V([0, 2, 0])));
+    ok(s2.row(2).equal($V([0, 0, 3])));
+    ok(s2.col(1).equal($V([0, 0])));
+    ok(s2.col(2).equal($V([2, 0])));
+    ok(s2.col(3).equal($V([0, 3])));
+    ok(s3.row(1).equal($V([2, 0, 0])));
+    ok(s3.row(2).equal($V([0, $C(0, 1), 0])));
+    ok(s3.col(1).equal($V([2, 0, 0])));
+    ok(s3.col(3).equal($V([0, 0, 0])));
+  });    
+  
   test("Sparse: inspect", function () {
     var s0 = $S(),
         s1 = $S(1, 1),

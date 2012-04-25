@@ -882,7 +882,7 @@ var apiItems = {
     },
     
     modulus: {
-      title: "modulus()",
+      title: "modulus() || norm()",
       use: "Returns the modulus of the caller, |v| = sqrt(sum(v<sub>i</sub>)<sup>2</sup>)",
       example: ""
     },
@@ -1026,6 +1026,12 @@ var apiItems = {
       example: ""
     },
     
+    col: {
+      title: "col(index)",
+      use: "Returns the designated column as a Vector, or null if out of bounds.",
+      example: ""
+    },
+    
     e: {
       title: "e(i, j)",
       use: "Returns the element located in the sparse at row i, column j.<br/><br/>" +
@@ -1061,6 +1067,12 @@ var apiItems = {
       title: "rows()",
       use: "Returns the number of designated rows in the sparse.<br/><br/>" +
         "[!] Dynamically updated if a setElement or setElements command expands the sparse's dimensions.",
+      example: ""
+    },
+    
+    row: {
+      title: "row(index)",
+      use: "Returns the designated row as a Vector, or null if out of bounds.",
       example: ""
     },
     

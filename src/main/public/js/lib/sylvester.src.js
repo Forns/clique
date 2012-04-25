@@ -48,6 +48,9 @@ Vector.prototype = {
   modulus: function() {
     return Complex.sqrt(this.dot(this));
   },
+  norm: function() {
+    return this.modulus()
+  },
 
   // Returns true iff the vector is equal to the argument
   equal: function(vector) {
