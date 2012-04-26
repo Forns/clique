@@ -739,7 +739,6 @@ Matrix.prototype = {
     if (!matrix.elements) {
       return this.map(function(x) { return Complex.mult(x, matrix); });
     }
-    var returnVector = matrix.modulus ? true : false;
     var M = matrix.elements || matrix;
     if (typeof(M[0][0]) === 'undefined') { M = Matrix.create(M).elements; }
     if (!this.canMultiplyFromLeft(M)) { return null; }
@@ -758,7 +757,7 @@ Matrix.prototype = {
       } while (--nj);
     } while (--ni);
     var M = Matrix.create(elements);
-    return returnVector ? M.col(1) : M;
+    return (matrix.modulus) ? M.col(1) : M;
   },
 
   x: function(matrix) { return this.multiply(matrix); },
@@ -1909,6 +1908,13 @@ var $S = Sparse.create;
         size = A.cols(),
         v = Matrix.zero(size, 1); // "Main character" vector
     epsilon = epsilon || Math.pow(10, -8); // Default case for epsilon
+    // Cast the orthogonal matrix and argument if necessary
+    if (!orthogonalResult.col) {
+      orthogonalResult = $M(orthogonalResult);
+    }
+    if (A instanceof Sparse) {
+      A = Matrix.full(A);
+    }
     
     // FIRST PASS
     v = $M(A.multiply(orthogonalResult.col(1)));
@@ -2290,6 +2296,10 @@ var $S = Sparse.create;
             })
           ]));
         };
+    
+    // TEMPORARY:
+    A = Matrix.full(A);
+    X = Matrix.full(X);
     
     if (typeof(Y) === "undefined") {
       for (var i = 1; i <= X.cols(); i++) {

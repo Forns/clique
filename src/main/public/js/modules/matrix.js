@@ -341,6 +341,13 @@
         size = A.cols(),
         v = Matrix.zero(size, 1); // "Main character" vector
     epsilon = epsilon || Math.pow(10, -8); // Default case for epsilon
+    // Cast the orthogonal matrix and argument if necessary
+    if (!orthogonalResult.col) {
+      orthogonalResult = $M(orthogonalResult);
+    }
+    if (A instanceof Sparse) {
+      A = Matrix.full(A);
+    }
     
     // FIRST PASS
     v = $M(A.multiply(orthogonalResult.col(1)));
@@ -722,6 +729,10 @@
             })
           ]));
         };
+    
+    // TEMPORARY:
+    A = Matrix.full(A);
+    X = Matrix.full(X);
     
     if (typeof(Y) === "undefined") {
       for (var i = 1; i <= X.cols(); i++) {

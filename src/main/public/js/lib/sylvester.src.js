@@ -418,7 +418,6 @@ Matrix.prototype = {
     if (!matrix.elements) {
       return this.map(function(x) { return Complex.mult(x, matrix); });
     }
-    var returnVector = matrix.modulus ? true : false;
     var M = matrix.elements || matrix;
     if (typeof(M[0][0]) === 'undefined') { M = Matrix.create(M).elements; }
     if (!this.canMultiplyFromLeft(M)) { return null; }
@@ -437,7 +436,7 @@ Matrix.prototype = {
       } while (--nj);
     } while (--ni);
     var M = Matrix.create(elements);
-    return returnVector ? M.col(1) : M;
+    return (matrix.modulus) ? M.col(1) : M;
   },
 
   x: function(matrix) { return this.multiply(matrix); },
