@@ -348,7 +348,7 @@ var Sylvester = {
   precision: Clique.precision
 };
 
-function Vector() {}
+var Vector = function() {}
 Vector.prototype = {
 
   // Returns element i of the vector
@@ -617,7 +617,7 @@ Vector.zero = function(n) {
 
 
 
-function Matrix() {}
+var Matrix = function() {}
 Matrix.prototype = {
 
   // Returns element (i,j) of the matrix

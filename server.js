@@ -10,9 +10,9 @@
  * EXPRESS SERVER CONFIGURATION
  */
 
-var express = require('express');
-
-var app = module.exports = express.createServer();
+var express = require('express'),
+    app = module.exports = express.createServer(),
+    clique = require('./src/main/public/js/dist/clique.js'); // Import the library for the analyzer
 
 app.configure(function () {
   app.set('views', __dirname + '/src/main/views');
