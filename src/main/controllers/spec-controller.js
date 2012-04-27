@@ -120,8 +120,19 @@ module.exports = function (app) {
         purgedResult.push(currentRow);
       }
     }
+    req.session.results = purgedResult;
     
-    res.send(purgedResult);
+    res.send(true);
+  });
+  
+  /*
+   * POST /resultsDelete
+   *   Deletes the currently stored results in the user's session
+   *   and redirects back to he spectral analyzer
+   */
+  app.post("/resultsDelete", function (req, res) {
+    delete req.session.results;
+    res.send(true);
   });
   
 }

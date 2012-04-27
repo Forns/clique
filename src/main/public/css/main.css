@@ -144,7 +144,7 @@ a:active {
 }
 
 /* API */
-#api-nav-button {
+#nav-button {
   position: fixed;
   right: 20px;
   bottom: 20px;

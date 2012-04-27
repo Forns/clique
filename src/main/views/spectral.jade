@@ -15,10 +15,9 @@
           | Data Purification: purges all bad data segments from the given input for use
           | and compatibility with the analyzer
         li
-          | Analysis Specifications: provides options, customizations, and configurations for
-          | the tool's data-crunching and output
+          | Analysis Specifications: performs mathematical massaging on the data
         li
-          | Reporting: spits back the relevant data analysis and graphical data
+          | Reporting: spits back the relevant data analysis and graphical interpretation
     div.centering-container
       span#browser-compat.ui-widget.ui-state-highlight.rounded-corners
       
@@ -81,18 +80,10 @@
           input#omit-cols.text-input-field(type="text")
           p.text-input-label Omit Columns:
       hr
-      div.centering-container  
-        button#purify-button(disabled="true") Purify Data
+      div.centering-container
+        button#purify-button(disabled="true") Purify & Analyze
     #file-out.purifier-output
     #log-zone.purifier-output
       
-  #analyzer.main-section.rounded-corners
-    h1.ui-dialog-titlebar.ui-widget-header.rounded-corners Spectral Analysis
-    h2 [You must first purify your data before analyzing it]
-    
-  #results.main-section.rounded-corners
-    h1.ui-dialog-titlebar.ui-widget-header.rounded-corners Results
-    h2 [You must analyze your data before viewing any results]
-
 #error-button.accessory-button Errors
 #dialog

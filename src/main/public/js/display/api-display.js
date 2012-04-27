@@ -58,7 +58,7 @@ $(function () {
   }
   
   // Set up the navigation button
-  $("#api-nav-button")
+  $("#nav-button")
     .button()
     .click(function () {
       $("#api-list").dialog({
@@ -75,7 +75,7 @@ $(function () {
     });
   
   // Trigger the button once so that the dialog is displayed on launch  
-  $("#api-nav-button").trigger("click");
+  $("#nav-button").trigger("click");
   
   // Set up the accordion options
   $("#accordion").accordion({

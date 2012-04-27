@@ -320,8 +320,8 @@ $(function () {
       // Set up the loading modal
       popup(
         "dialog",
-        "Purifying...", 
-        "<p>Data is being purified, please wait...</p>" +
+        "Processing...",
+        "<p>Data is being processed, please wait...</p>" +
         "<p class='centering-container'><img src='../assets/loading.gif' /></p>",
         configErr,
         {
@@ -340,19 +340,7 @@ $(function () {
             url: "/specpure",
             data: JSON.stringify({raw: raw, config: config}),
             success: function (result) {
-              pureData = result;
-              $("#dialog")
-                .delay(3500)
-                .queue(function () {
-                  $(this).dialog("close");
-                });
-              // Display the data nicely
-              for (var i = 0; i < pureData.length; i++) {
-                $("#file-out").append(i + ": " + JSON.stringify(pureData[i]) + "</br>");
-              }
-              $("#file-out")
-                .delay(2000)
-                .slideDown(1000);
+              window.location = "../results";
             },
             error: function (jqXHR, textStatus, errorThrown) {
               console.log(jqXHR);

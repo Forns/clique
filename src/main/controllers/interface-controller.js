@@ -56,10 +56,29 @@ module.exports = function (app) {
    *   Render the spectral analyzer page
    */
   app.get("/spectral", function (req, res) {
-    // Simply render the greeting page
-    res.render("spectral", {
-      layout: true
-    });
+    // Render the spectral analyzer front-end if there is no
+    // session with the results, otherwise render results page
+    if (req.session.results) {
+      res.redirect("/results");
+    } else {
+      res.render("spectral", {
+        layout: true
+      });
+    }
+  });
+  
+  /*
+   * GET /results
+   *   Render the spectral analyzer results page
+   */
+  app.get("/results", function (req, res) {
+    if (req.session.results) {
+      res.render("results", {
+        layout: true
+      });
+    } else {
+      res.redirect("/spectral");
+    }
   });
   
 }

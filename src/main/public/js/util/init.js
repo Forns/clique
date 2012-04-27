@@ -25,6 +25,10 @@ switch (loc) {
     includes.push("./js/util/popup.js");
     includes.push("./js/display/spec-display.js");
     break;
+  case "results":
+    includes.push("./js/util/popup.js");
+    includes.push("./js/display/results-display.js");
+    break;
   case "api":
     includes.push("./js/display/api-items.js");
     includes.push("./js/display/api-display.js");
