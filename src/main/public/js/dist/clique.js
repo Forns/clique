@@ -2072,18 +2072,26 @@ var $S = Sparse.create;
     // Then ensure we're dealing with integers
     holderL = holderL.round();
     
+    console.log("TEST");
+    var x = $V([1, 2]);
+    x.append(3);
+    console.log(x)
+    
     // Sort the columns of L
     if (holderL.rows() > 1) {
-      holderL = holderL.sort();
+      holderL = Matrix.sort(holderL);
     }
     
     while (check === 0) {
       coord = $V();
+      console.log("count" + count);
+      console.log("check" + check);
       
       if (count > holderL.cols()) {
         check = 1;
       } else if (count === holderL.cols()) {
-        projectionLengths.append(holderP.col(count).modulus());
+        projectionLengths = projectionLengths.augment(holderP.col(count).modulus());
+        check = 1;
       } else {
         currentShape = holderL.col(count);                    // Current comparing shape
         for (var i = count + 1; i <= holderL.cols(); i++) {
@@ -2093,12 +2101,17 @@ var $S = Sparse.create;
         }
         
         // currentMatrix holds the columns of holderP defined by index in columnsToAdd
-        columnsToAdd = $V([count]).append(coord);               // Vector with the column numbers to be added to
+        columnsToAdd = $V([count]).append(coord);             // Vector with the column numbers to be added to
         currentMatrix = $M();                                 // currentMatrix for calculation
-        for (var j = 1; j < columnsToAdd.dimensions(); j++) {
+        for (var j = 1; j <= columnsToAdd.dimensions(); j++) {
+          console.log(j);
+          console.log(currentMatrix);
+          console.log(columnsToAdd);
+          console.log(holderP);
+          console.log(holderP.col(columnsToAdd.e(j)));
           currentMatrix.setCol(j, holderP.col(columnsToAdd.e(j)));
         }
-        
+
         summedProj = Vector.zero(currentMatrix.rows());
         for (k = 1; k < currentMatrix.cols(); k++) {
           summedProj = summedProj.add(currentMatrix.col(i));
@@ -2119,8 +2132,8 @@ var $S = Sparse.create;
       }
     }
     result[0] = $M()
-      .setRange(1, 1, projectionLengths.rows(), projectionLengths.cols(), projectionLengths)
-      .setRange(projectionLengths.rows() + 1, 1, holderL.rows(), holderL.cols, holderL);
+      .append(projectionLengths)
+      .append(holderL);
     result[1] = holderP;
     return result;
   };
