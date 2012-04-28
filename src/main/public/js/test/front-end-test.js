@@ -1300,7 +1300,10 @@ $(function () {
   
   // Checked against Matlab's eig function
   test("eig", function () {
-    var result1 = Matrix.eig($M([
+    var result0 = Matrix.eig($M([
+          [3]
+        ])),
+        result1 = Matrix.eig($M([
           [1, 1, 0],
           [1, 1, 1],
           [0, 1, 1]
@@ -1311,6 +1314,13 @@ $(function () {
           [0, 4, 5, 7],
           [0, 0, 7, 1]
         ]));
+    
+    ok(result0[0].equal($V([
+      1
+    ])));
+    ok(result0[1].equal($M([
+      [3]
+    ])));
     
     ok(result1[0].equal($V([
       -0.4142,
@@ -1348,7 +1358,7 @@ $(function () {
           [41, 1, 0.3897], [4, 2, 0.9027], [18,2, 0.3377],
           [37, 2, 0.1112]
         );
-    // console.log(Matrix.gatherProjections(inputL1, inputP1));
+    console.log(Matrix.gatherProjections(inputL1, inputP1));
     ok(true);
   });
   
@@ -1359,9 +1369,14 @@ $(function () {
         ),
         inputP1 = $S(0, 0,
           [10, 1, 93]
-        );
-    console.log(Matrix.eigenspaceProjections(inputL1, inputP1));
-    ok(true);
+        ),
+        result1 = Matrix.eigenspaceProjections(inputL1, inputP1);
+    
+    ok(result1[0].equal($M([
+      [93],
+      [1]
+    ])));
+    ok(result1[1].equal($S(10, 1, [10, 1, 93])));
   });
   
 

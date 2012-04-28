@@ -188,6 +188,10 @@
   
   // Returns a full matrix (all 0-elements fleshed out) from the given sparse
   Matrix.full = function (sparse) {
+    // In case we were actually handed a full matrix...
+    if (sparse instanceof Matrix) {
+      return sparse;
+    }
     var result = Matrix.zero(sparse.rows(), sparse.cols()),
         sparseElements = sparse.elements,
         splitter = [],
@@ -480,8 +484,8 @@
   // in question to the subgroup S_m where m < n
   // [!] Returns an array result consisting of the new representations of L and P
   Matrix.gatherProjections = function (L, P) {
-    var holderP = P,
-        holderL = L,
+    var holderP = Matrix.full(P) || P,
+        holderL = Matrix.full(L) || L,
         resultP = $M(),
         resultL = $M(),
         projectionLengths = $V(),
@@ -521,7 +525,7 @@
         }
         
         // currentMatrix holds the columns of holderP defined by index in columnsToAdd
-        columnsToAdd = $V([count]).append(coord);               // Vector with the column numbers to be added to
+        columnsToAdd = $V([count]).append(coord);             // Vector with the column numbers to be added to
         currentMatrix = $M();                                 // currentMatrix for calculation
         for (var j = 1; j < columnsToAdd.dimensions(); j++) {
           currentMatrix.setCol(j, holderP.col(columnsToAdd.e(j)));
@@ -586,6 +590,14 @@
   //
   // Algorithm credit (although modified substantively) to Saul Teukolsky, William Vetterling, and Brian Flannery
   Matrix.eig = function (tridiagonalMatrix) {
+    // Return null if the matrix is not square
+    if (!tridiagonalMatrix.isSquare()) {
+      return [null, null];
+    }
+    // If the matrix is a single element, just return that
+    if (tridiagonalMatrix.rows() === 1) {
+      return [$V([1]), tridiagonalMatrix];
+    }
     // Begin by extracting the necessary components from the input
     var diagonal = tridiagonalMatrix.diagonal(),          // Vector containing the argument's diagonal
         subDiagonal = tridiagonalMatrix.subDiagonal(),    // Vector containing the argument's subdiagonal
@@ -700,6 +712,7 @@
         R = $M(),
         projections = $M(),       // Holds the projections
         lengths = $M(),
+        lengthsBuilder,
         U = $M(),                 // Represent the eigenvalues / -vectors of R
         D = $M(),
         nrm = 0,                  // Reminds us of the size of X
@@ -723,11 +736,11 @@
           // No, I'm not going to simplify this line
           projections.append(Q.multiply(U.multiply(U.row(1).multiply(nrm).toDiagonalMatrix())));
           lengths
-          .append($M([
-            U.row(1).map(function (x) {
-              return Complex.mult(x.magnitude(), nrm);
-            })
-          ]));
+            .append(
+              U.row(1).map(function (x) {
+                return Complex.mult(Complex.magnitude(x), nrm);
+              })
+            );
         };
     
     // TEMPORARY:
@@ -737,7 +750,7 @@
     if (typeof(Y) === "undefined") {
       for (var i = 1; i <= X.cols(); i++) {
         projPrep(i); // See above for the prepwork this function performs
-        lengths.append(Matrix.ones(1, D.rows()).mult(D));
+        lengths.append(Matrix.ones(1, D.rows()).multiply(D));
       }
       
     // Recall that the first row of U contains the lengths of the projections X / ||X||
@@ -749,8 +762,8 @@
       for (var i = 1; i <= X.cols(); i++) {
         projPrep(i); // See above for the prepwork this function performs
         lengths
-          .append(Matrix.ones(1, D.rows()).mult($M(Y.col(i))))
-          .append(Matrix.ones(1, D.rows()).mult(D));
+          .append(Matrix.ones(1, D.rows()).multiply($M(Y.col(i))))
+          .append(Matrix.ones(1, D.rows()).multiply(D));
       }
     }
     

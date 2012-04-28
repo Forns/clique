@@ -132,6 +132,7 @@ module.exports = function (app) {
    */
   app.post("/resultsDelete", function (req, res) {
     delete req.session.results;
+    console.log(Complex.create(0, 1));
     res.send(true);
   });
   
