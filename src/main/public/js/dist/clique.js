@@ -2066,31 +2066,23 @@ var $S = Sparse.create;
         columnsToAdd,
         resultBound,
         result = [];
-        
+    
     // Remove the lengths of the projections
     holderL.removeRow(1);
     // Then ensure we're dealing with integers
     holderL = holderL.round();
-    
-    console.log("TEST");
-    var x = $V([1, 2]);
-    x.append(3);
-    console.log(x)
-    
     // Sort the columns of L
     if (holderL.rows() > 1) {
       holderL = Matrix.sort(holderL);
     }
-    
+
     while (check === 0) {
       coord = $V();
-      console.log("count" + count);
-      console.log("check" + check);
       
       if (count > holderL.cols()) {
         check = 1;
       } else if (count === holderL.cols()) {
-        projectionLengths = projectionLengths.augment(holderP.col(count).modulus());
+        projectionLengths.append(holderP.col(count).modulus());
         check = 1;
       } else {
         currentShape = holderL.col(count);                    // Current comparing shape
@@ -2104,17 +2096,13 @@ var $S = Sparse.create;
         columnsToAdd = $V([count]).append(coord);             // Vector with the column numbers to be added to
         currentMatrix = $M();                                 // currentMatrix for calculation
         for (var j = 1; j <= columnsToAdd.dimensions(); j++) {
-          console.log(j);
-          console.log(currentMatrix);
-          console.log(columnsToAdd);
-          console.log(holderP);
-          console.log(holderP.col(columnsToAdd.e(j)));
           currentMatrix.setCol(j, holderP.col(columnsToAdd.e(j)));
         }
 
         summedProj = Vector.zero(currentMatrix.rows());
-        for (k = 1; k < currentMatrix.cols(); k++) {
-          summedProj = summedProj.add(currentMatrix.col(i));
+        
+        for (k = 1; k <= currentMatrix.cols(); k++) {
+          summedProj = summedProj.add(currentMatrix.col(k));
         }
         
         // We gather the info calculated on this iteration back into the holders
@@ -2124,7 +2112,7 @@ var $S = Sparse.create;
         projectionLengths.append(summedProj.modulus());
         
         // Purge the superfluous data gathered on this iteration
-        for (var m = 1; m < coord.dimensions(); m++) {
+        for (var m = 1; m <= coord.dimensions(); m++) {
           holderP.removeCol(coord.e(m));
           holderL.removeCol(coord.e(m));
         }
@@ -2339,7 +2327,7 @@ var $S = Sparse.create;
     // the eigenvectors in U have length 1 to compute the lengths in L by using absolute
     // value
     } else {
-      Y.deleteRow(1);
+      Y.removeRow(1);
       for (var i = 1; i <= X.cols(); i++) {
         projPrep(i); // See above for the prepwork this function performs
         lengths
@@ -2353,9 +2341,11 @@ var $S = Sparse.create;
   
   // TODO: Comment here; renaming also required
   Matrix.emmyrk = function (lambda, v, Rs) {
-    if (typeof(Rs) === "undeinfed") {
+    if (typeof(Rs) === "undefined") {
       Rs = Matrix.jucysMurphyAll(Matrix.tabloids(lambda));
     }
+    // TEMPORARY cast to full
+    Rs = Matrix.full(Rs);
     var d = Rs.rows(),
         n = Rs.cols() / d + 1,
         A = Rs.minor(1, 1, d, d), // TODO: Check that this is operating as intended
@@ -2367,6 +2357,7 @@ var $S = Sparse.create;
         r,
         c,
         U;
+        console.log(A);
         
     // Computes the projections of v onto the eigenspaces of R_2
     resultHolder = Matrix.eigenspaceProjections(A, v);
@@ -2380,6 +2371,7 @@ var $S = Sparse.create;
     // Computes the projections onto the eigenspaces of R_i
     for (var i = 3; i <= n; i++) {
       A = Rs.minor(1, 1 + (i - 2) * d, d, (i - 1) * d);
+      console.log("HERE!");
       resultHolder = Matrix.eigenspaceProjections(A, projections, lengths);
       lengths = resultHolder[0];
       projections = resultHolder[1];
