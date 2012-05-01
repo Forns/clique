@@ -1380,8 +1380,12 @@ $(function () {
         inputP1 = $S(0, 0,
           [10, 1, 93]
         ),
-        result1 = Matrix.eigenspaceProjections(inputL1, inputP1);
-    
+        inputP2 = $S(0, 0,
+          [10, 1, 93], [9, 2, 1]
+        ),
+        result1 = Matrix.eigenspaceProjections(inputL1, inputP1),
+        result2 = Matrix.eigenspaceProjections(inputL1, inputP2);
+        
     ok(result1[0].equal($M([
       [93],
       [1]
@@ -1389,6 +1393,14 @@ $(function () {
     ok(result1[1].equal($S(10, 1,
       [10, 1, 93]
     )));
+    ok(result2[0].equal($M([
+      [93, 1],
+      [1, 1]
+    ])));
+    ok(result2[1].equal($S(0, 0, 
+      [10, 1, 93], [9, 2, 1]
+    )));
+    
   });
   
   test("emmyrk", function () {

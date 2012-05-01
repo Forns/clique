@@ -365,6 +365,15 @@ Vector.prototype = {
   dimensions: function() {
     return this.elements.length;
   },
+  // Same as above; nice for viewing vectors as 1D matrices
+  cols: function() {
+    return this.elements.length;
+  },
+  
+  // Useful if we're intermingling vectors and matrices
+  rows: function() {
+    return 1;
+  },
 
   // Returns the modulus ('length') of the vector
   modulus: function() {
@@ -920,18 +929,20 @@ Matrix.prototype = {
 
   // Returns the result of attaching the given argument to the right-hand side of the matrix
   augment: function(matrix) {
-    var M = matrix.elements || matrix;
-    if (typeof(M[0][0]) == 'undefined') { M = Matrix.create(M).elements; }
-    var T = this.dup(), cols = T.elements[0].length;
-    var ni = T.elements.length, ki = ni, i, nj, kj = M[0].length, j;
-    if (ni != M.length) { return null; }
-    do { i = ki - ni;
-      nj = kj;
-      do { j = kj - nj;
-        T.elements[i][cols + j] = M[i][j];
-      } while (--nj);
-    } while (--ni);
-    return T;
+    if (this.rows() !== 0 && matrix.rows() !== 0 && (this.rows() !== matrix.rows() || this.cols() !== this.cols())) {
+      return null;
+    }
+    var rows = matrix.rows(),
+        addingCols = matrix.cols(),
+        baseCol = this.cols(),
+        cols = addingCols + baseCol;
+        
+    for (var i = 1; i <= rows; i++) {
+      for (var j = 1; j <= addingCols; j++) {
+        this.setElement(i, baseCol + j, matrix.e(i, j));
+      }
+    }
+    return this;
   },
 
   // Returns the inverse (if one exists) using Gauss-Jordan
@@ -2306,7 +2317,7 @@ var $S = Sparse.create;
           nrm = X.col(iter).modulus();
           
           matrixConstructor = Q.multiply(U.multiply(U.row(1).multiply(nrm).toDiagonalMatrix()));
-          projections = projections.augment(matrixConstructor);
+          projections.augment(matrixConstructor);
           matrixConstructor = $M(U.row(1).map(function (x) {
             return Complex.mult(Complex.magnitude(x), nrm);
           }));
@@ -2319,7 +2330,7 @@ var $S = Sparse.create;
     if (typeof(Y) === "undefined") {
       for (var i = 1; i <= X.cols(); i++) {
         projPrep(i); // See above for the prepwork this function performs
-        lengths = lengths.augment(matrixConstructor.append(Matrix.ones(1, D.rows()).multiply(D)));
+        lengths.augment(matrixConstructor.append(Matrix.ones(1, D.rows()).multiply(D)));
       }
       
     // Recall that the first row of U contains the lengths of the projections X / ||X||
@@ -2331,9 +2342,11 @@ var $S = Sparse.create;
       Y.removeRow(1);
       for (var i = 1; i <= X.cols(); i++) {
         projPrep(i); // See above for the prepwork this function performs
-        lengths
+        console.log("HERE!");
+        matrixConstructor
           .append(Matrix.ones(1, D.rows()).multiply($M(Y.col(i))))
           .append(Matrix.ones(1, D.rows()).multiply(D));
+        lengths.augment(matrixConstructor);
       }
     }
     

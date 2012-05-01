@@ -43,6 +43,15 @@ Vector.prototype = {
   dimensions: function() {
     return this.elements.length;
   },
+  // Same as above; nice for viewing vectors as 1D matrices
+  cols: function() {
+    return this.elements.length;
+  },
+  
+  // Useful if we're intermingling vectors and matrices
+  rows: function() {
+    return 1;
+  },
 
   // Returns the modulus ('length') of the vector
   modulus: function() {
@@ -598,18 +607,20 @@ Matrix.prototype = {
 
   // Returns the result of attaching the given argument to the right-hand side of the matrix
   augment: function(matrix) {
-    var M = matrix.elements || matrix;
-    if (typeof(M[0][0]) == 'undefined') { M = Matrix.create(M).elements; }
-    var T = this.dup(), cols = T.elements[0].length;
-    var ni = T.elements.length, ki = ni, i, nj, kj = M[0].length, j;
-    if (ni != M.length) { return null; }
-    do { i = ki - ni;
-      nj = kj;
-      do { j = kj - nj;
-        T.elements[i][cols + j] = M[i][j];
-      } while (--nj);
-    } while (--ni);
-    return T;
+    if (this.rows() !== 0 && matrix.rows() !== 0 && (this.rows() !== matrix.rows() || this.cols() !== this.cols())) {
+      return null;
+    }
+    var rows = matrix.rows(),
+        addingCols = matrix.cols(),
+        baseCol = this.cols(),
+        cols = addingCols + baseCol;
+        
+    for (var i = 1; i <= rows; i++) {
+      for (var j = 1; j <= addingCols; j++) {
+        this.setElement(i, baseCol + j, matrix.e(i, j));
+      }
+    }
+    return this;
   },
 
   // Returns the inverse (if one exists) using Gauss-Jordan

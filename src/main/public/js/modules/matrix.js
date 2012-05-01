@@ -738,7 +738,7 @@
           nrm = X.col(iter).modulus();
           
           matrixConstructor = Q.multiply(U.multiply(U.row(1).multiply(nrm).toDiagonalMatrix()));
-          projections = projections.augment(matrixConstructor);
+          projections.augment(matrixConstructor);
           matrixConstructor = $M(U.row(1).map(function (x) {
             return Complex.mult(Complex.magnitude(x), nrm);
           }));
@@ -751,7 +751,7 @@
     if (typeof(Y) === "undefined") {
       for (var i = 1; i <= X.cols(); i++) {
         projPrep(i); // See above for the prepwork this function performs
-        lengths = lengths.augment(matrixConstructor.append(Matrix.ones(1, D.rows()).multiply(D)));
+        lengths.augment(matrixConstructor.append(Matrix.ones(1, D.rows()).multiply(D)));
       }
       
     // Recall that the first row of U contains the lengths of the projections X / ||X||
@@ -763,9 +763,11 @@
       Y.removeRow(1);
       for (var i = 1; i <= X.cols(); i++) {
         projPrep(i); // See above for the prepwork this function performs
-        lengths
+        console.log("HERE!");
+        matrixConstructor
           .append(Matrix.ones(1, D.rows()).multiply($M(Y.col(i))))
           .append(Matrix.ones(1, D.rows()).multiply(D));
+        lengths.augment(matrixConstructor);
       }
     }
     

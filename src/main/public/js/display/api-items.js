@@ -166,8 +166,9 @@ var apiItems = {
     
     augment: {
       title: "augment(matrix)",
-      use: "Returns the result of augmenting the receiver with matrix, that is, appending matrix " + 
-        "to the right hand side of the receiver. Both matrices must have the same number of rows for this to work.",
+      use: "Mutates the caller by augmenting it with matrix, that is, appending matrix " + 
+        "to the right hand side of the receiver. Both matrices must have the same number of rows for this to work, unless " +
+        "one of the two is the empty matrix.",
       example: "var M = $M([<br/>" +
           "&nbsp&nbsp[8,3,0],<br/>" +
           "&nbsp&nbsp[4,4,2],<br/>" +
