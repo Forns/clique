@@ -2384,19 +2384,20 @@ var $S = Sparse.create;
       // Rs(1:d, 1 + (i - 2) * d:(i - 1) * d)
       A = Rs.minor(1, 1 + (i - 2) * d, d, d);
       
-      /*
-      console.log(A);
-      console.log(projections);
-      console.log(lengths);
-      */
-      // TODO: BREAKS HERE
       resultHolder = Matrix.eigenspaceProjections(A, projections, lengths);
       lengths = resultHolder[0];
       projections = resultHolder[1];
-
+      
+      if (i===4) {
+        alert(Sparse.sparse(lengths).inspect());
+        alert(Sparse.sparse(projections).inspect());
+      }
+      
       resultHolder = Matrix.gatherProjections(lengths, projections);
       lengths = resultHolder[0];
       projections = resultHolder[1];
+      alert(Sparse.sparse(lengths).inspect());
+      alert(Sparse.sparse(projections).inspect());
     }
     
     r = lengths.rows();
@@ -2406,7 +2407,7 @@ var $S = Sparse.create;
     for (var j = 1; j <= c; j++) {
       for (var k = 1; k <= c; k++) {
         if (Complex.equal(lengths.e(r, k), n - i)) {
-          U.setCol(i, projections.col(f));
+          U.setCol(i, projections.col(k));
         }
       }
     }

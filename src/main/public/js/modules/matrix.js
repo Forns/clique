@@ -808,10 +808,18 @@
       resultHolder = Matrix.eigenspaceProjections(A, projections, lengths);
       lengths = resultHolder[0];
       projections = resultHolder[1];
-
+      
+      // above is disagreeing with matlab after i = 3
+      if (i===4) {
+        alert(Sparse.sparse(lengths).inspect());
+        alert(Sparse.sparse(projections).inspect());
+      }
+      
       resultHolder = Matrix.gatherProjections(lengths, projections);
       lengths = resultHolder[0];
       projections = resultHolder[1];
+      alert(Sparse.sparse(lengths).inspect());
+      alert(Sparse.sparse(projections).inspect());
     }
     
     r = lengths.rows();
@@ -821,7 +829,7 @@
     for (var j = 1; j <= c; j++) {
       for (var k = 1; k <= c; k++) {
         if (Complex.equal(lengths.e(r, k), n - i)) {
-          U.setCol(i, projections.col(f));
+          U.setCol(i, projections.col(k));
         }
       }
     }
