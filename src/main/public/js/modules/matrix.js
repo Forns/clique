@@ -712,7 +712,6 @@
   //
   // [!] Returns result as array with [L, P] as elements
   Matrix.eigenspaceProjections = function (A, X, Y) {
-    console.log("NEW===================");
     var Q = $M(),                 // Represent the QR decomposition for use with lanczos
         R = $M(),
         projections = $M(),       // Holds the projections
@@ -727,11 +726,10 @@
         // Private helper method to prepare the values of the various intermediary matrices
         // in order to facilitate the projections per condition
         projPrep = function (iter) {
-          // TODO: sparse col
           lanczosResult = Matrix.lanczos(A, X.col(iter));
           Q = lanczosResult[0];
           R = lanczosResult[1];
-          R = Matrix.full(R);   // Possibly unnecessary
+          R = Matrix.full(R);
           
           eigResult = Matrix.eig(R);
           U = eigResult[0].toDiagonalMatrix();
@@ -744,7 +742,7 @@
             return Complex.mult(Complex.magnitude(x), nrm);
           }));
         };
-    
+
     // TEMPORARY:
     A = Matrix.full(A);
     X = Matrix.full(X);
@@ -752,7 +750,12 @@
     if (typeof(Y) === "undefined") {
       for (var i = 1; i <= X.cols(); i++) {
         projPrep(i); // See above for the prepwork this function performs
-        lengths.augment(matrixConstructor.append(Matrix.ones(1, D.rows()).multiply(D)));
+        // TODO: Error here in this augment; the augment argument is 2 rows, lengths has 3
+        console.log("what we have to start:\n" + matrixConstructor.inspect());
+        console.log("what we want to add to the bottom:\n" + Matrix.ones(1, D.rows()).multiply(D).inspect());
+        var test = matrixConstructor.append(Matrix.ones(1, D.rows()).multiply(D));
+        console.log(matrixConstructor);
+        lengths.augment(test);
       }
       
     // Recall that the first row of U contains the lengths of the projections X / ||X||
@@ -760,7 +763,6 @@
     // the eigenvectors in U have length 1 to compute the lengths in L by using absolute
     // value
     } else {
-      // TODO: Error here; Y is empty after this command
       Y.removeRow(1);
       for (var i = 1; i <= X.cols(); i++) {
         projPrep(i); // See above for the prepwork this function performs
@@ -783,7 +785,7 @@
     Rs = Matrix.full(Rs);
     var d = Rs.rows(),
         n = Rs.cols() / d + 1,
-        A = Rs.minor(1, 1, d, d), // TODO: Check that this is operating as intended
+        A = Rs.minor(1, 1, d, d),
         lengths,
         projections,
         resultHolder,
@@ -794,7 +796,7 @@
         U;
     
     // Computes the projections of v onto the eigenspaces of R_2
-    resultHolder = Matrix.eigenspaceProjections(A, v);
+    resultHolder = Matrix.eigenspaceProjections(A, v); // TODO: Breaks here
     lengths = resultHolder[0];
     projections = resultHolder[1];
     
