@@ -192,6 +192,9 @@
     if (sparse instanceof Matrix) {
       return sparse;
     }
+    if (sparse instanceof Vector) {
+      sparse = $M(sparse);
+    }
     var result = Matrix.zero(sparse.rows(), sparse.cols()),
         sparseElements = sparse.elements,
         splitter = [],
@@ -713,7 +716,7 @@
         R = $M(),
         projections = $M(),       // Holds the projections
         lengths = $M(),
-        lengthsBuilder,
+        matrixConstructor,        // Used as an intermediary holder to construct matrices
         U = $M(),                 // Represent the eigenvalues / -vectors of R
         D = $M(),
         nrm = 0,                  // Reminds us of the size of X
@@ -734,14 +737,11 @@
           D = eigResult[1];
           nrm = X.col(iter).modulus();
           
-          // No, I'm not going to simplify this line
-          projections.append(Q.multiply(U.multiply(U.row(1).multiply(nrm).toDiagonalMatrix())));
-          lengths
-            .append(
-              U.row(1).map(function (x) {
-                return Complex.mult(Complex.magnitude(x), nrm);
-              })
-            );
+          matrixConstructor = Q.multiply(U.multiply(U.row(1).multiply(nrm).toDiagonalMatrix()));
+          projections = projections.augment(matrixConstructor);
+          matrixConstructor = $M(U.row(1).map(function (x) {
+            return Complex.mult(Complex.magnitude(x), nrm);
+          }));
         };
     
     // TEMPORARY:
@@ -751,7 +751,7 @@
     if (typeof(Y) === "undefined") {
       for (var i = 1; i <= X.cols(); i++) {
         projPrep(i); // See above for the prepwork this function performs
-        lengths.append(Matrix.ones(1, D.rows()).multiply(D));
+        lengths = lengths.augment(matrixConstructor.append(Matrix.ones(1, D.rows()).multiply(D)));
       }
       
     // Recall that the first row of U contains the lengths of the projections X / ||X||
@@ -759,6 +759,7 @@
     // the eigenvectors in U have length 1 to compute the lengths in L by using absolute
     // value
     } else {
+      // TODO: Error here; Y is empty after this command
       Y.removeRow(1);
       for (var i = 1; i <= X.cols(); i++) {
         projPrep(i); // See above for the prepwork this function performs
@@ -789,20 +790,26 @@
         r,
         c,
         U;
-        console.log(A);
-        
+    
     // Computes the projections of v onto the eigenspaces of R_2
     resultHolder = Matrix.eigenspaceProjections(A, v);
     lengths = resultHolder[0];
     projections = resultHolder[1];
+    alert(resultHolder[0].inspect());
     
     resultHolder = Matrix.gatherProjections(lengths, projections);
     lengths = resultHolder[0];
     projections = resultHolder[1];
+    console.log(resultHolder);
     
     // Computes the projections onto the eigenspaces of R_i
     for (var i = 3; i <= n; i++) {
       A = Rs.minor(1, 1 + (i - 2) * d, d, (i - 1) * d);
+      /*
+      console.log(A);
+      console.log(projections);
+      console.log(lengths);
+      */
       resultHolder = Matrix.eigenspaceProjections(A, projections, lengths);
       lengths = resultHolder[0];
       projections = resultHolder[1];

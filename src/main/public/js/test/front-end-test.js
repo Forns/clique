@@ -1386,7 +1386,9 @@ $(function () {
       [93],
       [1]
     ])));
-    ok(result1[1].equal($S(10, 1, [10, 1, 93])));
+    ok(result1[1].equal($S(10, 1,
+      [10, 1, 93]
+    )));
   });
   
   test("emmyrk", function () {
@@ -1395,7 +1397,7 @@ $(function () {
           [17, 1, 11], [24, 1, 17], [30, 1, 75],
           [42, 1, 4], [44, 1, 301], [45, 1, 19]
         );
-        
+
     console.log(Matrix.emmyrk(lambda1, v1));
     ok(true);
   });

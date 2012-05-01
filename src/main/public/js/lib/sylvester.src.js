@@ -49,7 +49,7 @@ Vector.prototype = {
     return Complex.sqrt(this.dot(this));
   },
   norm: function() {
-    return this.modulus()
+    return this.modulus();
   },
 
   // Returns true iff the vector is equal to the argument
