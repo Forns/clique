@@ -2311,15 +2311,16 @@ var $S = Sparse.create;
           R = Matrix.full(R);
           
           eigResult = Matrix.eig(R);
-          U = eigResult[0].toDiagonalMatrix();
-          D = eigResult[1];
+          // TODO: eig returning eigenvalues first--WRONG!
+          U = eigResult[1];
+          D = eigResult[0].toDiagonalMatrix();
           nrm = X.col(iter).modulus();
           
           matrixConstructor = Q.multiply(U.multiply(U.row(1).multiply(nrm).toDiagonalMatrix()));
           projections.augment(matrixConstructor);
           matrixConstructor = $M(U.row(1).map(function (x) {
             return Complex.mult(Complex.magnitude(x), nrm);
-          }));
+          })).transpose();
         };
 
     // TEMPORARY:
@@ -2329,12 +2330,7 @@ var $S = Sparse.create;
     if (typeof(Y) === "undefined") {
       for (var i = 1; i <= X.cols(); i++) {
         projPrep(i); // See above for the prepwork this function performs
-        // TODO: Error here in this augment; the augment argument is 2 rows, lengths has 3
-        console.log("what we have to start:\n" + matrixConstructor.inspect());
-        console.log("what we want to add to the bottom:\n" + Matrix.ones(1, D.rows()).multiply(D).inspect());
-        var test = matrixConstructor.append(Matrix.ones(1, D.rows()).multiply(D));
-        console.log(matrixConstructor);
-        lengths.augment(test);
+        lengths.augment(matrixConstructor.append(Matrix.ones(1, D.rows()).multiply(D)));
       }
       
     // Recall that the first row of U contains the lengths of the projections X / ||X||
@@ -2345,13 +2341,13 @@ var $S = Sparse.create;
       Y.removeRow(1);
       for (var i = 1; i <= X.cols(); i++) {
         projPrep(i); // See above for the prepwork this function performs
-        matrixConstructor
-          .append(Matrix.ones(1, D.rows()).multiply($M(Y.col(i))))
-          .append(Matrix.ones(1, D.rows()).multiply(D));
+        // TODO: D is broken here when i = 2
+        matrixConstructor.append($M(Y.col(i)).multiply(Matrix.ones(1, D.rows())));
+        matrixConstructor.append(Matrix.ones(1, D.rows()).multiply(D));
+        
         lengths.augment(matrixConstructor);
       }
     }
-    
     return [lengths, projections];
   };
   
@@ -2375,7 +2371,7 @@ var $S = Sparse.create;
         U;
     
     // Computes the projections of v onto the eigenspaces of R_2
-    resultHolder = Matrix.eigenspaceProjections(A, v); // TODO: Breaks here
+    resultHolder = Matrix.eigenspaceProjections(A, v);
     lengths = resultHolder[0];
     projections = resultHolder[1];
     
@@ -2385,16 +2381,19 @@ var $S = Sparse.create;
     
     // Computes the projections onto the eigenspaces of R_i
     for (var i = 3; i <= n; i++) {
-      A = Rs.minor(1, 1 + (i - 2) * d, d, (i - 1) * d);
+      // Rs(1:d, 1 + (i - 2) * d:(i - 1) * d)
+      A = Rs.minor(1, 1 + (i - 2) * d, d, d);
+      
       /*
       console.log(A);
       console.log(projections);
       console.log(lengths);
       */
+      // TODO: BREAKS HERE
       resultHolder = Matrix.eigenspaceProjections(A, projections, lengths);
       lengths = resultHolder[0];
       projections = resultHolder[1];
-      
+
       resultHolder = Matrix.gatherProjections(lengths, projections);
       lengths = resultHolder[0];
       projections = resultHolder[1];

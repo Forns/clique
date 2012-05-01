@@ -473,7 +473,7 @@ var apiItems = {
     minor: {
       title: "minor(i, j, m, n)",
       use: "This method returns a matrix formed from a subset of the receiver’s elements. It selects elements beginning " + 
-        "at row i and column j of the receiver, and returns a matrix with n rows and m columns. The selection wraps to the " + 
+        "at row i and column j of the receiver, and returns a matrix with m rows and n columns. The selection wraps to the " + 
         "other side of the receiver if n or m is large enough. This is best illustrated by example:",
       example: "var M = $M([<br/>" +
       "&nbsp&nbsp[9,2,6,5],<br/>" +
