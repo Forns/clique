@@ -607,7 +607,7 @@ Matrix.prototype = {
 
   // Returns the result of attaching the given argument to the right-hand side of the matrix
   augment: function(matrix) {
-    if (this.rows() !== 0 && matrix.rows() !== 0 && (this.rows() !== matrix.rows() || this.cols() !== this.cols())) {
+    if (this.rows() !== 0 && matrix.rows() !== 0 && this.rows() !== matrix.rows()) {
       return null;
     }
     var rows = matrix.rows(),

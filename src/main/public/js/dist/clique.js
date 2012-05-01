@@ -929,7 +929,7 @@ Matrix.prototype = {
 
   // Returns the result of attaching the given argument to the right-hand side of the matrix
   augment: function(matrix) {
-    if (this.rows() !== 0 && matrix.rows() !== 0 && (this.rows() !== matrix.rows() || this.cols() !== this.cols())) {
+    if (this.rows() !== 0 && matrix.rows() !== 0 && this.rows() !== matrix.rows()) {
       return null;
     }
     var rows = matrix.rows(),
@@ -2291,6 +2291,7 @@ var $S = Sparse.create;
   //
   // [!] Returns result as array with [L, P] as elements
   Matrix.eigenspaceProjections = function (A, X, Y) {
+    console.log("NEW===================");
     var Q = $M(),                 // Represent the QR decomposition for use with lanczos
         R = $M(),
         projections = $M(),       // Holds the projections
@@ -2342,7 +2343,6 @@ var $S = Sparse.create;
       Y.removeRow(1);
       for (var i = 1; i <= X.cols(); i++) {
         projPrep(i); // See above for the prepwork this function performs
-        console.log("HERE!");
         matrixConstructor
           .append(Matrix.ones(1, D.rows()).multiply($M(Y.col(i))))
           .append(Matrix.ones(1, D.rows()).multiply(D));
@@ -2376,12 +2376,10 @@ var $S = Sparse.create;
     resultHolder = Matrix.eigenspaceProjections(A, v);
     lengths = resultHolder[0];
     projections = resultHolder[1];
-    alert(resultHolder[0].inspect());
     
     resultHolder = Matrix.gatherProjections(lengths, projections);
     lengths = resultHolder[0];
     projections = resultHolder[1];
-    console.log(resultHolder);
     
     // Computes the projections onto the eigenspaces of R_i
     for (var i = 3; i <= n; i++) {

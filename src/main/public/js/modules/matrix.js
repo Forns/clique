@@ -712,6 +712,7 @@
   //
   // [!] Returns result as array with [L, P] as elements
   Matrix.eigenspaceProjections = function (A, X, Y) {
+    console.log("NEW===================");
     var Q = $M(),                 // Represent the QR decomposition for use with lanczos
         R = $M(),
         projections = $M(),       // Holds the projections
@@ -763,7 +764,6 @@
       Y.removeRow(1);
       for (var i = 1; i <= X.cols(); i++) {
         projPrep(i); // See above for the prepwork this function performs
-        console.log("HERE!");
         matrixConstructor
           .append(Matrix.ones(1, D.rows()).multiply($M(Y.col(i))))
           .append(Matrix.ones(1, D.rows()).multiply(D));
@@ -797,12 +797,10 @@
     resultHolder = Matrix.eigenspaceProjections(A, v);
     lengths = resultHolder[0];
     projections = resultHolder[1];
-    alert(resultHolder[0].inspect());
     
     resultHolder = Matrix.gatherProjections(lengths, projections);
     lengths = resultHolder[0];
     projections = resultHolder[1];
-    console.log(resultHolder);
     
     // Computes the projections onto the eigenspaces of R_i
     for (var i = 3; i <= n; i++) {
