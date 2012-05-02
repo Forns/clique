@@ -2239,7 +2239,7 @@ var $S = Sparse.create;
             b = Complex.mult(c, subDiagonal.e(i));
             r = Complex.pythag(f, g);
             subDiagonal.setElement(i + 1, r);
-            if (Complex.equal(r, 0)) { // Recover from underflow
+            if (Complex.equal(r, 0, true)) { // Recover from underflow
               diagonal.setElement(i + 1, Complex.sub(diagonal.e(i + 1), p));
               subDiagonal.setElement(m, 0);
               break;
@@ -2262,7 +2262,7 @@ var $S = Sparse.create;
             }
           }
         
-          if (Complex.equal(r, 0) && i >= j) {
+          if (Complex.equal(r, 0, true) && i >= j) {
             continue;
           }
           diagonal.setElement(j, Complex.sub(diagonal.e(j), p));
@@ -2316,7 +2316,7 @@ var $S = Sparse.create;
           D = eigResult[0].toDiagonalMatrix();
           nrm = X.col(iter).modulus();
           
-          matrixConstructor = Q.multiply(U.multiply(U.row(1).multiply(nrm).toDiagonalMatrix()));
+          matrixConstructor = Q.multiply(U.multiply((U.row(1).multiply(nrm)).toDiagonalMatrix()));
           projections.augment(matrixConstructor);
           matrixConstructor = $M(U.row(1).map(function (x) {
             return Complex.mult(Complex.magnitude(x), nrm);
@@ -2341,7 +2341,6 @@ var $S = Sparse.create;
       Y.removeRow(1);
       for (var i = 1; i <= X.cols(); i++) {
         projPrep(i); // See above for the prepwork this function performs
-        // TODO: D is broken here when i = 2
         matrixConstructor.append($M(Y.col(i)).multiply(Matrix.ones(1, D.rows())));
         matrixConstructor.append(Matrix.ones(1, D.rows()).multiply(D));
         
@@ -2384,20 +2383,37 @@ var $S = Sparse.create;
       // Rs(1:d, 1 + (i - 2) * d:(i - 1) * d)
       A = Rs.minor(1, 1 + (i - 2) * d, d, d);
       
+      // NOTE: Agreement at end of i = 3; problem after eigenspaceProj. on i = 4
+      if(i === 3 || i === 4) {
+        console.log("============ new iteration, i = " + i + " =============");
+        console.log(">>> A: >>> \n" + Sparse.sparse(A).inspect());
+        console.log(">>> LENG: >>>\n" + Sparse.sparse(lengths).inspect());
+        console.log(">>> PROJ: >>>\n" + Sparse.sparse(projections).inspect());
+        alert("stuff");
+      }
+      
       resultHolder = Matrix.eigenspaceProjections(A, projections, lengths);
       lengths = resultHolder[0];
       projections = resultHolder[1];
       
-      if (i===4) {
-        alert(Sparse.sparse(lengths).inspect());
-        alert(Sparse.sparse(projections).inspect());
+      if (i === 4 || i === 3) {
+        console.log("<<<< PROJRplus Results: <<<<");
+        console.log(">>> LENG: >>>\n" + Sparse.sparse(lengths).inspect());
+        console.log(">>> PROJ: >>>\n" + Sparse.sparse(projections).inspect());
+        alert("hi@");
       }
       
       resultHolder = Matrix.gatherProjections(lengths, projections);
       lengths = resultHolder[0];
       projections = resultHolder[1];
-      alert(Sparse.sparse(lengths).inspect());
-      alert(Sparse.sparse(projections).inspect());
+      
+      if (i === 4 || i === 3) {
+        console.log("Gather Results:");
+        console.log(">>> LENG: >>>\n" + Sparse.sparse(lengths).inspect());
+        console.log(">>> PROJ: >>>\n" + Sparse.sparse(projections).inspect());
+        alert("hi!");
+      }
+      
     }
     
     r = lengths.rows();
@@ -2406,7 +2422,7 @@ var $S = Sparse.create;
     
     for (var j = 1; j <= c; j++) {
       for (var k = 1; k <= c; k++) {
-        if (Complex.equal(lengths.e(r, k), n - i)) {
+        if (Complex.equal(lengths.e(r, k), n - i, true)) {
           U.setCol(i, projections.col(k));
         }
       }
