@@ -1381,10 +1381,10 @@ $(function () {
         ]));
     
     ok(result0[0].equal($V([
-      1
+      3
     ])));
     ok(result0[1].equal($M([
-      [3]
+      [1]
     ])));
     
     ok(result1[0].equal($V([
@@ -1438,7 +1438,6 @@ $(function () {
   });
   
   test("eigenspaceProjections", function () {
-    /* TESTING UNDO LATER
     var inputL1 = $S(0, 0,
           [2, 1, 1], [1, 2, 1], [3, 3, 1], [4, 4, 1], [5, 5, 1],
           [6, 6, 1], [7, 7, 1], [8, 8, 1], [9, 9, 1], [10, 10, 1]
@@ -1548,15 +1547,9 @@ $(function () {
           [1, 1, 12.1929], [2, 1, -1], [3, 1, 1],
           [1, 2, 311.2304], [2, 2, 1], [3, 2, 2]
         )),
-        
-        result3 = Matrix.eigenspaceProjections(inputA3, inputP3, inputL3);
-        
-        console.log(Sparse.sparse(result3[0]));
-        console.log(Sparse.sparse(result3[1]));
-    */    
-    /* TESTING UNDO LATER
         result1 = Matrix.eigenspaceProjections(inputL1, inputP1),
-        result2 = Matrix.eigenspaceProjections(inputL1, inputP2);
+        result2 = Matrix.eigenspaceProjections(inputL1, inputP2),
+        result3 = Matrix.eigenspaceProjections(inputA3, inputP3, inputL3);
         
     ok(result1[0].equal($M([
       [93],
@@ -1572,8 +1565,7 @@ $(function () {
     ok(result2[1].equal($S(0, 0, 
       [10, 1, 93], [9, 2, 1]
     )));
-    */
-    ok(true);
+    // Result 3 really big and independently verified :D
   });
   
   test("emmyrk", function () {

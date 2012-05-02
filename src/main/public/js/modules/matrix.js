@@ -379,9 +379,9 @@
       tridiagonalResult.setElement(n, n, a.e(1, n));
       
       // Re-orthogonalize here
-      for (var j = 1; j < n; j++) {
-        ep = $M(orthogonalResult.col(j)).transpose().multiply(v);
-        v = v.subtract(orthogonalResult.col(j).multiply(ep.e(1)));
+      for (var j = 1; j <= n; j++) {
+        ep = $M(orthogonalResult.col(j)).transpose().multiply(v).e(1, 1);
+        v = v.subtract(orthogonalResult.col(j).multiply(ep));
       }
       
       b.setElement(1, n, v.modulus());
@@ -600,7 +600,7 @@
     }
     // If the matrix is a single element, just return that
     if (tridiagonalMatrix.rows() === 1) {
-      return [$V([1]), tridiagonalMatrix];
+      return [tridiagonalMatrix.row(1), $M([1])];
     }
     // Begin by extracting the necessary components from the input
     var diagonal = tridiagonalMatrix.diagonal(),          // Vector containing the argument's diagonal
@@ -804,37 +804,13 @@
       // Rs(1:d, 1 + (i - 2) * d:(i - 1) * d)
       A = Rs.minor(1, 1 + (i - 2) * d, d, d);
       
-      // NOTE: Agreement at end of i = 3; problem after eigenspaceProj. on i = 4
-      if(i === 3 || i === 4) {
-        console.log("============ new iteration, i = " + i + " =============");
-        console.log(">>> A: >>> \n" + Sparse.sparse(A).inspect());
-        console.log(">>> LENG: >>>\n" + Sparse.sparse(lengths).inspect());
-        console.log(">>> PROJ: >>>\n" + Sparse.sparse(projections).inspect());
-        alert("stuff");
-      }
-      
       resultHolder = Matrix.eigenspaceProjections(A, projections, lengths);
       lengths = resultHolder[0];
       projections = resultHolder[1];
-      
-      if (i === 4 || i === 3) {
-        console.log("<<<< PROJRplus Results: <<<<");
-        console.log(">>> LENG: >>>\n" + Sparse.sparse(lengths).inspect());
-        console.log(">>> PROJ: >>>\n" + Sparse.sparse(projections).inspect());
-        alert("hi@");
-      }
-      
+
       resultHolder = Matrix.gatherProjections(lengths, projections);
       lengths = resultHolder[0];
       projections = resultHolder[1];
-      
-      if (i === 4 || i === 3) {
-        console.log("Gather Results:");
-        console.log(">>> LENG: >>>\n" + Sparse.sparse(lengths).inspect());
-        console.log(">>> PROJ: >>>\n" + Sparse.sparse(projections).inspect());
-        alert("hi!");
-      }
-      
     }
     
     r = lengths.rows();
@@ -843,13 +819,12 @@
     
     for (var j = 1; j <= c; j++) {
       for (var k = 1; k <= c; k++) {
-        if (Complex.equal(lengths.e(r, k), n - i, true)) {
-          U.setCol(i, projections.col(k));
+        if (Complex.equal(lengths.e(r, k), n - j)) {
+          U.setCol(j, projections.col(k));
         }
       }
     }
-    projections = U;
-    return [lengths, projections];
+    return [lengths, U];
   };
   
 })();
