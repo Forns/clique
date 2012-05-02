@@ -67,6 +67,28 @@
     return $V(copy.elements.sort(sortFunc));
   };
   
+  // Returns an array with the first element being the sorted elements of v with the given
+  // sorting function, or ascending value by default, and the second element being the
+  // original indices of those sorted values.
+  Vector.sortWithIndex = function (v, sortFunc) {
+    var copy = v.dup(),
+        result,
+        resultCopy,
+        vCopy = v.elements.slice(),
+        indices = [];
+    if (!sortFunc) {
+      sortFunc = sortAscending;
+    }
+    result = Vector.sort(copy, sortFunc);
+    resultCopy = result.elements.slice();
+    for (var i = 1; i <= result.dimensions(); i++) {
+      indices[i - 1] = vCopy.indexOf(resultCopy[0]) + 1;
+      resultCopy.splice(0, 1);
+      vCopy[indices[i - 1] - 1] = undefined;
+    }
+    return [result, $V(indices)];
+  };
+  
   // Inserts a new vector representing the element e inserted into v at index i
   Vector.insert = function (v, i, e) {
     var elements = v.elements;

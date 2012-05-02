@@ -266,6 +266,25 @@ $(function () {
     ok(Vector.sort($V([1, 1, -1, -1, 0])).equal($V([-1, -1, 0, 1, 1])));
   });
   
+  test("Vector: sortWithIndex", function () {
+    var result0 = Vector.sortWithIndex($V()),
+        result1 = Vector.sortWithIndex($V([1])),
+        result2 = Vector.sortWithIndex($V([1, 3, 2])),
+        result3 = Vector.sortWithIndex($V([1, 3, 3, 2])),
+        result4 = Vector.sortWithIndex($V([1, 3, 2, 3]));
+        
+    ok(result0[0].equal($V()));
+    ok(result0[1].equal($V()));
+    ok(result1[0].equal($V([1])));
+    ok(result1[1].equal($V([1])));
+    ok(result2[0].equal($V([1, 2, 3])));
+    ok(result2[1].equal($V([1, 3, 2])));
+    ok(result3[0].equal($V([1, 2, 3, 3])));
+    ok(result3[1].equal($V([1, 4, 2, 3])));
+    ok(result4[0].equal($V([1, 2, 3, 3])));
+    ok(result4[1].equal($V([1, 3, 2, 4])));
+  });
+  
   test("Vector: sum", function () {
     equal(Vector.sum($V()), 0);
     equal(Vector.sum($V([1])), 1);
@@ -1575,7 +1594,33 @@ $(function () {
           [42, 1, 4], [44, 1, 301], [45, 1, 19]
         );
 
-    console.log(Matrix.emmyrk(lambda1, v1));
+    // console.log(Matrix.emmyrk(lambda1, v1));
+    ok(true);
+  });
+  
+  test("rawDataSorting", function () {
+    var a1 = [
+          [1, 0, 1, 1, 0, 0, 1, 0, 0, 1],
+          [1, 0, 1, 1, 0, 1, 0, 1, 1, 1],
+          [1, 0, 1, 0, 1, 1, 0, 1, 1, 1],
+          [0, 1, 1, 0, 1, 1, 0, 1, 0, 1],
+          [0, 0, 1, 0, 1, 0, 1, 1, 1, 1],
+          [0, 1, 1, 1, 0, 1, 0, 1, 1, 1]
+        ],
+        result1 = Matrix.rawDataSorting(a1);
+        
+    ok(result1[3].equal($S(120, 1,
+      [23, 1, 1], [46, 1, 1], [51, 1, 1]
+    )));
+    ok(result1[4].equal($S(210, 1,
+      [9, 1, 1], [60, 1, 1]
+    )));
+    ok(result1[5].equal($S(252, 1,
+      [185, 1, 1]
+    )));
+  });
+  
+  test("finalDecomposition", function () {
     ok(true);
   });
   
