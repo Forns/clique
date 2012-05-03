@@ -1587,26 +1587,4 @@ $(function () {
     // Result 3 really big and independently verified :D
   });
   
-  test("rawDataSorting", function () {
-    var a1 = [
-          [1, 0, 1, 1, 0, 0, 1, 0, 0, 1],
-          [1, 0, 1, 1, 0, 1, 0, 1, 1, 1],
-          [1, 0, 1, 0, 1, 1, 0, 1, 1, 1],
-          [0, 1, 1, 0, 1, 1, 0, 1, 0, 1],
-          [0, 0, 1, 0, 1, 0, 1, 1, 1, 1],
-          [0, 1, 1, 1, 0, 1, 0, 1, 1, 1]
-        ],
-        result1 = Matrix.rawDataSorting(a1);
-        
-    ok(result1[3].equal($S(120, 1,
-      [23, 1, 1], [46, 1, 1], [51, 1, 1]
-    )));
-    ok(result1[4].equal($S(210, 1,
-      [9, 1, 1], [60, 1, 1]
-    )));
-    ok(result1[5].equal($S(252, 1,
-      [185, 1, 1]
-    )));
-  });
-  
 });

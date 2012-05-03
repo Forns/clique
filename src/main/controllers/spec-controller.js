@@ -126,13 +126,21 @@ module.exports = function (app) {
   });
   
   /*
+   * GET /see-pure
+   *   Returns the purified results for the viewer to observe
+   */
+  app.get("/see-pure", function (req, res) {
+    res.contentType('application/json');
+    res.send(JSON.stringify(req.session.results));
+  });
+  
+  /*
    * POST /resultsDelete
    *   Deletes the currently stored results in the user's session
    *   and redirects back to he spectral analyzer
    */
   app.post("/resultsDelete", function (req, res) {
     delete req.session.results;
-    console.log($M([[0, 1, 2]]).inspect());
     res.send(true);
   });
   

@@ -33,6 +33,8 @@ switch (loc) {
     includes.push("./js/display/api-items.js");
     includes.push("./js/display/api-display.js");
     break;
+  case "download":
+    includes.push("./js/display/downloads-display.js");
 }
 
 // Perform necessary inclusions

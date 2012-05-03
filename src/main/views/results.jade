@@ -9,8 +9,21 @@
       button#results-delete Delete
     h2 Spectral Analysis Results
     p 
-      | The Clique Spectral Analyzer has computed the following results for your 
+      | The Clique Spectral Analyzer has computed results for your 
       | given data.
+    p
+      | You can navigate the results using the results navigation window. 
+      | If you lose the window, you can access it again from the button in the bottom 
+      | right of your screen.
+    p
+      | You can delete your current data by using the button to the right if you want to 
+      | analyze a new dataset. That said, this action cannot be undone.
+  #log-zone.purifier-output
+    p Loading results...
     
-#results-options
+#command-list
+  input#see-pure(type="radio", name="commands", checked=true)
+  label(for="see-pure") Purified Data
+  input#see-analysis(type="radio", name="commands")
+  label(for="see-analysis") Data Analysis
 #nav-button Results Navigation

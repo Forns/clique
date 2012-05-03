@@ -259,14 +259,16 @@ a:active {
   height: 400px;
 }
 
-#log-zone {
-  height: 200px;
-}
-
 .purifier-output {
   background-color: #333333;
-  overflow: scroll;
-  display: none;
+  padding: 10px;
+  margin-top: 13px;
+  text-align: left;
+  -moz-box-shadow: 10px 10px 5px #111;
+  -webkit-box-shadow: 10px 10px 5px #111;
+  box-shadow: 10px 10px 5px #111;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
 }
 
 #loading-status {
@@ -284,4 +286,16 @@ a:active {
 
 #results {
   display: none;
+}
+
+#command-list {
+  overflow-x: hidden;
+  display: none;
+}
+
+.command-button {
+  display: block;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  width: 175px !important;
 }

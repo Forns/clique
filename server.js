@@ -52,6 +52,7 @@ app.configure('production', function () {
  * CONTROLLERS
  */
 
+require('./src/main/controllers/analyzer-prep.js');
 require('./src/main/controllers/interface-controller.js')(app);
 require('./src/main/controllers/spec-controller.js')(app);
 require('./src/test/qunit/test-suite-controller.js')(app);
