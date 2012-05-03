@@ -11,7 +11,8 @@ $(function() {
   var logZone = $("#log-zone"),
       resPure,
       resAnalysis,
-      varNames
+      varNames,
+      graphNum = 0,
   
   // User requests to view the purified results
   displayPurifiedResults = function () {
@@ -32,11 +33,19 @@ $(function() {
         R = data[2],
         RArray = R,
         
-        // Private method to print the cell's items
+        // Private method to print the cell's items and graph them
         printCell = function (c, i) {
-          var currentObject;
+          var currentObject,
+              currentGraph,
+              labels;
           for (var j = 0; j < c.length; j++) {
             currentObject = c[j];
+            
+            // Instantiate the graph data collector
+            currentGraph = [];
+            labels = [];
+            currentGraph.name = "graph" + graphNum++;
+            
             if (currentObject !== null) {
               currentObject = currentObject.elements;
               logZone.append("[C] Cell (" + i + ", " + j +"):<br/>");
@@ -46,17 +55,29 @@ $(function() {
                   logZone.append("<br/><br/>");
                   printCell([currentObject[k]], "Array");
                 } else {
-                  // Temporary, will specialize later with var combos
-                  if (j === 1) {
-                    logZone.append("<br/>> " + varNames[k] + ": " + currentObject[k]);
-                  } else {
-                    logZone.append("<br/>> combo" + k + ": " + currentObject[k]);
-                  }
+                  var naming = (j === 1) ? varNames[k] : "combo" + k;
+                  currentGraph.push([k, currentObject[k]]);
+                  labels.push([k + 0.5, naming]);
+                  logZone.append("<br/>> " + naming + ": " + currentObject[k]);
                 }
               }
+              // Construct the graph
+              logZone.append("<div id ='" + currentGraph.name + "' class='graph'></div>");
+              $.plot($("#" + currentGraph.name), [{
+                  data: currentGraph,
+                  bars: { show: true }
+                }
+              ], 
+                {
+                  xaxis: {
+                    ticks: labels
+                  }
+                }
+              );
+              
+              // A little spacing is nice!
+              logZone.append("<br/><br/>");
             }
-            // A little spacing is nice!
-            logZone.append("<br/><br/>");
           }
         },
         

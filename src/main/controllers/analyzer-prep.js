@@ -5,6 +5,9 @@
  * spectral analysis portion of the web app
  */
 
+// Number of Johnson Graphs to generate
+var nJG = 10;
+
 // Johnson Graph generation for the final decomposition
 // [!] For server-side consumption only
 Matrix.johnsonGraphs = [];
@@ -33,9 +36,10 @@ var generateJohnson = function (n) {
   return result;
 };
 
-console.log("[...] Johnson graph generation in progress...");
+console.log("[~] SERVER: Starting up...")
+console.log("[" + nJG + "] Johnson graph generation in progress...");
 // Construct the actual Johnson Graphs
-for (var jn = 2; jn <= 10; jn++) {
+for (var jn = 2; jn <= nJG; jn++) {
   Matrix.johnsonGraphs[jn] = generateJohnson(jn);
 }
 console.log("[!] Johnson graph generation complete!");

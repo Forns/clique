@@ -26,6 +26,7 @@ switch (loc) {
     includes.push("./js/display/spec-display.js");
     break;
   case "results":
+    includes.push("./js/lib/jquery.flot.min.js");
     includes.push("./js/util/popup.js");
     includes.push("./js/display/results-display.js");
     break;

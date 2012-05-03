@@ -304,3 +304,9 @@ a:active {
   margin-bottom: 5px;
   width: 175px !important;
 }
+
+.graph {
+  margin: 10px;
+  width: 600px;
+  height: 300px;
+}
