@@ -35,7 +35,7 @@ var generateJohnson = function (n) {
 
 console.log("[...] Johnson graph generation in progress...");
 // Construct the actual Johnson Graphs
-for (var jn = 2; jn <= 4; jn++) {
+for (var jn = 2; jn <= 10; jn++) {
   Matrix.johnsonGraphs[jn] = generateJohnson(jn);
 }
 console.log("[!] Johnson graph generation complete!");
