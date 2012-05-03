@@ -261,6 +261,7 @@ a:active {
 
 .purifier-output {
   background-color: #333333;
+  overflow-x: scroll;
   padding: 10px;
   margin-top: 13px;
   text-align: left;

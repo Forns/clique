@@ -340,7 +340,21 @@ $(function () {
             url: "/specpure",
             data: JSON.stringify({raw: raw, config: config}),
             success: function (result) {
-              window.location = "../results";
+              configErr.push("[X] Data does not match formatting requirements. Consult documentation. :(");
+              if (result.error) {
+                popup(
+                  "dialog",
+                  "Errors in Input",
+                  "Your input appears to be malformed; check the data and try again. Error:",
+                  configErr,
+                  {
+                    modal: false
+                  }
+                );
+              configErr = [];
+              } else {
+                window.location = "../results";
+              }
             },
             error: function (jqXHR, textStatus, errorThrown) {
               console.log(jqXHR);
@@ -350,10 +364,9 @@ $(function () {
             dataType: "json",
             contentType: "application/json"
           });
-        } else {
-          // Otherwise, there were errors, so check them
-          $("#purifier-contents").fadeIn(1500);
         }
+        // Otherwise, there were errors, so check them
+        $("#purifier-contents").fadeIn(1500);
       }, 500);
       
     });
