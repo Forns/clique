@@ -1,0 +1,58 @@
+#container
+  #header
+    img(src='./assets/clique-logo.png')
+  #nav-bar
+  #center-zone.rounded-corners
+    h2 So You Want to Spectral Analyze?
+    p 
+      | The following page describes some help elements for those distressed by 
+      | the Spectral Analyzer. Your question might be answered within!
+    p
+      | If you leave this page understanding the application, please come and tell me 
+      | so that I'll finally understand too.
+
+  #common-probs.main-section.rounded-corners
+    h1.ui-dialog-titlebar.ui-widget-header.rounded-corners Common Issues
+    h2 Analyzer Rejecting Data
+    h3 Restrictions:
+    ul
+      li 
+        | Presently, the spectral analyzer can only accept data points in the form of 
+        | 0's and 1's; the purifier is available to help you accomplish this requirement.
+      li
+        | The analyzer is limited to 10 variables at the moment, subject to change.
+      li
+        | The present algorithm will often reject rows (trials) with more 0's than 1's
+      li
+        | Analysis may require at least one 0 entry per set.
+    h3 Other Troubleshooting:
+    ul
+      li 
+        | If there is trash in your data, make sure that you are willing for it to be normalized 
+        | or omitted by the analyzer.
+      li
+        | Ensure that the proper delimiter and options are set in the purifier before analysis.
+      li
+        | Jagged matrix entries are made rectangular by the purifier.
+        
+  #interpretation.main-section.rounded-corners
+    h1.ui-dialog-titlebar.ui-widget-header.rounded-corners Interpreting Results
+    h2 The Three Results Explained
+    h3 [Q]
+    p Trade secret, sorry.
+    h3 [q]
+    p 
+      | There's evidence to suggest that q is the true result of interest, displaying the effects that 
+      | each variable has on the other, and what groups exert the most influence.
+    p
+      | Presently, it appears that negative values are ones that exert a positive influence, whereas 
+      | the positive values are those that exert a negative influence. Intuitive, really. The greater 
+      | the magnitude of these values, the more influence is exerted.
+    h3 [R]
+    p What are you looking at me for?
+   
+    h2 Known Issues and Future Improvement
+    p
+      | The data needs to be displayed and labeled more intuitively. For now, this guide and its subsequent 
+      | improvements will have to suffice...
+      

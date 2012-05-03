@@ -68,6 +68,16 @@ module.exports = function (app) {
   });
   
   /*
+   * GET /spechelp
+   *   Render the help page for the spectral analyzer
+   */
+  app.get("/spechelp", function (req, res) {
+    res.render("spechelp", {
+      layout: true
+    });
+  });
+  
+  /*
    * GET /results
    *   Render the spectral analyzer results page
    */
