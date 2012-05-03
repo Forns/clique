@@ -48,7 +48,7 @@ $(function() {
             
             if (currentObject !== null) {
               currentObject = currentObject.elements;
-              logZone.append("[C] Cell (" + i + ", " + j +"):<br/>");
+              logZone.append("<strong>[C] Cell (" + i + ", " + j +"):</strong><br/>");
               for (var k = 0; k < currentObject.length; k++) {
                 // Handle embedded results that pop up every once and awhile...
                 if (currentObject[k].elements) {
