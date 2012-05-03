@@ -26,8 +26,7 @@ Clique.precision = 1e-4;
 
 // Complex numbers of the form x + iy where x, y are
 // real numbers and i = sqrt(-1)
-var $C,
-    Complex = $C = function () {};
+Complex = function () {};
 
 (function() {
   
@@ -344,12 +343,12 @@ var $C,
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-var Sylvester = {
+Sylvester = {
   version: '0.1.3',
   precision: Clique.precision
 };
 
-var Vector = function() {}
+Vector = function() {}
 Vector.prototype = {
 
   // Returns element i of the vector
@@ -627,7 +626,7 @@ Vector.zero = function(n) {
 
 
 
-var Matrix = function() {}
+Matrix = function() {}
 Matrix.prototype = {
 
   // Returns element (i,j) of the matrix
@@ -1137,14 +1136,14 @@ Matrix.zero = function(n, m) {
 };
 
 // Utility functions
-var $V = Vector.create,
-    $M = Matrix.create;
+$V = Vector.create;
+$M = Matrix.create;
 
 
 /**
  * Sparse Matrix custom class
  */
-function Sparse () {};
+Sparse = function () {};
 Sparse.prototype = {
   rows: function () {
     return this.sRows;
@@ -1318,7 +1317,7 @@ Sparse.sparse = function (matrix) {
   return result;
 }
 
-var $S = Sparse.create;
+$S = Sparse.create;
 
 
 /**
@@ -2459,8 +2458,8 @@ var $S = Sparse.create;
   // Construct the actual Johnson Graphs
   for (var jn = 2; jn <= 8; jn++) {
     Matrix.johnsonGraphs[jn] = generateJohnson(jn);
-    console.log(Matrix.johnsonGraphs);
   }
+  console.log("[!] Johnson graph generation complete!");
  
   // Takes in the raw data D and returns the corresponding isotypic projections.
   // It then returns the following:
@@ -2565,19 +2564,6 @@ var $S = Sparse.create;
     
     return result;
   };
-  
-  var a1 = [
-        [1, 0, 0],
-        [1, 0, 0],
-        [1, 0, 1],
-        [1, 1, 0]
-      ],
-      result1 = Matrix.finalDecomposition(
-        Matrix.rawDataSorting(a1),
-        Matrix.johnsonGraphs[a1[0].length]
-      );
-  
-  console.log(result1);    
   
 })();
 

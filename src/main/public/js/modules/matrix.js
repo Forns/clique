@@ -858,8 +858,8 @@
   // Construct the actual Johnson Graphs
   for (var jn = 2; jn <= 8; jn++) {
     Matrix.johnsonGraphs[jn] = generateJohnson(jn);
-    console.log(Matrix.johnsonGraphs);
   }
+  console.log("[!] Johnson graph generation complete!");
  
   // Takes in the raw data D and returns the corresponding isotypic projections.
   // It then returns the following:
@@ -964,19 +964,6 @@
     
     return result;
   };
-  
-  var a1 = [
-        [1, 0, 0],
-        [1, 0, 0],
-        [1, 0, 1],
-        [1, 1, 0]
-      ],
-      result1 = Matrix.finalDecomposition(
-        Matrix.rawDataSorting(a1),
-        Matrix.johnsonGraphs[a1[0].length]
-      );
-  
-  console.log(result1);    
   
 })();
 

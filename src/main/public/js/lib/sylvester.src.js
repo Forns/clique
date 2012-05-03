@@ -22,12 +22,12 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-var Sylvester = {
+Sylvester = {
   version: '0.1.3',
   precision: Clique.precision
 };
 
-var Vector = function() {}
+Vector = function() {}
 Vector.prototype = {
 
   // Returns element i of the vector
@@ -305,7 +305,7 @@ Vector.zero = function(n) {
 
 
 
-var Matrix = function() {}
+Matrix = function() {}
 Matrix.prototype = {
 
   // Returns element (i,j) of the matrix
@@ -815,5 +815,5 @@ Matrix.zero = function(n, m) {
 };
 
 // Utility functions
-var $V = Vector.create,
-    $M = Matrix.create;
+$V = Vector.create;
+$M = Matrix.create;

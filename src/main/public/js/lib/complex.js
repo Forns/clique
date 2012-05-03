@@ -7,8 +7,7 @@
 
 // Complex numbers of the form x + iy where x, y are
 // real numbers and i = sqrt(-1)
-var $C,
-    Complex = $C = function () {};
+Complex = function () {};
 
 (function() {
   

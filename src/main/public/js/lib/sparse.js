@@ -3,7 +3,7 @@
 /**
  * Sparse Matrix custom class
  */
-function Sparse () {};
+Sparse = function () {};
 Sparse.prototype = {
   rows: function () {
     return this.sRows;
@@ -177,5 +177,5 @@ Sparse.sparse = function (matrix) {
   return result;
 }
 
-var $S = Sparse.create;
+$S = Sparse.create;
 

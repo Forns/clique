@@ -1587,17 +1587,6 @@ $(function () {
     // Result 3 really big and independently verified :D
   });
   
-  test("emmyrk", function () {
-    var lambda1 = $V([8, 2]),
-        v1 = $S(0, 0,
-          [17, 1, 11], [24, 1, 17], [30, 1, 75],
-          [42, 1, 4], [44, 1, 301], [45, 1, 19]
-        );
-
-    // console.log(Matrix.emmyrk(lambda1, v1));
-    ok(true);
-  });
-  
   test("rawDataSorting", function () {
     var a1 = [
           [1, 0, 1, 1, 0, 0, 1, 0, 0, 1],
@@ -1618,17 +1607,6 @@ $(function () {
     ok(result1[5].equal($S(252, 1,
       [185, 1, 1]
     )));
-  });
-  
-  test("finalDecomposition", function () {
-    ok(true);
-  });
-  
-
-  /***** TESTING SECTION *****/
-  // Used for testing functions in progress (if any)
-  test("testingSection", function() {
-    ok(true);
   });
   
 });
