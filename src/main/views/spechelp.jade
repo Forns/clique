@@ -35,6 +35,57 @@
       li
         | Jagged matrix entries are made rectangular by the purifier.
         
+  #example.main-section.rounded-corners
+    h1.ui-dialog-titlebar.ui-widget-header.rounded-corners Example Analysis
+    p Perhaps an example would serve best to show off the Spectral Analyzer...
+    ol
+      li First, open the spectral analysis page via the navigation links.
+      li You'll be able to enter your data either straight with text input or through a file containing it.
+      li 
+        | For this example, let's pretend we just ran a small survey asking people if they'd ever used a variety 
+        | of drugs. We'll put their labels at the top of the input and then the "no" responses as 0's and yes 
+        | responses as 1's; that should give us this:
+        br
+        br
+        | weed coke tobacco horseTranq alcohol
+        br
+        | 1 1 1 0 1
+        br
+        | 1 0 0 1 1
+        br
+        | 0 1 1 0 1
+        br
+        | 1 1 1 0 1
+        br
+        | 1 0 1 0 0
+        br
+        | 1 1 1 0 1
+        br
+        | 1 0 0 1 1
+        br
+        | 0 1 1 0 1
+        br
+        | 1 1 1 0 1
+        br
+        | 1 0 1 0 0
+        br
+        br
+      li
+        | Since we have variable names in the first row, we should make sure that the "First-row variable names" 
+        | purifier option is checked--this removes them from being considered trash, and also preserves the names 
+        | for result reporting later.
+      li
+        | Now we're ready to analyze, so we hit the button at the bottom of the purifier.
+      li
+        | We wait, and if all's successful (as it will be... it's an example) we reach the results page.
+      li
+        | The results page allows us to view what the purified data looked like (that was actually used for analysis) 
+        | in order to verify that it meets our expectations, and we can then take a look at the analysis report and graphs.
+        | (For more information on interpreting these results, see the next section)
+      li
+        | When we are done analyzing the results, we can hit the "Delete" button at the top, which will destroy the session 
+        | preserving the data, and return us to the spectral analyzer!
+        
   #interpretation.main-section.rounded-corners
     h1.ui-dialog-titlebar.ui-widget-header.rounded-corners Interpreting Results
     h2 The Three Results Explained
