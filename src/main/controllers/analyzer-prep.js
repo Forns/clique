@@ -197,6 +197,11 @@ Matrix.purifyData = function (req, res) {
   omitColsBlueprint = omitCols.slice(0);
   varCount -= omitCols.length;
   
+  // Store the var names if present
+  if (config["first-row-vars"]) {
+    req.session.results.varNames = result[0];
+  }
+  
   // Parse the individual data points based on configs
   for (var j = (config["first-row-vars"]) ? 1 : 0; j < result.length; j++) {
     // Reset the row to push and the col omissions
@@ -254,6 +259,15 @@ Matrix.purifyData = function (req, res) {
     if (!trashRow) {
       purgedResult.push(currentRow);
     }
+  }
+  
+  // Make sure we don't return without var names (sounds Spartan)
+  if (!req.session.results.varNames) {
+    var names = [];
+    for (var v = 1; v <= purgedResult[0].length; v++) {
+      names.push("v" + v);
+    }
+    req.session.results.varNames = names;
   }
   
   return purgedResult;

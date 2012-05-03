@@ -18,12 +18,12 @@
     p
       | You can delete your current data by using the button to the right if you want to 
       | analyze a new dataset. That said, this action cannot be undone.
-  #log-zone.purifier-output
+  #log-zone.purifier-output.initially-hidden
     p Loading results...
     
-#command-list
+#command-list.initially-hidden
   input#see-pure(type="radio", name="commands", checked=true)
   label(for="see-pure") Purified Data
   input#see-analysis(type="radio", name="commands")
   label(for="see-analysis") Data Analysis
-#nav-button Results Navigation
+#nav-button.initially-hidden Results Navigation

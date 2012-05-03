@@ -294,6 +294,10 @@ a:active {
   display: none;
 }
 
+.initially-hidden {
+  display: none;
+}
+
 .command-button {
   display: block;
   margin-top: 5px;

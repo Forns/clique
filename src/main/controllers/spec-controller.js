@@ -14,35 +14,27 @@ module.exports = function (app) {
   app.post("/specpure", function (req, res) {
     var pureData;
     try {
-      req.session.pure = pureData = Matrix.purifyData(req, res);
-      req.session.analysis = Matrix.finalDecomposition(
+      req.session.results = {};
+      req.session.results.pure = pureData = Matrix.purifyData(req, res);
+      req.session.results.analysis = Matrix.finalDecomposition(
         Matrix.rawDataSorting(pureData),
         Matrix.johnsonGraphs[pureData[0].length]
       );
       res.send(true);
     } catch (err) {
       console.log(err);
-      delete req.session.pure;
+      delete req.session.results;
       res.send({error: err});
     }
   });
   
   /*
-   * GET /see-pure
+   * GET /analysis
    *   Returns the purified results for the viewer to observe
    */
-  app.get("/see-pure", function (req, res) {
+  app.get("/analysis", function (req, res) {
     res.contentType('application/json');
-    res.send(JSON.stringify(req.session.pure));
-  });
-  
-  /*
-   * GET /see-analysis
-   *   Returns the purified results for the viewer to observe
-   */
-  app.get("/see-analysis", function (req, res) {
-    res.contentType('application/json');
-    res.send(JSON.stringify(req.session.analysis));
+    res.send(JSON.stringify(req.session.results));
   });
   
   /*
@@ -51,8 +43,7 @@ module.exports = function (app) {
    *   and redirects back to he spectral analyzer
    */
   app.post("/resultsDelete", function (req, res) {
-    delete req.session.pure;
-    delete req.session.analysis;
+    delete req.session.results;
     res.send(true);
   });
   

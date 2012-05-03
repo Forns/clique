@@ -58,7 +58,7 @@ module.exports = function (app) {
   app.get("/spectral", function (req, res) {
     // Render the spectral analyzer front-end if there is no
     // session with the results, otherwise render results page
-    if (req.session.pure) {
+    if (req.session.results) {
       res.redirect("/results");
     } else {
       res.render("spectral", {
@@ -72,7 +72,7 @@ module.exports = function (app) {
    *   Render the spectral analyzer results page
    */
   app.get("/results", function (req, res) {
-    if (req.session.pure) {
+    if (req.session.results) {
       res.render("results", {
         layout: true
       });
