@@ -6,7 +6,7 @@
  */
 
 // Number of Johnson Graphs to generate
-var nJG = 5;
+var nJG = 10;
 
 // Johnson Graph generation for the final decomposition
 // [!] For server-side consumption only
