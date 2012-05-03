@@ -73,14 +73,8 @@ $(function() {
   // Renders the data retrieved from a request to the viewport
   displayViewRequest = function (request, data) {
     // Wait for the log zone to fade out before updating it
-    setTimeout(function () {
-      logZone.html("");
-      requestDisplayMap[request](data);
-    }, 500);
-    
-    // Fade the log zone back in!
-    $("#log-zone")
-      .fadeIn(500);
+    logZone.html("");
+    requestDisplayMap[request](data);
   };
   
   // Set up the results deletion button
@@ -139,6 +133,7 @@ $(function() {
             url: reqName,
             success: function (result) {
               displayViewRequest(reqName, result);
+              $("#log-zone").fadeIn(500);
             },
             error: function (jqXHR, textStatus, errorThrown) {
               console.log(jqXHR);

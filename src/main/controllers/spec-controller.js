@@ -21,6 +21,7 @@ module.exports = function (app) {
       );
       res.send(true);
     } catch (err) {
+      console.log(err);
       delete req.session.pure;
       res.send({error: err});
     }
